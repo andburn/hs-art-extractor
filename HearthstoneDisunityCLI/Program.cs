@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HearthstoneDisunity;
+
 namespace HearthstoneDisunityCLI
 {
     class Program
@@ -22,7 +24,7 @@ namespace HearthstoneDisunityCLI
             switch (command.ToLower())
             {
                 case "extract":
-                    Extract(fileDir, outDir);
+                    ExtractAll(fileDir, outDir);
                     break;
                 case "cardart":
                     CardArt(fileDir, outDir);
@@ -36,21 +38,27 @@ namespace HearthstoneDisunityCLI
         private static void CardArt(string hsDir, string outDir)
         {
             Console.WriteLine("Extracting Card Art from {0} to {1}", hsDir, outDir);
+            try
+            {
+                Extract.CardArt(outDir, hsDir);
+            }
+            catch (Exception e)
+            {
+                PrintErrorAndExit(e.Message);
+            }
         }
 
-        private static void Extract(string file, string outDir)
+        private static void ExtractAll(string file, string outDir)
         {
             Console.WriteLine("Extracting Assets from {0} to {1}", file, outDir);
-        }
-
-        private static bool IsValidFile(string file)
-        {
-            return false;
-        }
-
-        private static bool IsValidDir(string dir)
-        {
-            return false;
+            try
+            {
+                Extract.All(outDir, file);
+            }
+            catch (Exception e)
+            {
+                PrintErrorAndExit(e.Message);
+            }
         }
 
         private static void PrintErrorAndExit(string message)
