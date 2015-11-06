@@ -8,6 +8,11 @@ namespace HearthstoneDisunity
 {
     public static class Extract
     {
+        public static void Raw(string outDir, params string[] files)
+        {
+
+        }
+
         public static void All(string outDir, params string[] files)
         {
 

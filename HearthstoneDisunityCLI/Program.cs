@@ -23,6 +23,9 @@ namespace HearthstoneDisunityCLI
 
             switch (command.ToLower())
             {
+                case "raw":
+                    ExtractRaw(fileDir, outDir);
+                    break;
                 case "extract":
                     ExtractAll(fileDir, outDir);
                     break;
@@ -54,6 +57,19 @@ namespace HearthstoneDisunityCLI
             try
             {
                 Extract.All(outDir, file);
+            }
+            catch (Exception e)
+            {
+                PrintErrorAndExit(e.Message);
+            }
+        }
+
+        private static void ExtractRaw(string file, string outDir)
+        {
+            Console.WriteLine("Extracting Assets from {0} to {1}", file, outDir);
+            try
+            {
+                Extract.Raw(outDir, file);
             }
             catch (Exception e)
             {
