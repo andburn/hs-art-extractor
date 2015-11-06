@@ -1,5 +1,6 @@
 ﻿namespace HearthstoneDisunity.Util
 {
+    // TODO: should be a Vector4F instead of this
     public struct ColorRGBA
     {
         public float r, g, b, a;

@@ -66,7 +66,7 @@ namespace HearthstoneDisunityCLI
 
         private static void ExtractRaw(string file, string outDir)
         {
-            Console.WriteLine("Extracting Assets from {0} to {1}", file, outDir);
+            Console.WriteLine("Extracting Raw Assets from {0} to {1}", file, outDir);
             try
             {
                 Extract.Raw(outDir, file);
