@@ -1,4 +1,5 @@
-﻿using HearthstoneDisunity.Util;
+﻿using HearthstoneDisunity.Image;
+using HearthstoneDisunity.Util;
 using System;
 using System.IO;
 
