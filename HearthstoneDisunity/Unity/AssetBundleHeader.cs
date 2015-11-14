@@ -83,7 +83,7 @@ namespace HearthstoneDisunity.Unity
 
 		public override string ToString()
 		{
-			return string.Format("{0} {1}, Size={2}", Signature, UnityRevision, CompleteFileSize);
+			return string.Format("{0} {1}, FileSize={2}", Signature, UnityRevision, CompleteFileSize);
 		}
 	}
 }

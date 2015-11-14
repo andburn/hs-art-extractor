@@ -13,7 +13,10 @@ namespace HearthstoneDisunity.Unity
 	public class AssetBundleReader
 	{
 		public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
-		public long HeaderOffset { get; set; }
+		public long HeaderOffset { get; private set; }
+        public AssetBundleHeader Header { get; private set; }
+        public int NumberOfFiles { get; private set; }
+        public AssetBundleEntry BundleEntry { get; private set; }
 
 		public void Read(string file)
 		{
@@ -24,13 +27,18 @@ namespace HearthstoneDisunity.Unity
 					b.BigEndian = true;
 
 					AssetBundleHeader bundleHeader = new AssetBundleHeader(b);
+                    Header = bundleHeader;
 					Console.WriteLine(bundleHeader);
 
 					var files = b.ReadUnsignedInt();
 					if(files != 1)
-						throw new AssetException("Should be exactly one file in HS Asset Bundle");
+                    {
+                        // TODO: handle elsewhere?
+                        throw new AssetException("Should be exactly one file in HS Asset Bundle");
+                    }						
 
 					AssetBundleEntry bundleEntry = new AssetBundleEntry(b);
+                    BundleEntry = bundleEntry;
 					Console.WriteLine(bundleEntry);
 
 					// move to bundle file offset
