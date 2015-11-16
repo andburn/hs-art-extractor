@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HearthstoneDisunity.Util;
 using HearthstoneDisunity.Unity.Objects;
 
 namespace HearthstoneDisunity.Unity
 {
-	public class AssetBundleReader
+    public class AssetBundleReader
 	{
 		public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
-		public long HeaderOffset { get; private set; }
-        public AssetBundleHeader Header { get; private set; }
+		public long HeaderOffset { get; private set; }        
         public int NumberOfFiles { get; private set; }
-        public AssetBundleEntry BundleEntry { get; private set; }
 
-		public void Read(string file)
+        public AssetBundleHeader Header { get; private set; }
+        public AssetBundleEntry BundleEntry { get; private set; }
+        public AssetHeader AssetHeader { get; private set; }
+        public TypeTree TypeTree { get; private set; }
+        public ObjectInfoTable InfoTable { get; private set; }
+
+        public void Read(string file, int extractionType = 0)
 		{
 			try
 			{
@@ -47,10 +48,13 @@ namespace HearthstoneDisunity.Unity
 					AssetHeader assetHeader = new AssetHeader(b);
 					Console.WriteLine(assetHeader);
 
+                    AssetHeader = assetHeader;
+
 					// TODO: references? UnityVersion object
 					var version = assetHeader.AssetVersion;
 					
 					// switch to little endian
+                    // TODO: use assetHeader.Endianess == 0 ? false : true
 					b.BigEndian = false;
 
 					if(version < 9)
@@ -58,20 +62,23 @@ namespace HearthstoneDisunity.Unity
 
 					// read the bundle metadata, classes and attributes
 					TypeTree tt = new TypeTree(version);
-					tt.Read(b);
+                    tt.Read(b);
+                    TypeTree = tt;
+
 					// read the asset objects info and offsets
 					ObjectInfoTable oit = new ObjectInfoTable(version);
 					oit.Read(b);
+                    InfoTable = oit;
 					// assign
 					ObjectMap = oit.InfoMap;
 
-					// Skip this not used
+					// Skip this not using this for now
 					//FileIdentifierTable fi = new FileIdentifierTable(version);
 					//fi.Read(b);
 
 					HeaderOffset = assetHeader.DataOffset + bundleHeader.DataHeaderSize + bundleHeader.HeaderSize;
 
-					LoadObjects(oit.InfoMap, tt.TypeMap, b);
+					LoadObjects(oit.InfoMap, tt.TypeMap, b, extractionType);
 				}
 			}
 			catch(Exception e)
@@ -80,7 +87,7 @@ namespace HearthstoneDisunity.Unity
 			}
 		}
 
-		private void LoadObjects(Dictionary<long, ObjectInfo> infoMap, Dictionary<int, BaseClass> typeTreeMap, BinaryFileReader b)
+		private void LoadObjects(Dictionary<long, ObjectInfo> infoMap, Dictionary<int, BaseClass> typeTreeMap, BinaryFileReader b, int extractionType)
 		{
 			long ofsMin = long.MaxValue;
 			long ofsMax = long.MinValue;
@@ -111,10 +118,7 @@ namespace HearthstoneDisunity.Unity
 				{
 					typeNode = typeClass.TypeTree;
 				}
-				//if(typeNode == null) // get from database
-
-				// DEBUG: save raw
-				//File.WriteAllBytes(@"E:\Dump\DisunityTest\" + id + ".bin", bytes);
+				//if(typeNode == null) // get from database               
 
 				ObjectData data = new ObjectData(id);
 				data.Info = info;
@@ -145,31 +149,46 @@ namespace HearthstoneDisunity.Unity
 			Dictionary<long, object> fileMap = new Dictionary<long, object>();
 			List<GameObject> gameObjects = new List<GameObject>();
 
-			foreach (ObjectData objectData in objectList) {
+            // Extraction
+            //if (extractionType == 0)
+            //{
+            //    // Raw
+            //    File.WriteAllBytes(@"E:\Dump\DisunityTest\" + id + ".bin", bytes);
+            //}
+            //else if (extractionType == 2)
+            //{
+            //    // CardArt ??
+            //}
+            //else
+            //{
+            //    // Extract Supported Types
+            //}
+
+            foreach (ObjectData objectData in objectList) {
 				Debug.Assert(!fileMap.ContainsKey(objectData.Id));
 
 				var data = BinaryFileReader.CreateFromByteArray(objectData.Buffer);
 				switch(objectData.Info.ClassId)
 				{
-				case 1: // GameObject
-					var go = new GameObject(data);
-					fileMap[objectData.Id] = go;
-					gameObjects.Add(go);
-					break;
-				case 4: // Transform
-					fileMap[objectData.Id] = new Transform(data);
-					break;
-				case 21: // Material
-					fileMap[objectData.Id] = new Material(data);
-					break;
-				case 28: // Texture2D
-					fileMap[objectData.Id] = new Texture2D(data);
-					break;
-				case 114: // MonoBehaviour
-					fileMap[objectData.Id] = new CardDef(data);
-					break;
-				default:
-					break;
+				    case 1: // GameObject
+					    var go = new GameObject(data);
+					    fileMap[objectData.Id] = go;
+					    gameObjects.Add(go);
+					    break;
+				    case 4: // Transform
+					    fileMap[objectData.Id] = new Transform(data);
+					    break;
+				    case 21: // Material
+					    fileMap[objectData.Id] = new Material(data);
+					    break;
+				    case 28: // Texture2D
+					    fileMap[objectData.Id] = new Texture2D(data);
+					    break;
+				    case 114: // MonoBehaviour
+					    fileMap[objectData.Id] = new CardDef(data);
+					    break;
+				    default:
+					    break;
 				}
 			}
 
