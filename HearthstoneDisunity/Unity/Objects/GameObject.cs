@@ -1,5 +1,6 @@
 ﻿using HearthstoneDisunity.Util;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace HearthstoneDisunity.Unity.Objects
@@ -40,6 +41,25 @@ namespace HearthstoneDisunity.Unity.Objects
         public override string ToString()
         {
             return string.Format("{0} : {1}", Name, _components.Count);
+        }
+
+        public void Save(string dir, string name = "default")
+        {
+            string outFile = Name;
+            if (string.IsNullOrEmpty(Name))
+            {
+                outFile = name;
+            }
+            outFile = Path.Combine(dir, outFile + ".txt");
+            // TODO: duplicate check, => rename _2
+            using (StreamWriter sw = new StreamWriter(outFile, false))
+            {
+                sw.WriteLine("GameObject");
+                sw.WriteLine("\tName: " + Name);
+                sw.WriteLine("\tLayer: " + Layer);
+                sw.WriteLine("\tTag: " + Tag);
+                sw.WriteLine("\tIsActive: " + IsActive);
+            }
         }
     }
 }

@@ -12,8 +12,7 @@ namespace HearthstoneDisunityTest
         public static void ClassInitialize(TestContext context)
         {
             var file = @".\data\cardtextures.unity3d";
-            var abr = new AssetBundleReader();
-            abr.Read(file);
+            var abr = new AssetBundle(file);
             _entry = abr.BundleEntry;
         }
 

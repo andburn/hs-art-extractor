@@ -49,7 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unity\AssetBundleEntry.cs" />
     <Compile Include="Unity\AssetBundleHeader.cs" />
-    <Compile Include="Unity\AssetBundleReader.cs" />
+    <Compile Include="Unity\AssetBundle.cs" />
     <Compile Include="Unity\AssetException.cs" />
     <Compile Include="Unity\AssetHeader.cs" />
     <Compile Include="Unity\AssetType.cs" />

@@ -1,6 +1,7 @@
 ﻿using HearthstoneDisunity.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,6 +96,29 @@ namespace HearthstoneDisunity.Unity.Objects
                 Colors[key] = new ColorRGBA(cr, cg, cb, ca);
             }
             b.Align(4);
+        }
+
+        public void Save(string dir, string name = "default")
+        {
+            string outFile = Name;
+            if (string.IsNullOrEmpty(Name))
+            {
+                outFile = name;
+            }
+            outFile = Path.Combine(dir, outFile + ".txt");
+            // TODO: duplicate check, => rename _2
+            using (StreamWriter sw = new StreamWriter(outFile, false))
+            {
+                sw.WriteLine("Material");
+                sw.WriteLine("\tShader: " + Shader.FileID);
+                sw.WriteLine("\tShaderKeywords: " + ShaderKeywords);
+                sw.WriteLine("\tLightmapFlags: " + LightmapFlags);
+                sw.WriteLine("\tCustomRenderQueue: " + CustomRenderQueue);
+                sw.WriteLine("\tTagMap (length): " + TagMap.Count);
+                sw.WriteLine("\tTexEnvs (length): " + TexEnvs.Count);
+                sw.WriteLine("\tFloats (length): " + Floats.Count);
+                sw.WriteLine("\tColors (length): " + Colors.Count);
+            }
         }
 
         public override string ToString()

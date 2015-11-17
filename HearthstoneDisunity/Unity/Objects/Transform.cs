@@ -1,5 +1,6 @@
 ﻿using HearthstoneDisunity.Util;
 using System.Collections.Generic;
+using System.IO;
 
 namespace HearthstoneDisunity.Unity.Objects
 {
@@ -27,6 +28,33 @@ namespace HearthstoneDisunity.Unity.Objects
             }
 
             Parent = new FilePointer(b.ReadInt(), b.ReadLong());
+        }
+
+        public void Save(string dir, string name)
+        {
+            string outFile = name;
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new AssetException("null filename Transform export");
+            }
+
+            outFile = Path.Combine(dir, outFile + ".txt");
+            // TODO: duplicate check, => rename _2
+            using (StreamWriter sw = new StreamWriter(outFile, false))
+            {
+                sw.WriteLine("Transform");
+                sw.WriteLine("\tGameObject: " + GameObject.PathID);
+                sw.WriteLine("\tLocalRotation: " + LocalRotation);
+                sw.WriteLine("\tLocalPosition: " + LocalPosition);
+                sw.WriteLine("\tLocalScale: " + LocalScale);
+                sw.WriteLine("\tChildren [" + Children.Count + "]");
+                for (var i = 0; i < Children.Count; i++)
+                {
+                    sw.WriteLine("\t\t[" + i + "]: " + Children[i]);
+                }
+
+                sw.WriteLine("\tParent: " + Parent.PathID);
+            }
         }
 
         public override string ToString()

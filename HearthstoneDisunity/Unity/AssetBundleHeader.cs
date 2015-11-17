@@ -40,7 +40,10 @@ namespace HearthstoneDisunity.Unity
 		// file size if completeFileSize contains the uncompressed data size
 		public long DataHeaderSize { get; set; }
 
-		public AssetBundleHeader(BinaryFileReader b)
+        // the number of files in bundle
+        public long NumberOfFiles { get; private set; }
+
+        public AssetBundleHeader(BinaryFileReader b)
 		{
 			Signature = b.ReadStringToNull();
 			StreamVersion = b.ReadInt();
@@ -78,7 +81,8 @@ namespace HearthstoneDisunity.Unity
 				DataHeaderSize = b.ReadUnsignedInt();
 			}
 
-			b.ReadByte();
+			b.ReadByte(); // unused
+            NumberOfFiles = b.ReadUnsignedInt();
 		}
 
 		public override string ToString()

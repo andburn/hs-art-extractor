@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HearthstoneDisunity.Unity;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,14 +21,27 @@ namespace HearthstoneDisunity
             {
                 if (File.Exists(f))
                 {
-
+                    AssetBundle ab = new AssetBundle(f);
+                    ab.ExtractRaw(outDir);
                 }
             }
         }
 
         public static void All(string outDir, params string[] files)
         {
+            if (!Directory.Exists(outDir))
+            {
+                Directory.CreateDirectory(outDir);
+            }
 
+            foreach (var f in files)
+            {
+                if (File.Exists(f))
+                {
+                    AssetBundle ab = new AssetBundle(f);
+                    ab.ExtractFull(outDir);
+                }
+            }
         }
 
         public static void Text(string outDir, params string[] files)

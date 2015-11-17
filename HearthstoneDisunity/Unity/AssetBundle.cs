@@ -7,11 +7,10 @@ using HearthstoneDisunity.Unity.Objects;
 
 namespace HearthstoneDisunity.Unity
 {
-    public class AssetBundleReader
+    public class AssetBundle
 	{
 		public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
-		public long HeaderOffset { get; private set; }        
-        public int NumberOfFiles { get; private set; }
+		public long AssetDataOffset { get; private set; }        
 
         public AssetBundleHeader Header { get; private set; }
         public AssetBundleEntry BundleEntry { get; private set; }
@@ -19,7 +18,85 @@ namespace HearthstoneDisunity.Unity
         public TypeTree TypeTree { get; private set; }
         public ObjectInfoTable InfoTable { get; private set; }
 
-        public void Read(string file, int extractionType = 0)
+        private string _bundleFile;
+
+        public AssetBundle(string file)
+        {
+            _bundleFile = file;
+            Read(_bundleFile);
+        }
+
+        public void ExtractRaw(string dir)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(File.Open(_bundleFile, FileMode.Open)))
+                {
+                    foreach (var pair in ObjectMap)
+                    {
+                        var info = pair.Value;
+                        b.Seek(info.Offset + AssetDataOffset);
+                        byte[] data = new byte[info.Length];
+                        // TODO: can there be loss of precision here, long to int?
+                        Debug.Assert(info.Length <= int.MaxValue);
+                        b.Read(data, 0, (int)info.Length);
+                        var outFile = Path.Combine(dir, pair.Key + ".raw");
+                        File.WriteAllBytes(outFile, data);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }             
+        }
+
+        public void ExtractFull(string dir)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(File.Open(_bundleFile, FileMode.Open)))
+                {
+                    foreach (var pair in ObjectMap)
+                    {
+                        var info = pair.Value;
+                        b.Seek(info.Offset + AssetDataOffset);
+                        byte[] data = new byte[info.Length];
+                        // TODO: can there be loss of precision here, long to int?
+                        Debug.Assert(info.Length <= int.MaxValue);
+                        b.Read(data, 0, (int)info.Length);
+                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        switch (info.ClassId)
+                        {
+                            case 1: // GameObject
+                                new GameObject(block).Save(dir, pair.Key.ToString());
+                                break;
+                            case 4: // Transform
+                                new Transform(block).Save(dir, pair.Key.ToString());
+                                break;
+                            case 21: // Material
+                                new Material(block).Save(dir, pair.Key.ToString());
+                                break;
+                            case 28: // Texture2D
+                                new Texture2D(block).Save(dir);
+                                break;
+                            case 114: // MonoBehaviour
+                                // TODO: not only carddef obviously
+                                new CardDef(block).Save(dir, pair.Key.ToString());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private void Read(string file)
 		{
 			try
 			{
@@ -27,58 +104,51 @@ namespace HearthstoneDisunity.Unity
 				{
 					b.BigEndian = true;
 
-					AssetBundleHeader bundleHeader = new AssetBundleHeader(b);
-                    Header = bundleHeader;
-					Console.WriteLine(bundleHeader);
+					Header = new AssetBundleHeader(b);
+					Console.WriteLine(Header);
 
-					var files = b.ReadUnsignedInt();
-					if(files != 1)
+					if(Header.NumberOfFiles != 1)
                     {
-                        // TODO: handle elsewhere?
+                        // TODO: handle elsewhere?                        
                         throw new AssetException("Should be exactly one file in HS Asset Bundle");
                     }						
 
-					AssetBundleEntry bundleEntry = new AssetBundleEntry(b);
-                    BundleEntry = bundleEntry;
-					Console.WriteLine(bundleEntry);
+					BundleEntry = new AssetBundleEntry(b);
+					Console.WriteLine(BundleEntry);
 
 					// move to bundle file offset
-					b.Seek(bundleHeader.HeaderSize + bundleEntry.Offset);
+					b.Seek(Header.HeaderSize + BundleEntry.Offset);
 
-					AssetHeader assetHeader = new AssetHeader(b);
-					Console.WriteLine(assetHeader);
-
-                    AssetHeader = assetHeader;
-
+					AssetHeader = new AssetHeader(b);
+					Console.WriteLine(AssetHeader);
+                    
 					// TODO: references? UnityVersion object
-					var version = assetHeader.AssetVersion;
+					var version = AssetHeader.AssetVersion;
 					
-					// switch to little endian
-                    // TODO: use assetHeader.Endianess == 0 ? false : true
-					b.BigEndian = false;
+					// should be little endian
+					b.BigEndian = AssetHeader.Endianness == 1 ? true : false;
 
 					if(version < 9)
-						b.Seek(assetHeader.FileSize - assetHeader.MetadataSize + 1);
+						b.Seek(AssetHeader.FileSize - AssetHeader.MetadataSize + 1);
 
 					// read the bundle metadata, classes and attributes
-					TypeTree tt = new TypeTree(version);
-                    tt.Read(b);
-                    TypeTree = tt;
+					TypeTree = new TypeTree(version);
+                    TypeTree.Read(b);
 
-					// read the asset objects info and offsets
-					ObjectInfoTable oit = new ObjectInfoTable(version);
-					oit.Read(b);
-                    InfoTable = oit;
+                    // read the asset objects info and offsets
+                    InfoTable  = new ObjectInfoTable(version);
+                    InfoTable.Read(b);
 					// assign
-					ObjectMap = oit.InfoMap;
+					ObjectMap = InfoTable.InfoMap;
 
 					// Skip this not using this for now
 					//FileIdentifierTable fi = new FileIdentifierTable(version);
 					//fi.Read(b);
 
-					HeaderOffset = assetHeader.DataOffset + bundleHeader.DataHeaderSize + bundleHeader.HeaderSize;
+					AssetDataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
 
-					LoadObjects(oit.InfoMap, tt.TypeMap, b, extractionType);
+					// LoadObjects(InfoTable.InfoMap, TypeTree.TypeMap, b);
+
 				}
 			}
 			catch(Exception e)
@@ -86,8 +156,8 @@ namespace HearthstoneDisunity.Unity
 				throw e;
 			}
 		}
-
-		private void LoadObjects(Dictionary<long, ObjectInfo> infoMap, Dictionary<int, BaseClass> typeTreeMap, BinaryFileReader b, int extractionType)
+       
+		private void LoadObjects(Dictionary<long, ObjectInfo> infoMap, Dictionary<int, BaseClass> typeTreeMap, BinaryFileReader b)
 		{
 			long ofsMin = long.MaxValue;
 			long ofsMax = long.MinValue;
@@ -100,7 +170,7 @@ namespace HearthstoneDisunity.Unity
 				ObjectInfo info = oi.Value;
 
 				long id = oi.Key;
-				long ofs = HeaderOffset + info.Offset;
+				long ofs = AssetDataOffset + info.Offset;
 				ofsMin = Math.Min(ofsMin, ofs);
 				ofsMax = Math.Max(ofsMax, ofs + info.Length);
 
