@@ -35,12 +35,16 @@ namespace HearthstoneDisunity.Unity
                     foreach (var pair in ObjectMap)
                     {
                         var info = pair.Value;
+                        var subdir = UnityClasses.Get(info.ClassId);
+                        Directory.CreateDirectory(Path.Combine(dir, subdir));
                         b.Seek(info.Offset + AssetDataOffset);
+
                         byte[] data = new byte[info.Length];
                         // TODO: can there be loss of precision here, long to int?
                         Debug.Assert(info.Length <= int.MaxValue);
                         b.Read(data, 0, (int)info.Length);
-                        var outFile = Path.Combine(dir, pair.Key + ".raw");
+
+                        var outFile = Path.Combine(dir, subdir, pair.Key + ".bin");
                         File.WriteAllBytes(outFile, data);
                     }
                 }
@@ -60,6 +64,10 @@ namespace HearthstoneDisunity.Unity
                     foreach (var pair in ObjectMap)
                     {
                         var info = pair.Value;
+                        var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
+                        // TODO: don't create dir if not supported type
+                        Directory.CreateDirectory(subdir);
+
                         b.Seek(info.Offset + AssetDataOffset);
                         byte[] data = new byte[info.Length];
                         // TODO: can there be loss of precision here, long to int?
@@ -69,20 +77,20 @@ namespace HearthstoneDisunity.Unity
                         switch (info.ClassId)
                         {
                             case 1: // GameObject
-                                new GameObject(block).Save(dir, pair.Key.ToString());
+                                new GameObject(block).Save(subdir, pair.Key.ToString());
                                 break;
                             case 4: // Transform
-                                new Transform(block).Save(dir, pair.Key.ToString());
+                                new Transform(block).Save(subdir, pair.Key.ToString());
                                 break;
                             case 21: // Material
-                                new Material(block).Save(dir, pair.Key.ToString());
+                                new Material(block).Save(subdir, pair.Key.ToString());
                                 break;
                             case 28: // Texture2D
-                                new Texture2D(block).Save(dir);
+                                new Texture2D(block).Save(subdir);
                                 break;
                             case 114: // MonoBehaviour
                                 // TODO: not only carddef obviously
-                                new CardDef(block).Save(dir, pair.Key.ToString());
+                                new CardDef(block).Save(subdir, pair.Key.ToString());
                                 break;
                             default:
                                 break;

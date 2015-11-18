@@ -23,7 +23,7 @@ namespace HearthstoneDisunityCLI
 
             switch (command.ToLower())
             {
-                case "raw":
+                case "dump":
                     ExtractRaw(fileDir, outDir);
                     break;
                 case "extract":

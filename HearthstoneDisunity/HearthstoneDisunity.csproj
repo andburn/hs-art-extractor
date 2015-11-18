@@ -64,6 +64,7 @@
     <Compile Include="Unity\Objects\Transform.cs" />
     <Compile Include="Unity\Objects\UnityTexEnv.cs" />
     <Compile Include="Unity\Objects\UnityHash128.cs" />
+    <Compile Include="Unity\UnityClasses.cs" />
     <Compile Include="Util\BinaryFileReader.cs" />
     <Compile Include="Util\CardObject.cs" />
     <Compile Include="Util\ColorRGBA.cs" />
