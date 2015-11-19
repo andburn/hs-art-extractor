@@ -40,6 +40,7 @@ namespace HearthstoneDisunity.Unity.Objects
         public int WrapMode { get; set; }
 
         private BinaryFileReader _buffer;
+        private long _dataPos;
 
         public Texture2D(BinaryFileReader b)
         {
@@ -67,6 +68,8 @@ namespace HearthstoneDisunity.Unity.Objects
             ColorSpace = b.ReadInt();
             var dataSize = b.ReadInt();
 
+            _dataPos = b.BaseStream.Position;
+
             if (dataSize != Size)
                 throw new AssetException("Texture2D size mismatch [" + dataSize + "," + Size + "]");
         }
@@ -89,23 +92,30 @@ namespace HearthstoneDisunity.Unity.Objects
             }
         }
 
-        public void Save(string outputDir, string prefix = "")
+        public void Save(string outputDir, string name = null)
         {
+            _buffer.Seek(_dataPos);
+
+            var filename = name;
+            if (filename == null)
+            {
+                filename = Name;
+            }
             // TODO: handle save overwriting
 
             // for HS check if DDS, otherwise assume TGA
             if (Format == TextureFormat.DXT1 || Format == TextureFormat.DXT5)
             {
-                SaveAsDDS(outputDir, prefix);
+                SaveAsDDS(outputDir, filename);
             }
             else
             {
                 Console.WriteLine("Not a DDS file! Format = " + Format);
-                SaveAsTGA(outputDir, prefix);
+                SaveAsTGA(outputDir, filename);
             }
         }
 
-        private void SaveAsDDS(string outputDir, string prefix = "")
+        private void SaveAsDDS(string outputDir, string filename)
         {
             DDSHeader header = new DDSHeader();
             header.dwWidth = Width;
@@ -148,7 +158,7 @@ namespace HearthstoneDisunity.Unity.Objects
             }
 
             // TODO: make note of duplicates? overwritten by defaults
-            using (BinaryWriter bw = new BinaryWriter(new FileStream(Path.Combine(outputDir, prefix + Name + ".dds"), FileMode.Create)))
+            using (BinaryWriter bw = new BinaryWriter(new FileStream(Path.Combine(outputDir, filename + ".dds"), FileMode.Create)))
             {
                 header.write(bw);
 
@@ -163,6 +173,9 @@ namespace HearthstoneDisunity.Unity.Objects
                 int numBytesRead = 0;
                 do
                 {
+                    // TODO: use of buffer resetting position!! Need cache this anyway,
+                    // or copy/rename file on disk!
+                    // ~ infinite loop otherwise on multiple saves on same object
                     int n = _buffer.Read(bytes, numBytesRead, 1024);
                     numBytesRead += n;
                     numBytesToRead -= n;
@@ -175,7 +188,7 @@ namespace HearthstoneDisunity.Unity.Objects
             //File.WriteAllBytes(Path.Combine(outputDir, name + ".bin"), data);
         }
 
-        private void SaveAsTGA(string outputDir, string prefix = "")
+        private void SaveAsTGA(string outputDir, string filename)
         {
             bool tgaSaveMipMaps = false;
             TGAHeader header = new TGAHeader();
@@ -230,7 +243,7 @@ namespace HearthstoneDisunity.Unity.Objects
 
                     if (tgaSaveMipMaps || j == 0)
                     {
-                        var outname = Path.Combine(outputDir, prefix + Name + ".tga");
+                        var outname = Path.Combine(outputDir, filename + ".tga");
                         // TODO: make note of duplicates? overwritten by defaults
                         using (BinaryWriter bw = new BinaryWriter(new FileStream(outname, FileMode.Create)))
                         {

@@ -11,7 +11,7 @@ namespace HearthstoneDisunity.Unity
     public class AssetBundle
 	{
 		public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
-		public long AssetDataOffset { get; private set; }        
+		public long AssetDataOffset { get; private set; }
 
         public AssetBundleHeader Header { get; private set; }
         public AssetBundleEntry BundleEntry { get; private set; }
@@ -54,6 +54,49 @@ namespace HearthstoneDisunity.Unity
             {
                 throw e;
             }             
+        }
+
+        public void ExtractCardTextures(Dictionary<string, List<CardArt>> artInfo, string dir)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(File.Open(_bundleFile, FileMode.Open)))
+                {
+                    foreach (var pair in ObjectMap)
+                    {
+                        var info = pair.Value;
+                        //var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
+                        // TODO: don't create dir if not supported type
+                        //Directory.CreateDirectory(subdir);
+
+                        b.Seek(info.Offset + AssetDataOffset);
+                        byte[] data = new byte[info.Length];
+                        // TODO: can there be loss of precision here, long to int?
+                        Debug.Assert(info.Length <= int.MaxValue);
+                        b.Read(data, 0, (int)info.Length);
+                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        if (info.ClassId == 28)
+                        {
+                            var tex = new Texture2D(block);
+                            if (artInfo.ContainsKey(tex.Name))
+                            {
+                                Console.WriteLine("Tex: " + tex.Name);
+                                var list = artInfo[tex.Name];
+                                Console.WriteLine(list.Count);
+                                foreach (var c in list)
+                                {
+                                    Console.WriteLine(c.Name);
+                                    tex.Save(dir, c.Name);
+                                }
+                            }                            
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public void ExtractFull(string dir)
