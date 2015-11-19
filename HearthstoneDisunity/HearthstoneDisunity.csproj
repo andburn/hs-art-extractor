@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extract.cs" />
+    <Compile Include="Hearthstone\CardArt.cs" />
+    <Compile Include="Hearthstone\CardMaterial.cs" />
     <Compile Include="Image\DDSHeader.cs" />
     <Compile Include="Image\DDSPixelFormat.cs" />
     <Compile Include="Image\TGAHeader.cs" />
@@ -66,7 +68,6 @@
     <Compile Include="Unity\Objects\UnityHash128.cs" />
     <Compile Include="Unity\UnityClasses.cs" />
     <Compile Include="Util\BinaryFileReader.cs" />
-    <Compile Include="Util\CardObject.cs" />
     <Compile Include="Util\ColorRGBA.cs" />
     <Compile Include="Util\DebugUtils.cs" />
     <Compile Include="Util\FileIdentifierTable.cs" />
@@ -86,6 +87,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
