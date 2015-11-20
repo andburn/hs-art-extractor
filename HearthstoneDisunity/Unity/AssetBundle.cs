@@ -11,7 +11,6 @@ namespace HearthstoneDisunity.Unity
     public class AssetBundle
 	{
 		public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
-		public long AssetDataOffset { get; private set; }
 
         public AssetBundleHeader Header { get; private set; }
         public AssetBundleEntry BundleEntry { get; private set; }
@@ -20,6 +19,7 @@ namespace HearthstoneDisunity.Unity
         public ObjectInfoTable InfoTable { get; private set; }
 
         private string _bundleFile;
+        private long _dataOffset;
 
         public AssetBundle(string file)
         {
@@ -38,7 +38,7 @@ namespace HearthstoneDisunity.Unity
                         var info = pair.Value;
                         var subdir = UnityClasses.Get(info.ClassId);
                         Directory.CreateDirectory(Path.Combine(dir, subdir));
-                        b.Seek(info.Offset + AssetDataOffset);
+                        b.Seek(info.Offset + _dataOffset);
 
                         byte[] data = new byte[info.Length];
                         // TODO: can there be loss of precision here, long to int?
@@ -56,7 +56,39 @@ namespace HearthstoneDisunity.Unity
             }             
         }
 
-        public void ExtractCardTextures(Dictionary<string, List<CardArt>> artInfo, string dir)
+		public void ExtractText(string dir)
+		{
+			try
+			{
+				using(BinaryFileReader b = new BinaryFileReader(File.Open(_bundleFile, FileMode.Open)))
+				{
+					foreach(var pair in ObjectMap)
+					{
+						var info = pair.Value;
+						b.Seek(info.Offset + _dataOffset);
+
+						byte[] data = new byte[info.Length];
+						// TODO: can there be loss of precision here, long to int?
+						Debug.Assert(info.Length <= int.MaxValue);
+						b.Read(data, 0, (int)info.Length);
+
+						var block = BinaryFileReader.CreateFromByteArray(data);
+						// TODO: enum for class ids
+						if(info.ClassId == 49)
+						{
+							var text = new TextAsset(block);
+							text.Save(dir);
+						}
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				throw e;
+			}
+		}
+
+		public void ExtractCardTextures(Dictionary<string, List<CardArt>> artInfo, string dir)
         {
             try
             {
@@ -69,7 +101,7 @@ namespace HearthstoneDisunity.Unity
                         // TODO: don't create dir if not supported type
                         //Directory.CreateDirectory(subdir);
 
-                        b.Seek(info.Offset + AssetDataOffset);
+                        b.Seek(info.Offset + _dataOffset);
                         byte[] data = new byte[info.Length];
                         // TODO: can there be loss of precision here, long to int?
                         Debug.Assert(info.Length <= int.MaxValue);
@@ -80,12 +112,12 @@ namespace HearthstoneDisunity.Unity
                             var tex = new Texture2D(block);
                             if (artInfo.ContainsKey(tex.Name))
                             {
-                                Console.WriteLine("Tex: " + tex.Name);
+                                //Console.WriteLine("Tex: " + tex.Name);
                                 var list = artInfo[tex.Name];
-                                Console.WriteLine(list.Count);
+                                //Console.WriteLine(list.Count);
                                 foreach (var c in list)
                                 {
-                                    Console.WriteLine(c.Name);
+                                    //Console.WriteLine(c.Name);
                                     tex.Save(dir, c.Name);
                                 }
                             }                            
@@ -112,7 +144,7 @@ namespace HearthstoneDisunity.Unity
                         // TODO: don't create dir if not supported type
                         Directory.CreateDirectory(subdir);
 
-                        b.Seek(info.Offset + AssetDataOffset);
+                        b.Seek(info.Offset + _dataOffset);
                         byte[] data = new byte[info.Length];
                         // TODO: can there be loss of precision here, long to int?
                         Debug.Assert(info.Length <= int.MaxValue);
@@ -132,6 +164,9 @@ namespace HearthstoneDisunity.Unity
                             case 28: // Texture2D
                                 new Texture2D(block).Save(subdir);
                                 break;
+                            case 49: // TextAsset
+                                new TextAsset(block).Save(subdir);
+                                break;
                             case 114: // MonoBehaviour
                                 // TODO: not only carddef obviously
                                 new CardDef(block).Save(subdir, pair.Key.ToString());
@@ -148,7 +183,7 @@ namespace HearthstoneDisunity.Unity
             }
         }
 
-        public Dictionary<string, List<CardArt>> ExtractCards()
+        public Dictionary<string, List<CardArt>> ExtractCards(string dir)
         {
             long ofsMin = long.MaxValue;
             long ofsMax = long.MinValue;
@@ -162,7 +197,7 @@ namespace HearthstoneDisunity.Unity
             //    ObjectInfo info = oi.Value;
 
             //    long id = oi.Key;
-            //    long ofs = AssetDataOffset + info.Offset;
+            //    long ofs = _dataOffset + info.Offset;
             //    ofsMin = Math.Min(ofsMin, ofs);
             //    ofsMax = Math.Max(ofsMax, ofs + info.Length);
 
@@ -217,7 +252,7 @@ namespace HearthstoneDisunity.Unity
                 {
                     using (BinaryFileReader b = new BinaryFileReader(File.Open(_bundleFile, FileMode.Open)))
                     {
-                        b.Seek(info.Offset + AssetDataOffset);
+                        b.Seek(info.Offset + _dataOffset);
                         switch (info.ClassId)
                         {
                             case 1: // GameObject
@@ -276,6 +311,22 @@ namespace HearthstoneDisunity.Unity
                                         ArtFileMap[card.PortraitName] = new List<CardArt>();
                                     }
                                     ArtFileMap[card.PortraitName].Add(card);
+
+                                    // save text info by cardid
+                                    var outFile = Path.Combine(dir, card.Name + ".txt");
+                                    // TODO: duplicate check, => rename _2
+                                    using (StreamWriter sw = new StreamWriter(outFile, false))
+                                    {
+                                        sw.WriteLine(fp.PathID);
+                                        sw.Write(DebugUtils.AllPropsToString(card));
+                                    }
+
+                                    // DEBUG: check deck bar tex offset is same for all
+                                    if (card.DeckBar != null)
+                                    {
+                                        if (card.DeckBar.TexOffset.x != -0.2f || card.DeckBar.TexOffset.y != 0.25f)
+                                            Console.WriteLine(">> found one ----- " + card.Name);
+                                    }
                                 }
                             }
                             else
@@ -351,7 +402,10 @@ namespace HearthstoneDisunity.Unity
 					if(Header.NumberOfFiles != 1)
                     {
                         // TODO: handle elsewhere?                        
-                        throw new AssetException("Should be exactly one file in HS Asset Bundle");
+                        //throw new AssetException("Should be exactly one file in HS Asset Bundle");
+                        // shared now has 2 files :)
+                        // probably get away with ignoring second?
+                        Console.WriteLine("Warning: " + file + " has " + Header.NumberOfFiles + " bundle files");
                     }						
 
 					BundleEntry = new AssetBundleEntry(b);
@@ -386,7 +440,7 @@ namespace HearthstoneDisunity.Unity
 					//FileIdentifierTable fi = new FileIdentifierTable(version);
 					//fi.Read(b);
 
-					AssetDataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
+					_dataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
 
 					// LoadObjects(InfoTable.InfoMap, TypeTree.TypeMap, b);
 

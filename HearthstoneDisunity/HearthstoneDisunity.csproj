@@ -62,6 +62,7 @@
     <Compile Include="Unity\Objects\CardDef.cs" />
     <Compile Include="Unity\Objects\GameObject.cs" />
     <Compile Include="Unity\Objects\Material.cs" />
+    <Compile Include="Unity\Objects\TextAsset.cs" />
     <Compile Include="Unity\Objects\Texture2D.cs" />
     <Compile Include="Unity\Objects\Transform.cs" />
     <Compile Include="Unity\Objects\UnityTexEnv.cs" />

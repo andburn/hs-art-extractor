@@ -47,38 +47,66 @@ namespace HearthstoneDisunity
 
         public static void Text(string outDir, params string[] files)
         {
+			var hsDataPath = Path.Combine(outDir, "Data", "Win");
 
-        }
+			if(!Directory.Exists(outDir))
+			{
+				Directory.CreateDirectory(outDir);
+			}
+
+			foreach(var f in files)
+			{
+				if(File.Exists(f))
+				{
+					AssetBundle ab = new AssetBundle(f);
+					ab.ExtractText(outDir);
+				}
+			}
+		}
 
         public static void Textures(string outDir, params string[] files)
         {
 
         }
 
-        public static void CardArt(string outDir, string hsDir, params string[] cardIds)
+        // TODO: add set filter, include/exclude?
+        public static void CardArt(string outDir, string hsDir)
         {
+            var hsDataPath = Path.Combine(hsDir, "Data", "Win");
+
             if (!Directory.Exists(outDir))
             {
                 Directory.CreateDirectory(outDir);
             }
 
-            foreach (var f in new string[] { hsDir })
+            Dictionary<string, List<CardArt>> map = new Dictionary<string, List<CardArt>>();
+
+            // get all card defs (cards<n>.unity3d)
+            var cardFiles = Directory.GetFiles(hsDataPath, "cards?.unity3d");
+
+            foreach (var cf in cardFiles)
             {
-                if (File.Exists(f))
+                AssetBundle ab = new AssetBundle(cf);
+                var m = ab.ExtractCards(outDir);
+                foreach (var entry in m)
                 {
-                    AssetBundle ab = new AssetBundle(f);
-                    Dictionary<string, List<CardArt>> map = ab.ExtractCards();
-                    Console.WriteLine(map.Count);
-                    foreach (var p in map)
+                    if (!map.ContainsKey(entry.Key))
                     {
-                        Console.WriteLine(p.Key + ": " + p.Value.Count);
+                        map[entry.Key] = new List<CardArt>();
                     }
+                    map[entry.Key].AddRange(entry.Value);
                 }
             }
 
-            // get all card defs (cards<n>.unity3d)
-
             // get all textures (cardtextures<n>.unity3d, shared<n>.unity3d)
+            var textureFiles = new List<string>(Directory.GetFiles(hsDataPath, "cardtextures?.unity3d"));
+            textureFiles.AddRange(Directory.GetFiles(hsDataPath, "shared?.unity3d"));
+
+            foreach (var tf in textureFiles)
+            {
+                AssetBundle ab = new AssetBundle(tf);
+                ab.ExtractCardTextures(map, outDir);
+            }
         }
 
     }

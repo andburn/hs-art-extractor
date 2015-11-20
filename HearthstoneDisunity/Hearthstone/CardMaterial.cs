@@ -1,4 +1,5 @@
 ﻿using HearthstoneDisunity.Unity.Objects;
+using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Hearthstone
 {
@@ -10,6 +11,8 @@ namespace HearthstoneDisunity.Hearthstone
         public float Scale { get; set; }
         public float Transition { get; set; }
         public float ValueRange { get; set; }
+        public Vector2F TexOffset { get; set; }
+        public Vector2F TexScale { get; set; }
 
         public CardMaterial()
         {
@@ -20,7 +23,7 @@ namespace HearthstoneDisunity.Hearthstone
             Name = mat.Name;
             foreach (var p in mat.Floats)
             {
-                switch (p.Key.ToLowerInvariant())
+                switch (p.Key.ToLower())
                 {
                     case "_offsetx":
                         OffsetX = p.Value;
@@ -41,11 +44,20 @@ namespace HearthstoneDisunity.Hearthstone
                         break;
                 }
             }
+
+            foreach (var p in mat.TexEnvs)
+            {
+                if (p.Key.ToLower() == "_maintex")
+                {
+                    TexScale = p.Value.Scale;
+                    TexOffset = p.Value.Offset;
+                }
+            }
         }
 
         public override string ToString()
         {
-            return string.Format("({0}, {1}) {2}", OffsetX, OffsetY, Scale);
+            return string.Format("({0}, {1}) {2} : {3} : {4}", OffsetX, OffsetY, Scale, TexScale, TexOffset);
         }
     }
 }

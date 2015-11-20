@@ -23,6 +23,9 @@ namespace HearthstoneDisunityCLI
 
             switch (command.ToLower())
             {
+                case "text":
+                    ExtractText(fileDir, outDir);
+                    break;
                 case "dump":
                     ExtractRaw(fileDir, outDir);
                     break;
@@ -35,6 +38,19 @@ namespace HearthstoneDisunityCLI
                 default:
                     PrintUsageAndExit();
                     break;
+            }
+        }
+
+        private static void ExtractText(string file, string outDir)
+        {
+            Console.WriteLine("Extracting TextAssets from {0} to {1}", file, outDir);
+            try
+            {
+                Extract.Text(outDir, file);
+            }
+            catch(Exception e)
+            {
+                PrintErrorAndExit(e.Message);
             }
         }
 
