@@ -53,6 +53,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AssetHeaderTest.cs" />
+    <Compile Include="CardDbTest.cs" />
     <Compile Include="ExtractRawTest.cs" />
     <Compile Include="ObjectInfoTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,7 +67,11 @@
       <Name>HearthstoneDisunity</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="data\cardxml.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <None Include="data\cardtextures.unity3d">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

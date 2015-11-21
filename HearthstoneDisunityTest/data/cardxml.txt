@@ -1,0 +1,59 @@
+﻿<CardDefs>
+  <Entity version="2" CardID="CS1h_001">
+    <MasterPower>5f0999b3-52fd-4382-90d4-296de2994e34</MasterPower>
+    <Tag enumID="185" type="String">Lesser Heal</Tag>
+    <Tag enumID="183" type="" value="2" />
+    <Tag enumID="202" type="" value="10" />
+    <Tag enumID="201" type="" value="3" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="203" type="" value="2" />
+    <Tag enumID="48" type="" value="2" />
+    <Tag enumID="251" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Hero Power&lt;/b&gt;
+Restore #2 Health.</Tag>
+    <Power definition="5f0999b3-52fd-4382-90d4-296de2994e34">
+      <PlayRequirement reqID="11" param="" />
+    </Power>
+  </Entity>
+  <Entity version="2" CardID="CS1_042">
+    <Tag enumID="185" type="String">Goldshire Footman</Tag>
+    <Tag enumID="183" type="" value="2" />
+    <Tag enumID="202" type="" value="4" />
+    <Tag enumID="201" type="" value="2" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="48" type="" value="1" />
+    <Tag enumID="47" type="" value="1" />
+    <Tag enumID="45" type="" value="2" />
+    <Tag enumID="251" type="" value="1" />
+    <Tag enumID="184" type="String">&lt;b&gt;Taunt&lt;/b&gt;</Tag>
+    <Tag enumID="268" type="" value="2" />
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Donato Giancola</Tag>
+    <Tag enumID="365" type="String">Unlocked at Paladin Level 57.</Tag>
+    <Tag enumID="351" type="String">If 1/2 minions are all that is defending Goldshire, you would think it would have been overrun years ago.</Tag>
+    <Tag enumID="190" type="" value="1" />
+    <Power definition="54e57583-ce5c-46e3-899a-39bd2181468d" />
+  </Entity>
+  <Entity version="2" CardID="CS1_112">
+    <MasterPower>add8d26e-2838-4f10-97f4-d2a9312b79b5</MasterPower>
+    <Tag enumID="185" type="String">Holy Nova</Tag>
+    <Tag enumID="183" type="" value="2" />
+    <Tag enumID="202" type="" value="5" />
+    <Tag enumID="201" type="" value="3" />
+    <Tag enumID="199" type="" value="6" />
+    <Tag enumID="203" type="" value="1" />
+    <Tag enumID="48" type="" value="5" />
+    <Tag enumID="251" type="" value="5" />
+    <Tag enumID="184" type="String">Deal $2 damage to all enemies. Restore #2 Health to all friendly characters.</Tag>
+    <Tag enumID="321" type="" value="1" />
+    <Tag enumID="330" type="" value="0" />
+    <Tag enumID="331" type="" value="0" />
+    <Tag enumID="342" type="String">Luca Zontini</Tag>
+    <Tag enumID="351" type="String">If the Holy Light forsakes you, good luck casting this spell.  Also, you're probably a jerk.</Tag>
+    <Tag enumID="364" type="String">Unlocked at Level 6.</Tag>
+    <Tag enumID="365" type="String">Unlocked at Level 45.</Tag>
+    <Power definition="add8d26e-2838-4f10-97f4-d2a9312b79b5" />
+  </Entity>
+</CardDefs>
