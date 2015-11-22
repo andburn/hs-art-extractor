@@ -25,28 +25,31 @@ namespace HearthstoneDisunity.Hearthstone
 
         public override bool Equals(object obj)
         {
-            if(obj == null || GetType() != obj.GetType())
+            if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
-
             Card c = (Card)obj;
-            return c.Name.ToLower().Equals(Name.ToLower());
+            return c.Id.ToLower().Equals(Id.ToLower());
         }
 
         public override int GetHashCode()
         {
             return Id.GetHashCode() ^ Name.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Format("{1} [{0}] ({2})", Id, Name, Type);
+        }
     }
 
     public enum CardTag
     {
-        CARDNAME = 185,        
+        CARDNAME = 185,
         CARDTYPE = 202,
         COLLECTIBLE = 321
     }
-
 
     public enum CardType
     {

@@ -23,23 +23,29 @@ namespace HearthstoneDisunity.Hearthstone
             Name = mat.Name;
             foreach (var p in mat.Floats)
             {
+                // TODO: check, is more than this now?
                 switch (p.Key.ToLower())
                 {
                     case "_offsetx":
                         OffsetX = p.Value;
                         break;
+
                     case "_offsety":
                         OffsetY = p.Value;
                         break;
+
                     case "_scale":
                         Scale = p.Value;
                         break;
+
                     case "_transition":
                         Transition = p.Value;
                         break;
+
                     case "_valuerange":
                         ValueRange = p.Value;
                         break;
+
                     default:
                         break;
                 }

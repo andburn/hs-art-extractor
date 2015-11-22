@@ -53,5 +53,16 @@ namespace HearthstoneDisunityTest
             Assert.AreEqual(CardType.HERO_POWER, _cards["CS1h_001"].Type);
         }
 
+        [TestMethod]
+        public void CardEquality()
+        {
+            Assert.AreEqual(new Card("CS1_112", "Holy Nova", CardType.ABILITY), _cards["CS1_112"]);
+        }
+
+        [TestMethod]
+        public void CardEqualityOperator()
+        {
+            Assert.IsFalse(new Card("CS1_112", "Holy Nova", CardType.ABILITY) == _cards["CS1_112"]);
+        }
     }
 }
