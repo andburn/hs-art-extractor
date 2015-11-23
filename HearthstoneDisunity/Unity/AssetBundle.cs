@@ -2,247 +2,208 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using HearthstoneDisunity.Util;
 using HearthstoneDisunity.Unity.Objects;
-using HearthstoneDisunity.Hearthstone;
+using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Unity
 {
-	public class AssetBundle
-	{
-		public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
-		public AssetBundleHeader Header { get; private set; }
-		public AssetBundleEntry BundleEntry { get; private set; }
-		public AssetHeader AssetHeader { get; private set; }
-		public TypeTree TypeTree { get; private set; }
-		public ObjectInfoTable InfoTable { get; private set; }
-		public string File { get; private set; }
-		public long DataOffset { get; private set; }
+    public class AssetBundle
+    {
+        public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
+        public AssetBundleHeader Header { get; private set; }
+        public AssetBundleEntry BundleEntry { get; private set; }
+        public AssetHeader AssetHeader { get; private set; }
+        public TypeTree TypeTree { get; private set; }
+        public ObjectInfoTable InfoTable { get; private set; }
+        public string File { get; private set; }
+        public long DataOffset { get; private set; }
 
-		public AssetBundle(string file)
-		{
-			File = file;
-			Read(File);
-		}
+        public AssetBundle(string file)
+        {
+            File = file;
+            Read(File);
+        }
 
-		public void ExtractRaw(string dir)
-		{
-			try
-			{
-				using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
-				{
-					foreach (var pair in ObjectMap)
-					{
-						var info = pair.Value;
-						var subdir = UnityClasses.Get(info.ClassId);
-						Directory.CreateDirectory(Path.Combine(dir, subdir));
-						b.Seek(info.Offset + DataOffset);
+        public void ExtractRaw(string dir)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
+                {
+                    foreach (var pair in ObjectMap)
+                    {
+                        var info = pair.Value;
+                        var subdir = UnityClasses.Get(info.ClassId);
+                        Directory.CreateDirectory(Path.Combine(dir, subdir));
+                        b.Seek(info.Offset + DataOffset);
 
-						byte[] data = new byte[info.Length];
-						// TODO: can there be loss of precision here, long to int?
-						Debug.Assert(info.Length <= int.MaxValue);
-						b.Read(data, 0, (int)info.Length);
+                        byte[] data = new byte[info.Length];
+                        // TODO: can there be loss of precision here, long to int?
+                        Debug.Assert(info.Length <= int.MaxValue);
+                        b.Read(data, 0, (int)info.Length);
 
-						var outFile = Path.Combine(dir, subdir, pair.Key + ".bin");
-						System.IO.File.WriteAllBytes(outFile, data);
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}             
-		}
+                        var outFile = Path.Combine(dir, subdir, pair.Key + ".bin");
+                        System.IO.File.WriteAllBytes(outFile, data);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
-		public void ExtractText(string dir)
-		{
-			try
-			{
-				using(BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
-				{
-					foreach(var pair in ObjectMap)
-					{
-						var info = pair.Value;
-						b.Seek(info.Offset + DataOffset);
+        public void ExtractText(string dir)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
+                {
+                    foreach (var pair in ObjectMap)
+                    {
+                        var info = pair.Value;
+                        b.Seek(info.Offset + DataOffset);
 
-						byte[] data = new byte[info.Length];
-						// TODO: can there be loss of precision here, long to int?
-						Debug.Assert(info.Length <= int.MaxValue);
-						b.Read(data, 0, (int)info.Length);
+                        byte[] data = new byte[info.Length];
+                        // TODO: can there be loss of precision here, long to int?
+                        Debug.Assert(info.Length <= int.MaxValue);
+                        b.Read(data, 0, (int)info.Length);
 
-						var block = BinaryFileReader.CreateFromByteArray(data);
-						// TODO: enum for class ids
-						if(info.ClassId == 49)
-						{
-							var text = new TextAsset(block);
-							text.Save(dir);
-						}
-					}
-				}
-			}
-			catch(Exception e)
-			{
-				throw e;
-			}
-		}
+                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        // TODO: enum for class ids
+                        if (info.ClassId == 49)
+                        {
+                            var text = new TextAsset(block);
+                            text.Save(dir);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
-		public void ExtractCardTextures(Dictionary<string, List<CardArt>> artInfo, string dir)
-		{
-			try
-			{
-				using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
-				{
-					foreach (var pair in ObjectMap)
-					{
-						var info = pair.Value;
-						//var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
-						// TODO: don't create dir if not supported type
-						//Directory.CreateDirectory(subdir);
+        public void ExtractFull(string dir)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
+                {
+                    foreach (var pair in ObjectMap)
+                    {
+                        var info = pair.Value;
+                        var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
+                        // TODO: don't create dir if not supported type
+                        Directory.CreateDirectory(subdir);
 
-						b.Seek(info.Offset + DataOffset);
-						byte[] data = new byte[info.Length];
-						// TODO: can there be loss of precision here, long to int?
-						Debug.Assert(info.Length <= int.MaxValue);
-						b.Read(data, 0, (int)info.Length);
-						var block = BinaryFileReader.CreateFromByteArray(data);
-						if (info.ClassId == 28)
-						{
-							var tex = new Texture2D(block);
-							if (artInfo.ContainsKey(tex.Name))
-							{
-								//Console.WriteLine("Tex: " + tex.Name);
-								var list = artInfo[tex.Name];
-								//Console.WriteLine(list.Count);
-								foreach (var c in list)
-								{
-									//Console.WriteLine(c.Name);
-									tex.Save(dir, c.Name);
-								}
-							}                            
-						}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
+                        b.Seek(info.Offset + DataOffset);
+                        byte[] data = new byte[info.Length];
+                        // TODO: can there be loss of precision here, long to int?
+                        Debug.Assert(info.Length <= int.MaxValue);
+                        b.Read(data, 0, (int)info.Length);
+                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        switch (info.ClassId)
+                        {
+                            case 1: // GameObject
+                                new GameObject(block).Save(subdir, pair.Key.ToString());
+                                break;
 
-		public void ExtractFull(string dir)
-		{
-			try
-			{
-				using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
-				{
-					foreach (var pair in ObjectMap)
-					{
-						var info = pair.Value;
-						var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
-						// TODO: don't create dir if not supported type
-						Directory.CreateDirectory(subdir);
+                            case 4: // Transform
+                                new Transform(block).Save(subdir, pair.Key.ToString());
+                                break;
 
-						b.Seek(info.Offset + DataOffset);
-						byte[] data = new byte[info.Length];
-						// TODO: can there be loss of precision here, long to int?
-						Debug.Assert(info.Length <= int.MaxValue);
-						b.Read(data, 0, (int)info.Length);
-						var block = BinaryFileReader.CreateFromByteArray(data);
-						switch (info.ClassId)
-						{
-							case 1: // GameObject
-								new GameObject(block).Save(subdir, pair.Key.ToString());
-								break;
-							case 4: // Transform
-								new Transform(block).Save(subdir, pair.Key.ToString());
-								break;
-							case 21: // Material
-								new Material(block).Save(subdir, pair.Key.ToString());
-								break;
-							case 28: // Texture2D
-								new Texture2D(block).Save(subdir);
-								break;
-							case 49: // TextAsset
-								new TextAsset(block).Save(subdir);
-								break;
-							case 114: // MonoBehaviour
-								// TODO: not only carddef obviously
-								new CardDef(block).Save(subdir, pair.Key.ToString());
-								break;
-							default:
-								break;
-						}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
+                            case 21: // Material
+                                new Material(block).Save(subdir, pair.Key.ToString());
+                                break;
 
-		private void Read(string file)
-		{
-			try
-			{
-				using(BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(file, FileMode.Open)))
-				{
-					b.BigEndian = true;
+                            case 28: // Texture2D
+                                new Texture2D(block).Save(subdir);
+                                break;
 
-					Header = new AssetBundleHeader(b);
-					Console.WriteLine(Header);
+                            case 49: // TextAsset
+                                new TextAsset(block).Save(subdir);
+                                break;
 
-					if(Header.NumberOfFiles != 1)
-					{
-						// TODO: handle elsewhere?                        
-						//throw new AssetException("Should be exactly one file in HS Asset Bundle");
-						// shared now has 2 files :)
-						// probably get away with ignoring second?
-						Console.WriteLine("Warning: " + file + " has " + Header.NumberOfFiles + " bundle files");
-					}
+                            case 114: // MonoBehaviour
+                                      // TODO: not only carddef obviously
+                                new CardDef(block).Save(subdir, pair.Key.ToString());
+                                break;
 
-					BundleEntry = new AssetBundleEntry(b);
-					Console.WriteLine(BundleEntry);
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
-					// move to bundle file offset
-					b.Seek(Header.HeaderSize + BundleEntry.Offset);
+        private void Read(string file)
+        {
+            try
+            {
+                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(file, FileMode.Open)))
+                {
+                    b.BigEndian = true;
 
-					AssetHeader = new AssetHeader(b);
-					Console.WriteLine(AssetHeader);
-					
-					// TODO: references? UnityVersion object
-					var version = AssetHeader.AssetVersion;
-					
-					// should be little endian
-					b.BigEndian = AssetHeader.Endianness == 1 ? true : false;
+                    Header = new AssetBundleHeader(b);
+                    Console.WriteLine(Header);
 
-					if(version < 9)
-						b.Seek(AssetHeader.FileSize - AssetHeader.MetadataSize + 1);
+                    if (Header.NumberOfFiles != 1)
+                    {
+                        // TODO: handle elsewhere?
+                        //throw new AssetException("Should be exactly one file in HS Asset Bundle");
+                        // shared now has 2 files :)
+                        // probably get away with ignoring second?
+                        Console.WriteLine("Warning: " + file + " has " + Header.NumberOfFiles + " bundle files");
+                    }
 
-					// read the bundle metadata, classes and attributes
-					TypeTree = new TypeTree(version);
-					TypeTree.Read(b);
+                    BundleEntry = new AssetBundleEntry(b);
+                    Console.WriteLine(BundleEntry);
 
-					// read the asset objects info and offsets
-					InfoTable = new ObjectInfoTable(version);
-					InfoTable.Read(b);
-					// assign
-					ObjectMap = InfoTable.InfoMap;
+                    // move to bundle file offset
+                    b.Seek(Header.HeaderSize + BundleEntry.Offset);
 
-					// Skip this not using this for now
-					//FileIdentifierTable fi = new FileIdentifierTable(version);
-					//fi.Read(b);
+                    AssetHeader = new AssetHeader(b);
+                    Console.WriteLine(AssetHeader);
 
-					DataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
+                    // TODO: references? UnityVersion object
+                    var version = AssetHeader.AssetVersion;
 
-					// LoadObjects(InfoTable.InfoMap, TypeTree.TypeMap, b);
+                    // should be little endian
+                    b.BigEndian = AssetHeader.Endianness == 1 ? true : false;
 
-				}
-			}
-			catch(Exception e)
-			{
-				throw e;
-			}
-		}      
-	}
+                    if (version < 9)
+                        b.Seek(AssetHeader.FileSize - AssetHeader.MetadataSize + 1);
+
+                    // read the bundle metadata, classes and attributes
+                    TypeTree = new TypeTree(version);
+                    TypeTree.Read(b);
+
+                    // read the asset objects info and offsets
+                    InfoTable = new ObjectInfoTable(version);
+                    InfoTable.Read(b);
+                    // assign
+                    ObjectMap = InfoTable.InfoMap;
+
+                    // Skip this not using this for now
+                    //FileIdentifierTable fi = new FileIdentifierTable(version);
+                    //fi.Read(b);
+
+                    DataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
+
+                    // LoadObjects(InfoTable.InfoMap, TypeTree.TypeMap, b);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+    }
 }

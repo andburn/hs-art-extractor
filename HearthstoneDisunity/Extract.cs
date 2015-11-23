@@ -125,7 +125,8 @@ namespace HearthstoneDisunity
             foreach (var tf in textureFiles)
             {
                 AssetBundle ab = new AssetBundle(tf);
-                ab.ExtractCardTextures(map, outDir);
+                TexturesBundle tb = new TexturesBundle(ab, map);
+                tb.Extract(outDir);
             }
         }
     }

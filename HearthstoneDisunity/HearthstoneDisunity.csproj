@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Extract.cs" />
     <Compile Include="Hearthstone\Bundle\CardsBundle.cs" />
+    <Compile Include="Hearthstone\Bundle\TexturesBundle.cs" />
     <Compile Include="Hearthstone\Card.cs" />
     <Compile Include="Hearthstone\CardArt.cs" />
     <Compile Include="Hearthstone\CardMaterial.cs" />
