@@ -15,20 +15,20 @@ namespace HearthstoneDisunity.Unity
         public AssetHeader AssetHeader { get; private set; }
         public TypeTree TypeTree { get; private set; }
         public ObjectInfoTable InfoTable { get; private set; }
-        public string File { get; private set; }
+        public string BundleFile { get; private set; }
         public long DataOffset { get; private set; }
 
         public AssetBundle(string file)
         {
-            File = file;
-            Read(File);
+            BundleFile = file;
+            Read(BundleFile);
         }
 
         public void ExtractRaw(string dir)
         {
             try
             {
-                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(BundleFile, FileMode.Open)))
                 {
                     foreach (var pair in ObjectMap)
                     {
@@ -57,7 +57,7 @@ namespace HearthstoneDisunity.Unity
         {
             try
             {
-                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(BundleFile, FileMode.Open)))
                 {
                     foreach (var pair in ObjectMap)
                     {
@@ -69,7 +69,7 @@ namespace HearthstoneDisunity.Unity
                         Debug.Assert(info.Length <= int.MaxValue);
                         b.Read(data, 0, (int)info.Length);
 
-                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        var block = BinaryBlock.CreateFromByteArray(data);
                         // TODO: enum for class ids
                         if (info.ClassId == 49)
                         {
@@ -89,7 +89,7 @@ namespace HearthstoneDisunity.Unity
         {
             try
             {
-                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(File, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(BundleFile, FileMode.Open)))
                 {
                     foreach (var pair in ObjectMap)
                     {
@@ -103,7 +103,7 @@ namespace HearthstoneDisunity.Unity
                         // TODO: can there be loss of precision here, long to int?
                         Debug.Assert(info.Length <= int.MaxValue);
                         b.Read(data, 0, (int)info.Length);
-                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        var block = BinaryBlock.CreateFromByteArray(data);
                         switch (info.ClassId)
                         {
                             case 1: // GameObject
@@ -147,7 +147,7 @@ namespace HearthstoneDisunity.Unity
         {
             try
             {
-                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(file, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(file, FileMode.Open)))
                 {
                     b.BigEndian = true;
 

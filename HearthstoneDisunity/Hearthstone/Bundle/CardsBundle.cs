@@ -41,11 +41,11 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                 var id = pair.Key;
                 Debug.Assert(!fileMap.ContainsKey(id));
 
-                //var data = BinaryFileReader.CreateFromByteArray(objectData.Buffer);
+                //var data = BinaryBlock.CreateFromByteArray(objectData.Buffer);
                 try
                 {
                     // TODO: open/close for every object! just seek
-                    using (BinaryFileReader b = new BinaryFileReader(File.Open(_bundle.File, FileMode.Open)))
+                    using (BinaryBlock b = new BinaryBlock(File.Open(_bundle.BundleFile, FileMode.Open)))
                     {
                         b.Seek(info.Offset + _bundle.DataOffset);
                         switch (info.ClassId)

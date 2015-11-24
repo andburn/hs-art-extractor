@@ -22,7 +22,7 @@ namespace HearthstoneDisunity.Util
 			_version = version;
 		}
 
-		public void Read(BinaryFileReader b)
+		public void Read(BinaryBlock b)
 		{
 			int entries = b.ReadInt();
 			for(int i = 0; i < entries; i++)
@@ -56,7 +56,7 @@ namespace HearthstoneDisunity.Util
 			_version = version;
 		}
 
-		public void Read(BinaryFileReader b)
+		public void Read(BinaryBlock b)
 		{
 			if(_version > 5)
 			{
@@ -67,7 +67,7 @@ namespace HearthstoneDisunity.Util
 			FilePath = b.ReadStringToNull();
 		}
 
-		private void ReadGuid(BinaryFileReader b)
+		private void ReadGuid(BinaryBlock b)
 		{
 			bool order = b.BigEndian;
 			b.BigEndian = true;

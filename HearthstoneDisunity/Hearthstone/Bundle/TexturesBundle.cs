@@ -25,7 +25,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
         {
             try
             {
-                using (BinaryFileReader b = new BinaryFileReader(System.IO.File.Open(_bundle.File, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(_bundle.BundleFile, FileMode.Open)))
                 {
                     foreach (var pair in _bundleObjects)
                     {
@@ -39,7 +39,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                         // TODO: can there be loss of precision here, long to int?
                         Debug.Assert(info.Length <= int.MaxValue);
                         b.Read(data, 0, (int)info.Length);
-                        var block = BinaryFileReader.CreateFromByteArray(data);
+                        var block = BinaryBlock.CreateFromByteArray(data);
                         if (info.ClassId == 28)
                         {
                             var tex = new Texture2D(block);

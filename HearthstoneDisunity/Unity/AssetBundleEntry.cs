@@ -9,7 +9,7 @@ namespace HearthstoneDisunity.Unity
 		public long Offset { get; set; }
 		public long Size { get; set; }
 
-		public AssetBundleEntry(BinaryFileReader b)
+		public AssetBundleEntry(BinaryBlock b)
 		{
 			Name = b.ReadStringToNull();
 			Offset = b.ReadUnsignedInt();

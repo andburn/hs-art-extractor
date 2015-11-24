@@ -14,7 +14,7 @@ namespace HearthstoneDisunity.Unity.Objects
         public int Tag { get; private set; }
         public bool IsActive { get; private set; }
 
-        public GameObject(BinaryFileReader b)
+        public GameObject(BinaryBlock b)
         {
             _components = new List<FilePointerWithClass>();
             var size = b.ReadInt();

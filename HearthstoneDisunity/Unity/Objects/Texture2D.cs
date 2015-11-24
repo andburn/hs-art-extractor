@@ -39,10 +39,10 @@ namespace HearthstoneDisunity.Unity.Objects
         public int MipBias { get; set; }
         public int WrapMode { get; set; }
 
-        private BinaryFileReader _buffer;
+        private BinaryBlock _buffer;
         private long _dataPos;
 
-        public Texture2D(BinaryFileReader b)
+        public Texture2D(BinaryBlock b)
         {
             _buffer = b;
             var nameLen = b.ReadInt();
@@ -321,7 +321,7 @@ namespace HearthstoneDisunity.Unity.Objects
 
         private void convertToRGBA32()
         {
-            BinaryFileReader imageBufferNew;
+            BinaryBlock imageBufferNew;
             if (Format == TextureFormat.RGB565)
             {
                 // convert 16 bit RGB to 24 bit
@@ -365,7 +365,7 @@ namespace HearthstoneDisunity.Unity.Objects
 
                 //imageBufferNew.rewind();
                 //imageBuffer = imageBufferNew;
-                imageBufferNew = new BinaryFileReader(ms);
+                imageBufferNew = new BinaryBlock(ms);
                 imageBufferNew.BaseStream.Position = 0;
             }
             else

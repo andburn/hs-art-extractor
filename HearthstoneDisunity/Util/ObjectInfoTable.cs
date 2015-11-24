@@ -16,7 +16,7 @@ namespace HearthstoneDisunity.Util
 			_version = version;
 		}
 
-		public void Read(BinaryFileReader b)
+		public void Read(BinaryBlock b)
 		{
 			_infoMap = new Dictionary<long, ObjectInfo>();
 

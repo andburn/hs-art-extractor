@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace HearthstoneDisunity.Util
 {
-    public class BinaryFileReader : BinaryReader
+    public class BinaryBlock : BinaryReader
     {
         private bool _bigEndian;
 
-        public BinaryFileReader(Stream input)
+        public BinaryBlock(Stream input)
             : base(input)
         {
             _bigEndian = false;
         }
 
-        public static BinaryFileReader CreateFromByteArray(byte[] buffer)
+        public static BinaryBlock CreateFromByteArray(byte[] buffer)
         {
             MemoryStream ms = new MemoryStream(buffer);
-            return new BinaryFileReader(ms);
+            return new BinaryBlock(ms);
         }
 
         public bool BigEndian
@@ -29,7 +30,14 @@ namespace HearthstoneDisunity.Util
 
         public void Seek(long offset)
         {
-            this.BaseStream.Seek(offset, SeekOrigin.Begin);
+            try
+            {
+                BaseStream.Seek(offset, SeekOrigin.Begin);
+            }
+            catch (Exception)
+            {
+                // TODO: offset beyond eof check
+            }
         }
 
         public short ReadShort()
@@ -138,7 +146,7 @@ namespace HearthstoneDisunity.Util
         }
 
         // TODO: int enough?
-        public BinaryFileReader CopyBlock(int position, int length)
+        public BinaryBlock CopyBlock(int position, int length)
         {
             byte[] buffer = new byte[length];
             var pos = BaseStream.Position;
@@ -146,7 +154,7 @@ namespace HearthstoneDisunity.Util
             Read(buffer, 0, length);
             MemoryStream ms = new MemoryStream(buffer);
             BaseStream.Seek(pos, SeekOrigin.Begin);
-            return new BinaryFileReader(ms);
+            return new BinaryBlock(ms);
         }
 
         public string ReadFixedString(int length)

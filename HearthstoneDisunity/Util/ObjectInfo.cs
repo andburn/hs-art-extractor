@@ -19,7 +19,7 @@ namespace HearthstoneDisunity.Util
 			_version = version;
 		}
 
-		public void Read(BinaryFileReader b)
+		public void Read(BinaryBlock b)
 		{
 			Offset = b.ReadUnsignedInt();
 			Length = b.ReadUnsignedInt();

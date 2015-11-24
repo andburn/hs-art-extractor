@@ -13,7 +13,7 @@ namespace HearthstoneDisunity.Unity.Objects
         public string Name { get; set; }
         private byte[] _text;
 
-        public TextAsset(BinaryFileReader b)
+        public TextAsset(BinaryBlock b)
         {
             var nameLen = b.ReadInt();
             Name = b.ReadFixedString(nameLen);

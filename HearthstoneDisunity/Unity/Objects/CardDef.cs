@@ -17,7 +17,7 @@ namespace HearthstoneDisunity.Unity.Objects
         public FilePointer HistoryTileHalfPortrait { get; private set; }
         public FilePointer HistoryTileFullPortrait { get; private set; }
 
-        public CardDef(BinaryFileReader b)
+        public CardDef(BinaryBlock b)
         {
             GameObject = new FilePointer(b.ReadInt(), b.ReadLong());
             Enabled = b.ReadUnsignedByte() == 1 ? true : false;

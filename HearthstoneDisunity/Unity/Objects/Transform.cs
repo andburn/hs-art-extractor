@@ -13,7 +13,7 @@ namespace HearthstoneDisunity.Unity.Objects
         public List<FilePointer> Children { get; private set; }
         public FilePointer Parent { get; private set; }
 
-        public Transform(BinaryFileReader b)
+        public Transform(BinaryBlock b)
         {
             GameObject = new FilePointer(b.ReadInt(), b.ReadLong());
             LocalRotation = new QuaternionF(b.ReadFloat(), b.ReadFloat(), b.ReadFloat(), b.ReadFloat());

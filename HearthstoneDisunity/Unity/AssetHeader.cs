@@ -14,7 +14,7 @@ namespace HearthstoneDisunity.Unity
 
 		public int AssetVersion { get; set; }
 
-		public AssetHeader(BinaryFileReader b)
+		public AssetHeader(BinaryBlock b)
 		{
 			MetadataSize = b.ReadInt();
 			FileSize = b.ReadUnsignedInt();

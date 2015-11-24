@@ -12,7 +12,7 @@ namespace HearthstoneDisunity.Unity
 			_version = version;
 		}
 
-		public void Read(BinaryFileReader b, AssetTypeNode node)
+		public void Read(BinaryBlock b, AssetTypeNode node)
 		{
 			if(_version > 13)
 			{
@@ -24,7 +24,7 @@ namespace HearthstoneDisunity.Unity
 			}
 		}
 
-		private void ReadNew(BinaryFileReader b, AssetTypeNode node, StringTable table)
+		private void ReadNew(BinaryBlock b, AssetTypeNode node, StringTable table)
 		{
 			int numFields = b.ReadInt();
 			int stringTableLen = b.ReadInt();
@@ -95,7 +95,7 @@ namespace HearthstoneDisunity.Unity
 			}
 		}
 
-		private void ReadOld(BinaryFileReader b, AssetTypeNode node, int level)
+		private void ReadOld(BinaryBlock b, AssetTypeNode node, int level)
 		{
 			AssetType type = new AssetType(_version);
 			type.Read(b);

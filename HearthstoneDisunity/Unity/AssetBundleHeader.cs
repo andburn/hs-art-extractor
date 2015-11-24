@@ -43,7 +43,7 @@ namespace HearthstoneDisunity.Unity
         // the number of files in bundle
         public long NumberOfFiles { get; private set; }
 
-        public AssetBundleHeader(BinaryFileReader b)
+        public AssetBundleHeader(BinaryBlock b)
 		{
 			Signature = b.ReadStringToNull();
 			StreamVersion = b.ReadInt();

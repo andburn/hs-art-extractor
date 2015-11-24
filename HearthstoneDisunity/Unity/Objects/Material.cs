@@ -20,7 +20,7 @@ namespace HearthstoneDisunity.Unity.Objects
         public Dictionary<string, float> Floats { get; set; }
         public Dictionary<string, ColorRGBA> Colors { get; set; }
 
-        public Material(BinaryFileReader b)
+        public Material(BinaryBlock b)
         {
             int size = b.ReadInt();
             Name = b.ReadFixedString(size);

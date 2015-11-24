@@ -36,7 +36,7 @@ namespace HearthstoneDisunity.Unity
 			set { _dataType = value; }
 		}
 
-		public void Read(BinaryFileReader b)
+		public void Read(BinaryBlock b)
 		{
 			if(_assetVersion > 13)
 			{

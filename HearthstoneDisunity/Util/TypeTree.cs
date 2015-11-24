@@ -29,7 +29,7 @@ namespace HearthstoneDisunity.Util
 			}
 		}
 
-		public void Read(BinaryFileReader b)
+		public void Read(BinaryBlock b)
 		{
 			if(_version > 6)
 			{
