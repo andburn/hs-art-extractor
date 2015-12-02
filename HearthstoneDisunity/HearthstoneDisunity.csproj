@@ -80,6 +80,7 @@
     <Compile Include="Util\DebugUtils.cs" />
     <Compile Include="Util\FileIdentifierTable.cs" />
     <Compile Include="Util\FilePointer.cs" />
+    <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\ObjectData.cs" />
     <Compile Include="Util\ObjectInfo.cs" />
     <Compile Include="Util\ObjectInfoTable.cs" />
