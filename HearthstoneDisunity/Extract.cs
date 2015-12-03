@@ -5,11 +5,18 @@ using HearthstoneDisunity.Hearthstone;
 using HearthstoneDisunity.Hearthstone.Bundle;
 using HearthstoneDisunity.Hearthstone.Xml;
 using HearthstoneDisunity.Unity;
+using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity
 {
     public static class Extract
     {
+        static Extract()
+        {
+            Logger.SetLogLevel(LogLevel.DEBUG);
+            Logger.SetLogLocation(@"E:\Dump\_extract_test_");
+        }
+
         public static void Raw(string outDir, params string[] files)
         {
             if (!Directory.Exists(outDir))

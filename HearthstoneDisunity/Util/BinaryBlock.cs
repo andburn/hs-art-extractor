@@ -24,8 +24,15 @@ namespace HearthstoneDisunity.Util
 
         public bool BigEndian
         {
-            get { return _bigEndian; }
-            set { _bigEndian = value; }
+            get
+            {
+                return _bigEndian;
+            }
+            set
+            {
+                Logger.Log(LogLevel.DEBUG, "Setting BigEndian to {0}", _bigEndian);
+                _bigEndian = value;
+            }
         }
 
         public void Seek(long offset)
