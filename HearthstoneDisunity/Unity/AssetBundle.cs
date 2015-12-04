@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using HearthstoneDisunity.Unity.Objects;
 using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Unity
 {
     public class AssetBundle
     {
-        public Dictionary<long, ObjectInfo> ObjectMap { get; set; }
+        public List<ObjectData> Objects { get; private set; }
+        public Dictionary<long, ObjectInfo> ObjectMap { get; private set; }
+        public long DataOffset { get; private set; }
+        public string BundleFile { get; private set; }
+
         public AssetBundleHeader Header { get; private set; }
         public AssetBundleEntry BundleEntry { get; private set; }
         public AssetHeader AssetHeader { get; private set; }
         public TypeTree TypeTree { get; private set; }
         public ObjectInfoTable InfoTable { get; private set; }
-        public string BundleFile { get; private set; }
-        public long DataOffset { get; private set; }
 
         public AssetBundle(string file)
         {
@@ -24,186 +25,92 @@ namespace HearthstoneDisunity.Unity
             Read(BundleFile);
         }
 
-        public void ExtractRaw(string dir)
-        {
-            try
-            {
-                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(BundleFile, FileMode.Open)))
-                {
-                    foreach (var pair in ObjectMap)
-                    {
-                        var info = pair.Value;
-                        var subdir = UnityClasses.Get(info.ClassId);
-                        Directory.CreateDirectory(Path.Combine(dir, subdir));
-                        b.Seek(info.Offset + DataOffset);
-
-                        byte[] data = new byte[info.Length];
-                        // TODO: can there be loss of precision here, long to int?
-                        Debug.Assert(info.Length <= int.MaxValue);
-                        b.Read(data, 0, (int)info.Length);
-
-                        var outFile = Path.Combine(dir, subdir, pair.Key + ".bin");
-                        System.IO.File.WriteAllBytes(outFile, data);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractText(string dir)
-        {
-            try
-            {
-                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(BundleFile, FileMode.Open)))
-                {
-                    foreach (var pair in ObjectMap)
-                    {
-                        var info = pair.Value;
-                        b.Seek(info.Offset + DataOffset);
-
-                        byte[] data = new byte[info.Length];
-                        // TODO: can there be loss of precision here, long to int?
-                        Debug.Assert(info.Length <= int.MaxValue);
-                        b.Read(data, 0, (int)info.Length);
-
-                        var block = BinaryBlock.CreateFromByteArray(data);
-                        // TODO: enum for class ids
-                        if (info.ClassId == 49)
-                        {
-                            var text = new TextAsset(block);
-                            text.Save(dir);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void ExtractFull(string dir)
-        {
-            try
-            {
-                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(BundleFile, FileMode.Open)))
-                {
-                    foreach (var pair in ObjectMap)
-                    {
-                        var info = pair.Value;
-                        var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
-                        // TODO: don't create dir if not supported type
-                        Directory.CreateDirectory(subdir);
-
-                        b.Seek(info.Offset + DataOffset);
-                        byte[] data = new byte[info.Length];
-                        // TODO: can there be loss of precision here, long to int?
-                        Debug.Assert(info.Length <= int.MaxValue);
-                        b.Read(data, 0, (int)info.Length);
-                        var block = BinaryBlock.CreateFromByteArray(data);
-                        switch (info.ClassId)
-                        {
-                            case 1: // GameObject
-                                new GameObject(block).Save(subdir, pair.Key.ToString());
-                                break;
-
-                            case 4: // Transform
-                                new Transform(block).Save(subdir, pair.Key.ToString());
-                                break;
-
-                            case 21: // Material
-                                new Material(block).Save(subdir, pair.Key.ToString());
-                                break;
-
-                            case 28: // Texture2D
-                                new Texture2D(block).Save(subdir);
-                                break;
-
-                            case 49: // TextAsset
-                                new TextAsset(block).Save(subdir);
-                                break;
-
-                            case 114: // MonoBehaviour
-                                      // TODO: not only carddef obviously
-                                new CardDef(block).Save(subdir, pair.Key.ToString());
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
         private void Read(string file)
         {
+            Logger.Log("Reading " + file);
             try
             {
-                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(file, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(File.Open(file, FileMode.Open)))
                 {
+                    // Use BigEndian for bundle header
                     b.BigEndian = true;
 
+                    // Load the Header info
                     Header = new AssetBundleHeader(b);
-                    Console.WriteLine(Header);
+                    BundleEntry = GetBundleEntry(b, (int)Header.NumberOfFiles);
 
-                    if (Header.NumberOfFiles != 1)
-                    {
-                        // TODO: handle elsewhere?
-                        //throw new AssetException("Should be exactly one file in HS Asset Bundle");
-                        // shared now has 2 files :)
-                        // probably get away with ignoring second?
-                        Console.WriteLine("Warning: " + file + " has " + Header.NumberOfFiles + " bundle files");
-                    }
-
-                    BundleEntry = new AssetBundleEntry(b);
-                    Console.WriteLine(BundleEntry);
-
-                    // move to bundle file offset
+                    // Move to bundle file offset
                     b.Seek(Header.HeaderSize + BundleEntry.Offset);
 
                     AssetHeader = new AssetHeader(b);
-                    Console.WriteLine(AssetHeader);
+                    Logger.Log(LogLevel.DEBUG, AssetHeader);
 
                     // TODO: references? UnityVersion object
                     var version = AssetHeader.AssetVersion;
 
-                    // should be little endian
+                    // Should be LittleEndian for assets
                     b.BigEndian = AssetHeader.Endianness == 1 ? true : false;
+                    Debug.Assert(b.BigEndian == false);
 
+                    // For older unity versions specify header size
                     if (version < 9)
                         b.Seek(AssetHeader.FileSize - AssetHeader.MetadataSize + 1);
 
-                    // read the bundle metadata, classes and attributes
+                    // Read the bundle metadata, classes and attributes
+                    // NOTE: not actually using directly, keeping to keep binary position correct
                     TypeTree = new TypeTree(version);
                     TypeTree.Read(b);
 
-                    // read the asset objects info and offsets
+                    // Read the asset objects info and offsets
                     InfoTable = new ObjectInfoTable(version);
                     InfoTable.Read(b);
-                    // assign
-                    ObjectMap = InfoTable.InfoMap;
 
-                    // Skip this not using this for now
-                    //FileIdentifierTable fi = new FileIdentifierTable(version);
-                    //fi.Read(b);
+                    // NOTE: FileIdentifierTable stuff would go here, but not using it for now
 
+                    // Gather the asset objects plus data together
+                    Objects = LoadObjects(b, InfoTable.InfoMap);
+                    // Assign some properties
                     DataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
-
-                    // LoadObjects(InfoTable.InfoMap, TypeTree.TypeMap, b);
+                    ObjectMap = InfoTable.InfoMap;
                 }
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
+
+        private List<ObjectData> LoadObjects(BinaryBlock b, Dictionary<long, ObjectInfo> infoTable)
+        {
+            var objects = new List<ObjectData>();
+            foreach (var pair in infoTable)
+            {
+                var id = pair.Key;
+                var info = pair.Value;
+
+                byte[] buffer = new byte[info.Length];
+                b.Seek(info.Offset + DataOffset);
+                // TODO: should add eof checks
+                Debug.Assert(info.Length <= int.MaxValue);
+                b.Read(buffer, 0, (int)info.Length);
+
+                ObjectData data = new ObjectData(id);
+                data.Info = info;
+                data.Buffer = buffer;
+
+                objects.Add(data);
+            }
+            return objects;
+        }
+
+        private AssetBundleEntry GetBundleEntry(BinaryBlock b, int count)
+        {
+            Logger.Log(LogLevel.DEBUG, "{0} bundle entries found", count);
+            // NOTE: for HS the first bundle is the one required
+            if (count > 0)
+                return new AssetBundleEntry(b);
+            else
+                throw new AssetException("No bundle entries found in " + BundleFile);
         }
     }
 }
