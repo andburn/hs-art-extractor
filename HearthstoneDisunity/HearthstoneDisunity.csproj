@@ -56,6 +56,7 @@
     <Compile Include="Image\TGAHeader.cs" />
     <Compile Include="Image\TGAReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unity\Extract\TextureExtractor.cs" />
     <Compile Include="Unity\AssetBundleEntry.cs" />
     <Compile Include="Unity\AssetBundleHeader.cs" />
     <Compile Include="Unity\AssetBundle.cs" />
@@ -65,6 +66,9 @@
     <Compile Include="Unity\AssetTypeNode.cs" />
     <Compile Include="Unity\AssetTypeReader.cs" />
     <Compile Include="Unity\BaseClass.cs" />
+    <Compile Include="Unity\Extract\IExtractor.cs" />
+    <Compile Include="Unity\Extract\RawExtractor.cs" />
+    <Compile Include="Unity\Extract\TextExtractor.cs" />
     <Compile Include="Unity\FieldNode.cs" />
     <Compile Include="Unity\Objects\CardDef.cs" />
     <Compile Include="Unity\Objects\GameObject.cs" />
@@ -74,7 +78,7 @@
     <Compile Include="Unity\Objects\Transform.cs" />
     <Compile Include="Unity\Objects\UnityTexEnv.cs" />
     <Compile Include="Unity\Objects\UnityHash128.cs" />
-    <Compile Include="Unity\UnityClasses.cs" />
+    <Compile Include="Unity\UnityClass.cs" />
     <Compile Include="Util\BinaryBlock.cs" />
     <Compile Include="Util\ColorRGBA.cs" />
     <Compile Include="Util\DebugUtils.cs" />

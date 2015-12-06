@@ -12,6 +12,7 @@ namespace HearthstoneDisunity.Unity
         public Dictionary<long, ObjectInfo> ObjectMap { get; private set; }
         public long DataOffset { get; private set; }
         public string BundleFile { get; private set; }
+        public string BundleFileName { get; private set; }
 
         public AssetBundleHeader Header { get; private set; }
         public AssetBundleEntry BundleEntry { get; private set; }
@@ -22,6 +23,7 @@ namespace HearthstoneDisunity.Unity
         public AssetBundle(string file)
         {
             BundleFile = file;
+            BundleFileName = StringUtils.GetFilenameNoExt(file);
             Read(BundleFile);
         }
 
@@ -67,11 +69,11 @@ namespace HearthstoneDisunity.Unity
 
                     // NOTE: FileIdentifierTable stuff would go here, but not using it for now
 
-                    // Gather the asset objects plus data together
-                    Objects = LoadObjects(b, InfoTable.InfoMap);
                     // Assign some properties
                     DataOffset = AssetHeader.DataOffset + Header.DataHeaderSize + Header.HeaderSize;
                     ObjectMap = InfoTable.InfoMap;
+                    // Gather the asset objects plus data together
+                    Objects = LoadObjects(b);
                 }
             }
             catch (Exception e)
@@ -80,10 +82,10 @@ namespace HearthstoneDisunity.Unity
             }
         }
 
-        private List<ObjectData> LoadObjects(BinaryBlock b, Dictionary<long, ObjectInfo> infoTable)
+        private List<ObjectData> LoadObjects(BinaryBlock b)
         {
             var objects = new List<ObjectData>();
-            foreach (var pair in infoTable)
+            foreach (var pair in ObjectMap)
             {
                 var id = pair.Key;
                 var info = pair.Value;

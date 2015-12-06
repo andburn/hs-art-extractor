@@ -30,7 +30,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                     foreach (var pair in _bundleObjects)
                     {
                         var info = pair.Value;
-                        //var subdir = Path.Combine(dir, UnityClasses.Get(info.ClassId));
+                        //var subdir = Path.Combine(dir, (UnityClass)info.ClassId);
                         // TODO: don't create dir if not supported type
                         //Directory.CreateDirectory(subdir);
 

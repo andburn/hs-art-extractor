@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using HearthstoneDisunity;
 
 namespace HearthstoneDisunityCLI
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 3)
             {
@@ -26,15 +22,19 @@ namespace HearthstoneDisunityCLI
                 case "text":
                     ExtractText(fileDir, outDir);
                     break;
+
+                case "texture":
+                    ExtractTextures(fileDir, outDir);
+                    break;
+
                 case "dump":
                     ExtractRaw(fileDir, outDir);
                     break;
-                case "extract":
-                    ExtractAll(fileDir, outDir);
-                    break;
+
                 case "cardart":
                     CardArt(fileDir, outDir);
                     break;
+
                 default:
                     PrintUsageAndExit();
                     break;
@@ -48,7 +48,20 @@ namespace HearthstoneDisunityCLI
             {
                 Extract.Text(outDir, file);
             }
-            catch(Exception e)
+            catch (Exception e)
+            {
+                PrintErrorAndExit(e.Message);
+            }
+        }
+
+        private static void ExtractTextures(string file, string outDir)
+        {
+            Console.WriteLine("Extracting Textures from {0} to {1}", file, outDir);
+            try
+            {
+                Extract.Textures(outDir, file);
+            }
+            catch (Exception e)
             {
                 PrintErrorAndExit(e.Message);
             }
@@ -60,19 +73,6 @@ namespace HearthstoneDisunityCLI
             try
             {
                 Extract.CardArt(outDir, hsDir);
-            }
-            catch (Exception e)
-            {
-                PrintErrorAndExit(e.Message);
-            }
-        }
-
-        private static void ExtractAll(string file, string outDir)
-        {
-            Console.WriteLine("Extracting Assets from {0} to {1}", file, outDir);
-            try
-            {
-                Extract.All(outDir, file);
             }
             catch (Exception e)
             {

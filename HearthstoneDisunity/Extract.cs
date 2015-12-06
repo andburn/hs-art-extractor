@@ -5,6 +5,7 @@ using HearthstoneDisunity.Hearthstone;
 using HearthstoneDisunity.Hearthstone.Bundle;
 using HearthstoneDisunity.Hearthstone.Xml;
 using HearthstoneDisunity.Unity;
+using HearthstoneDisunity.Unity.Extract;
 using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity
@@ -19,61 +20,17 @@ namespace HearthstoneDisunity
 
         public static void Raw(string outDir, params string[] files)
         {
-            if (!Directory.Exists(outDir))
-            {
-                Directory.CreateDirectory(outDir);
-            }
-
-            foreach (var f in files)
-            {
-                if (File.Exists(f))
-                {
-                    AssetBundle ab = new AssetBundle(f);
-                    // TODO: create dir for bundle
-                    //var bundleName = ab.BundleEntry.Name;
-                    ab.ExtractRaw(outDir);
-                }
-            }
-        }
-
-        public static void All(string outDir, params string[] files)
-        {
-            if (!Directory.Exists(outDir))
-            {
-                Directory.CreateDirectory(outDir);
-            }
-
-            foreach (var f in files)
-            {
-                if (File.Exists(f))
-                {
-                    AssetBundle ab = new AssetBundle(f);
-                    ab.ExtractFull(outDir);
-                }
-            }
+            ExtractAssets(new RawExtractor(), outDir, files);
         }
 
         public static void Text(string outDir, params string[] files)
         {
-            var hsDataPath = Path.Combine(outDir, "Data", "Win");
-
-            if (!Directory.Exists(outDir))
-            {
-                Directory.CreateDirectory(outDir);
-            }
-
-            foreach (var f in files)
-            {
-                if (File.Exists(f))
-                {
-                    AssetBundle ab = new AssetBundle(f);
-                    ab.ExtractText(outDir);
-                }
-            }
+            ExtractAssets(new TextExtractor(), outDir, files);
         }
 
         public static void Textures(string outDir, params string[] files)
         {
+            ExtractAssets(new TextureExtractor(), outDir, files);
         }
 
         // TODO: add set filter, include/exclude?
@@ -98,7 +55,7 @@ namespace HearthstoneDisunity
             AssetBundle xmlBundle = new AssetBundle(cardXml);
             // create a temp dir
             var xmlDir = Directory.CreateDirectory(Path.Combine(outDir, "cardxml"));
-            xmlBundle.ExtractText(xmlDir.FullName);
+            //xmlBundle.ExtractText(xmlDir.FullName);
             // TODO: check it exists
             CardDb.Read(Path.Combine(xmlDir.FullName, "enUS.txt"));
             var cards = CardDb.All;
@@ -134,6 +91,28 @@ namespace HearthstoneDisunity
                 AssetBundle ab = new AssetBundle(tf);
                 TexturesBundle tb = new TexturesBundle(ab, map);
                 tb.Extract(outDir);
+            }
+        }
+
+        private static void ExtractAssets(IExtractor extractor, string outDir, params string[] files)
+        {
+            if (!Directory.Exists(outDir))
+            {
+                Directory.CreateDirectory(outDir);
+            }
+
+            foreach (var f in files)
+            {
+                if (File.Exists(f))
+                {
+                    AssetBundle bundle = new AssetBundle(f);
+                    var bundleDir = Path.Combine(outDir, bundle.BundleFileName);
+                    Directory.CreateDirectory(bundleDir);
+                    foreach (var obj in bundle.Objects)
+                    {
+                        extractor.Extract(obj, bundleDir);
+                    }
+                }
             }
         }
     }
