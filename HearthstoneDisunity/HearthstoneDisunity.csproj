@@ -47,6 +47,7 @@
     <Compile Include="Hearthstone\Card.cs" />
     <Compile Include="Hearthstone\CardArt.cs" />
     <Compile Include="Hearthstone\CardMaterial.cs" />
+    <Compile Include="Hearthstone\CardArtExtractor.cs" />
     <Compile Include="Hearthstone\Xml\CardDefs.cs" />
     <Compile Include="Hearthstone\Xml\CardDb.cs" />
     <Compile Include="Hearthstone\Xml\Entity.cs" />
@@ -100,7 +101,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
