@@ -1,0 +1,3 @@
+[submodule "External"]
+	path = External
+	url = https://github.com/andburn/dds-reader

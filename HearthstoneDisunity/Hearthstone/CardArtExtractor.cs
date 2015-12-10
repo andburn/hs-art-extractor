@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using AndBurn.DDSReader;
 using HearthstoneDisunity.Hearthstone.Bundle;
 using HearthstoneDisunity.Hearthstone.Xml;
 using HearthstoneDisunity.Unity;
@@ -13,6 +15,7 @@ namespace HearthstoneDisunity.Hearthstone
         private string _hsDataPath;
         private string _outDir;
         private string _outDirRaw;
+        private string _outDirPng;
 
         public CardArtExtractor(string outDir, string hsDir)
         {
@@ -34,6 +37,9 @@ namespace HearthstoneDisunity.Hearthstone
 
             _outDirRaw = Path.Combine(outDir, "Raw");
             Directory.CreateDirectory(_outDirRaw);
+
+            _outDirPng = Path.Combine(outDir, "Png");
+            Directory.CreateDirectory(_outDirPng);
         }
 
         public void Extract()
@@ -50,6 +56,15 @@ namespace HearthstoneDisunity.Hearthstone
                 AssetBundle ab = new AssetBundle(tf);
                 TexturesBundle tb = new TexturesBundle(ab, cardArtMap);
                 tb.Extract(_outDirRaw);
+            }
+
+            var ddsList = Directory.GetFiles(_outDirRaw, "*.dds");
+            foreach (var ddsFile in ddsList)
+            {
+                var id = StringUtils.GetFilenameNoExt(ddsFile);
+                var bmp = DDS.LoadImage(ddsFile, false);
+                bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                bmp.Save(Path.Combine(_outDirPng, id + ".png"));
             }
         }
 
