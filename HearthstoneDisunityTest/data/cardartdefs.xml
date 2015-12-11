@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CardArtDefs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Patch>3.2.0.10604</Patch>
+  <Card id="AT_001">
+    <Texture>
+      <Name>HS5-033_D</Name>
+      <Path>Assets/Game/Cards/09 AT/AT_001/HS5-033_D.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="-0.2" y="0.25" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.1" y="1.1" />
+        <Offset x="0.06" y="-0.11" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="EX1_298">
+    <Texture>
+      <Name>w2_059_D</Name>
+      <Path>Assets/Game/Cards/01 Expert/EX1_298/w2_059_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="-0.2" y="0.25" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.73" y="0.73" />
+        <Offset x="0.28" y="0.02" />
+      </Transform>
+    </Material>
+    <Material type="Portrait">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.15" y="1.15" />
+        <Offset x="-0.07" y="-0.02" />
+      </Transform>
+    </Material>
+  </Card>
+</CardArtDefs>

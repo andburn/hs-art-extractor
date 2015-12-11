@@ -19,7 +19,7 @@ namespace HearthstoneDisunity.Hearthstone
 
         public CardArtExtractor(string outDir, string hsDir)
         {
-            Logger.Log("Initializing CardArt ({0} to {1})", hsDir, outDir);
+            Logger.Log("Initializing CardArtOld ({0} to {1})", hsDir, outDir);
 
             _hsDataPath = Path.Combine(hsDir, "Data", "Win");
 
@@ -45,7 +45,7 @@ namespace HearthstoneDisunity.Hearthstone
         public void Extract()
         {
             Dictionary<string, Card> cardDb = LoadCardDb();
-            Dictionary<string, List<CardArt>> cardArtMap = LoadCards();
+            Dictionary<string, List<CardArtOld>> CardArtOldMap = LoadCards();
 
             // get all textures (cardtextures<n>.unity3d, shared<n>.unity3d)
             var textureFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cardtextures?.unity3d"));
@@ -54,7 +54,7 @@ namespace HearthstoneDisunity.Hearthstone
             foreach (var tf in textureFiles)
             {
                 AssetBundle ab = new AssetBundle(tf);
-                TexturesBundle tb = new TexturesBundle(ab, cardArtMap);
+                TexturesBundle tb = new TexturesBundle(ab, CardArtOldMap);
                 tb.Extract(_outDirRaw);
             }
 
@@ -68,9 +68,9 @@ namespace HearthstoneDisunity.Hearthstone
             }
         }
 
-        private Dictionary<string, List<CardArt>> LoadCards()
+        private Dictionary<string, List<CardArtOld>> LoadCards()
         {
-            Dictionary<string, List<CardArt>> map = new Dictionary<string, List<CardArt>>();
+            Dictionary<string, List<CardArtOld>> map = new Dictionary<string, List<CardArtOld>>();
 
             // get all card defs (cards<n>.unity3d)
             var cardFiles = Directory.GetFiles(_hsDataPath, "cards?.unity3d");
@@ -80,13 +80,13 @@ namespace HearthstoneDisunity.Hearthstone
                 AssetBundle ab = new AssetBundle(cf);
                 CardsBundle cb = new CardsBundle(ab);
 
-                var bundleMap = cb.CardArtByTexture;
+                var bundleMap = cb.CardArtOldByTexture;
                 // Use this to join possible reuse of tex over the x bundles
                 foreach (var entry in bundleMap)
                 {
                     if (!map.ContainsKey(entry.Key))
                     {
-                        map[entry.Key] = new List<CardArt>();
+                        map[entry.Key] = new List<CardArtOld>();
                     }
                     map[entry.Key].AddRange(entry.Value);
                 }

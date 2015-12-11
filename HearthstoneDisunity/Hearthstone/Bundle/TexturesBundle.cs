@@ -10,15 +10,15 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
 {
     public class TexturesBundle
     {
-        private Dictionary<string, List<CardArt>> _cardArt;
+        private Dictionary<string, List<CardArtOld>> _CardArtOld;
         private AssetBundle _bundle;
         private Dictionary<long, ObjectInfo> _bundleObjects;
 
-        public TexturesBundle(AssetBundle bundle, Dictionary<string, List<CardArt>> map)
+        public TexturesBundle(AssetBundle bundle, Dictionary<string, List<CardArtOld>> map)
         {
             _bundle = bundle;
             _bundleObjects = bundle.ObjectMap;
-            _cardArt = map;
+            _CardArtOld = map;
         }
 
         public void Extract(string dir)
@@ -43,10 +43,10 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                         if (info.ClassId == 28)
                         {
                             var tex = new Texture2D(block);
-                            if (_cardArt.ContainsKey(tex.Name))
+                            if (_CardArtOld.ContainsKey(tex.Name))
                             {
                                 //Console.WriteLine("Tex: " + tex.Name);
-                                var list = _cardArt[tex.Name];
+                                var list = _CardArtOld[tex.Name];
                                 //Console.WriteLine(list.Count);
                                 foreach (var c in list)
                                 {

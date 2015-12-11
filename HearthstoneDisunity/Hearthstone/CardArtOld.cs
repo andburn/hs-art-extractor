@@ -2,7 +2,7 @@
 
 namespace HearthstoneDisunity.Hearthstone
 {
-    public class CardArt
+    public class CardArtOld
     {
         public string Name { get; set; }
         public string PortraitPath { get; set; }

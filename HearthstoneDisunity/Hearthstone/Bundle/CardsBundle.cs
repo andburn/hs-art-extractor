@@ -10,16 +10,16 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
 {
     public class CardsBundle
     {
-        public List<CardArt> CardArt { get; private set; }
-        public Dictionary<string, List<CardArt>> CardArtByTexture { get; private set; }
+        public List<CardArtOld> CardArtOld { get; private set; }
+        public Dictionary<string, List<CardArtOld>> CardArtOldByTexture { get; private set; }
 
         private AssetBundle _bundle;
         private Dictionary<long, ObjectInfo> _bundleObjects;
 
         public CardsBundle()
         {
-            CardArt = new List<CardArt>();
-            CardArtByTexture = new Dictionary<string, List<CardArt>>();
+            CardArtOld = new List<CardArtOld>();
+            CardArtOldByTexture = new Dictionary<string, List<CardArtOld>>();
             // TODO: this is useless
         }
 
@@ -84,7 +84,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
             {
                 if (!string.IsNullOrWhiteSpace(go.Name))
                 {
-                    CardArt card = new CardArt();
+                    CardArtOld card = new CardArtOld();
                     card.Name = go.Name;
 
                     foreach (var fp in go.Components)
@@ -104,13 +104,13 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
 
                                 if (card.PortraitName != null)
                                 {
-                                    if (!CardArtByTexture.ContainsKey(card.PortraitName))
+                                    if (!CardArtOldByTexture.ContainsKey(card.PortraitName))
                                     {
-                                        CardArtByTexture[card.PortraitName] = new List<CardArt>();
+                                        CardArtOldByTexture[card.PortraitName] = new List<CardArtOld>();
                                     }
-                                    CardArtByTexture[card.PortraitName].Add(card);
+                                    CardArtOldByTexture[card.PortraitName].Add(card);
 
-                                    CardArt.Add(card);
+                                    CardArtOld.Add(card);
 
                                     //// save text info by cardid
                                     //var outFile = Path.Combine(dir, card.Name + ".txt");

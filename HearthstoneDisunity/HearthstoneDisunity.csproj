@@ -45,7 +45,14 @@
     <Compile Include="Hearthstone\Bundle\CardsBundle.cs" />
     <Compile Include="Hearthstone\Bundle\TexturesBundle.cs" />
     <Compile Include="Hearthstone\Card.cs" />
-    <Compile Include="Hearthstone\CardArt.cs" />
+    <Compile Include="Hearthstone\CardArtOld.cs" />
+    <Compile Include="Hearthstone\CardArt\Card.cs" />
+    <Compile Include="Hearthstone\CardArt\CardArtDb.cs" />
+    <Compile Include="Hearthstone\CardArt\CardArtDefs.cs" />
+    <Compile Include="Hearthstone\CardArt\Material.cs" />
+    <Compile Include="Hearthstone\CardArt\Texture.cs" />
+    <Compile Include="Hearthstone\CardArt\Transform.cs" />
+    <Compile Include="Hearthstone\CardArt\Enums.cs" />
     <Compile Include="Hearthstone\CardMaterial.cs" />
     <Compile Include="Hearthstone\CardArtExtractor.cs" />
     <Compile Include="Hearthstone\Database\CardDefs.cs" />
