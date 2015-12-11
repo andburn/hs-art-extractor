@@ -2,8 +2,11 @@
 using System.IO;
 using System.Xml.Serialization;
 
-namespace HearthstoneDisunity.Hearthstone.Xml
+namespace HearthstoneDisunity.Hearthstone.Database
 {
+    /// <summary>
+    /// A basic card database, for card ids, types and sets.
+    /// </summary>
     public static class CardDb
     {
         public static Dictionary<string, Card> All = new Dictionary<string, Card>();

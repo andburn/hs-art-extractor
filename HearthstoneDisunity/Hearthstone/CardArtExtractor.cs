@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using AndBurn.DDSReader;
 using HearthstoneDisunity.Hearthstone.Bundle;
-using HearthstoneDisunity.Hearthstone.Xml;
+using HearthstoneDisunity.Hearthstone.Database;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Extract;
 using HearthstoneDisunity.Util;

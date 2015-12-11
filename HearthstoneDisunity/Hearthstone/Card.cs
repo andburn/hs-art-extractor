@@ -1,4 +1,4 @@
-﻿using HearthstoneDisunity.Hearthstone.Xml;
+﻿using HearthstoneDisunity.Hearthstone.Database;
 
 namespace HearthstoneDisunity.Hearthstone
 {

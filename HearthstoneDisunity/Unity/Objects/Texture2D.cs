@@ -1,7 +1,7 @@
-﻿using HearthstoneDisunity.Image;
-using HearthstoneDisunity.Util;
-using System;
+﻿using System;
 using System.IO;
+using HearthstoneDisunity.Image;
+using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Unity.Objects
 {
@@ -167,7 +167,6 @@ namespace HearthstoneDisunity.Unity.Objects
                 int read = chunk;
                 //byte[] buffer = new byte[chunk];
 
-
                 byte[] bytes = new byte[Size + 1024];
                 int numBytesToRead = Size;
                 int numBytesRead = 0;
@@ -257,7 +256,6 @@ namespace HearthstoneDisunity.Unity.Objects
                             int read = chunk;
                             //byte[] buffer = new byte[chunk];
 
-
                             byte[] bytes = new byte[imageSize + 1024];
                             int numBytesToRead = imageSize;
                             int numBytesRead = 0;
@@ -274,8 +272,6 @@ namespace HearthstoneDisunity.Unity.Objects
                         var tga = new TargaImage(outname);
                         var bmp = tga.Image;
                         bmp.Save("E:\\Dump\\ImpMaster.png");
-
-
 
                         //	// write image data
                         //	_buffer.limit(_buffer.position() + imageSize);
@@ -354,7 +350,7 @@ namespace HearthstoneDisunity.Unity.Objects
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("caught, i=" + i);
+                        Console.WriteLine("caught, i=" + i + "[" + e.Message + "]");
                         //throw e;
                         break;
                     }

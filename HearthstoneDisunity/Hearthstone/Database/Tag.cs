@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace HearthstoneDisunity.Hearthstone.Xml
+namespace HearthstoneDisunity.Hearthstone.Database
 {
     public class Tag
     {

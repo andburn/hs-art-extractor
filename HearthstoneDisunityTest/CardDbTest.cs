@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using HearthstoneDisunity.Hearthstone;
-using HearthstoneDisunity.Hearthstone.Xml;
+using HearthstoneDisunity.Hearthstone.Database;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HearthstoneDisunityTest

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace HearthstoneDisunity.Hearthstone.Xml
+namespace HearthstoneDisunity.Hearthstone.Database
 {
     [XmlRoot("CardDefs")]
     public class CardDefs

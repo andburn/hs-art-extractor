@@ -48,10 +48,10 @@
     <Compile Include="Hearthstone\CardArt.cs" />
     <Compile Include="Hearthstone\CardMaterial.cs" />
     <Compile Include="Hearthstone\CardArtExtractor.cs" />
-    <Compile Include="Hearthstone\Xml\CardDefs.cs" />
-    <Compile Include="Hearthstone\Xml\CardDb.cs" />
-    <Compile Include="Hearthstone\Xml\Entity.cs" />
-    <Compile Include="Hearthstone\Xml\Tag.cs" />
+    <Compile Include="Hearthstone\Database\CardDefs.cs" />
+    <Compile Include="Hearthstone\Database\CardDb.cs" />
+    <Compile Include="Hearthstone\Database\Entity.cs" />
+    <Compile Include="Hearthstone\Database\Tag.cs" />
     <Compile Include="Image\DDSHeader.cs" />
     <Compile Include="Image\DDSPixelFormat.cs" />
     <Compile Include="Image\TGAHeader.cs" />
