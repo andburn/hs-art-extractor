@@ -13,7 +13,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
         public List<CardArtOld> CardArtOld { get; private set; }
         public Dictionary<string, List<CardArtOld>> CardArtOldByTexture { get; private set; }
 
-        private AssetBundle _bundle;
+        private AssestFile _bundle;
         private Dictionary<long, ObjectInfo> _bundleObjects;
 
         public CardsBundle()
@@ -23,7 +23,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
             // TODO: this is useless
         }
 
-        public CardsBundle(AssetBundle bundle) : this()
+        public CardsBundle(AssestFile bundle) : this()
         {
             _bundle = bundle;
             _bundleObjects = bundle.ObjectMap;
@@ -45,7 +45,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                 try
                 {
                     // TODO: open/close for every object! just seek
-                    using (BinaryBlock b = new BinaryBlock(File.Open(_bundle.BundleFile, FileMode.Open)))
+                    using (BinaryBlock b = new BinaryBlock(File.Open(_bundle.FilePath, FileMode.Open)))
                     {
                         b.Seek(info.Offset + _bundle.DataOffset);
                         switch (info.ClassId)

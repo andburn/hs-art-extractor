@@ -53,7 +53,7 @@ namespace HearthstoneDisunity.Hearthstone
 
             foreach (var tf in textureFiles)
             {
-                AssetBundle ab = new AssetBundle(tf);
+                AssestFile ab = new AssestFile(tf);
                 TexturesBundle tb = new TexturesBundle(ab, CardArtOldMap);
                 tb.Extract(_outDirRaw);
             }
@@ -77,7 +77,7 @@ namespace HearthstoneDisunity.Hearthstone
 
             foreach (var cf in cardFiles)
             {
-                AssetBundle ab = new AssetBundle(cf);
+                AssestFile ab = new AssestFile(cf);
                 CardsBundle cb = new CardsBundle(ab);
 
                 var bundleMap = cb.CardArtOldByTexture;
@@ -101,7 +101,7 @@ namespace HearthstoneDisunity.Hearthstone
 
             // Extract card xml files
             var cardXml = Path.Combine(_hsDataPath, "cardxml0.unity3d");
-            AssetBundle xmlBundle = new AssetBundle(cardXml);
+            AssestFile xmlBundle = new AssestFile(cardXml);
             var extractor = new TextExtractor();
             foreach (var obj in xmlBundle.Objects)
             {

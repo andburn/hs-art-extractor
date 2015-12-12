@@ -14,7 +14,7 @@ namespace HearthstoneDisunityTest
         public static void ClassInitialize(TestContext context)
         {
             var file = @".\data\cardtextures.unity3d";
-            var abr = new AssetBundle(file);
+            var abr = new AssestFile(file);
             _tree = abr.TypeTree;
         }
 

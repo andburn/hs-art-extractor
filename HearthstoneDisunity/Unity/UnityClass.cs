@@ -1,7 +1,7 @@
 ﻿namespace HearthstoneDisunity.Unity
 {
     // Unity class ids (http://docs.unity3d.com/Manual/ClassIDReference.html)
-    internal enum UnityClass
+    public enum UnityClass
     {
         GameObject = 1,
         Component = 2,

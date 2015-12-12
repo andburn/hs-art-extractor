@@ -67,7 +67,7 @@
     <Compile Include="Unity\Extract\TextureExtractor.cs" />
     <Compile Include="Unity\AssetBundleEntry.cs" />
     <Compile Include="Unity\AssetBundleHeader.cs" />
-    <Compile Include="Unity\AssetBundle.cs" />
+    <Compile Include="Unity\AssestFile.cs" />
     <Compile Include="Unity\AssetException.cs" />
     <Compile Include="Unity\AssetHeader.cs" />
     <Compile Include="Unity\AssetType.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Unity\Extract\RawExtractor.cs" />
     <Compile Include="Unity\Extract\TextExtractor.cs" />
     <Compile Include="Unity\FieldNode.cs" />
+    <Compile Include="Unity\Objects\AssetBundle.cs" />
     <Compile Include="Unity\Objects\CardDef.cs" />
     <Compile Include="Unity\Objects\GameObject.cs" />
     <Compile Include="Unity\Objects\Material.cs" />

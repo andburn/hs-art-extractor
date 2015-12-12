@@ -11,10 +11,10 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
     public class TexturesBundle
     {
         private Dictionary<string, List<CardArtOld>> _CardArtOld;
-        private AssetBundle _bundle;
+        private AssestFile _bundle;
         private Dictionary<long, ObjectInfo> _bundleObjects;
 
-        public TexturesBundle(AssetBundle bundle, Dictionary<string, List<CardArtOld>> map)
+        public TexturesBundle(AssestFile bundle, Dictionary<string, List<CardArtOld>> map)
         {
             _bundle = bundle;
             _bundleObjects = bundle.ObjectMap;
@@ -25,7 +25,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
         {
             try
             {
-                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(_bundle.BundleFile, FileMode.Open)))
+                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(_bundle.FilePath, FileMode.Open)))
                 {
                     foreach (var pair in _bundleObjects)
                     {

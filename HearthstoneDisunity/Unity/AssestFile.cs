@@ -6,13 +6,13 @@ using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Unity
 {
-    public class AssetBundle
+    public class AssestFile
     {
         public List<ObjectData> Objects { get; private set; }
         public Dictionary<long, ObjectInfo> ObjectMap { get; private set; }
         public long DataOffset { get; private set; }
-        public string BundleFile { get; private set; }
-        public string BundleFileName { get; private set; }
+        public string FilePath { get; private set; }
+        public string FlieName { get; private set; }
 
         public AssetBundleHeader Header { get; private set; }
         public AssetBundleEntry BundleEntry { get; private set; }
@@ -20,11 +20,11 @@ namespace HearthstoneDisunity.Unity
         public TypeTree TypeTree { get; private set; }
         public ObjectInfoTable InfoTable { get; private set; }
 
-        public AssetBundle(string file)
+        public AssestFile(string file)
         {
-            BundleFile = file;
-            BundleFileName = StringUtils.GetFilenameNoExt(file);
-            Read(BundleFile);
+            FilePath = file;
+            FlieName = StringUtils.GetFilenameNoExt(file);
+            Read(FilePath);
         }
 
         private void Read(string file)
@@ -112,7 +112,7 @@ namespace HearthstoneDisunity.Unity
             if (count > 0)
                 return new AssetBundleEntry(b);
             else
-                throw new AssetException("No bundle entries found in " + BundleFile);
+                throw new AssetException("No bundle entries found in " + FilePath);
         }
     }
 }

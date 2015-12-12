@@ -47,8 +47,8 @@ namespace HearthstoneDisunity
             {
                 if (File.Exists(f))
                 {
-                    AssetBundle bundle = new AssetBundle(f);
-                    var bundleDir = Path.Combine(outDir, bundle.BundleFileName);
+                    AssestFile bundle = new AssestFile(f);
+                    var bundleDir = Path.Combine(outDir, bundle.FlieName);
                     Directory.CreateDirectory(bundleDir);
                     foreach (var obj in bundle.Objects)
                     {
