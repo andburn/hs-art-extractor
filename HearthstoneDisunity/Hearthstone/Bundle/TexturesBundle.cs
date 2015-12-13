@@ -39,7 +39,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                         // TODO: can there be loss of precision here, long to int?
                         Debug.Assert(info.Length <= int.MaxValue);
                         b.Read(data, 0, (int)info.Length);
-                        var block = BinaryBlock.CreateFromByteArray(data);
+                        var block = BinaryBlock.Create(data);
                         if (info.ClassId == 28)
                         {
                             var tex = new Texture2D(block);

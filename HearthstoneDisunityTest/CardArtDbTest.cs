@@ -66,14 +66,14 @@ namespace HearthstoneDisunityTest
         public void ShaderTransformExists()
         {
             var mat = _db["EX1_298"].GetMaterial(MaterialType.CardBar);
-            Assert.AreEqual(0.73, mat.GetTransform(TransformType.Shader).Scale.X);
+            Assert.AreEqual(0.73f, mat.GetTransform(TransformType.Shader).Scale.X);
         }
 
         [TestMethod]
         public void StandardTransformExists()
         {
             var mat = _db["AT_001"].GetMaterial(MaterialType.CardBar);
-            Assert.AreEqual(0.25, mat.GetTransform(TransformType.Standard).Offset.Y);
+            Assert.AreEqual(0.25f, mat.GetTransform(TransformType.Standard).Offset.Y);
         }
 
         [TestMethod]
@@ -111,14 +111,14 @@ namespace HearthstoneDisunityTest
                 new Transform()
                 {
                     Type = TransformType.Standard,
-                    Offset = new CoordinateTransform(0.0),
-                    Scale = new CoordinateTransform(1.0)
+                    Offset = new CoordinateTransform(0.0f),
+                    Scale = new CoordinateTransform(1.0f)
                 },
                 new Transform()
                 {
                     Type = TransformType.Shader,
-                    Offset = new CoordinateTransform(0.0),
-                    Scale = new CoordinateTransform(1.0)
+                    Offset = new CoordinateTransform(0.0f),
+                    Scale = new CoordinateTransform(1.0f)
                 }
             };
             card1.Materials.Add(mat1);
@@ -129,14 +129,14 @@ namespace HearthstoneDisunityTest
                 new Transform()
                 {
                     Type = TransformType.Standard,
-                    Offset = new CoordinateTransform(0.0),
-                    Scale = new CoordinateTransform(1.0)
+                    Offset = new CoordinateTransform(0.0f),
+                    Scale = new CoordinateTransform(1.0f)
                 },
                 new Transform()
                 {
                     Type = TransformType.Shader,
-                    Offset = new CoordinateTransform(-0.3, 1.2),
-                    Scale = new CoordinateTransform(1.2)
+                    Offset = new CoordinateTransform(-0.3f, 1.2f),
+                    Scale = new CoordinateTransform(1.2f)
                 }
             };
             card1.Materials.Add(mat2);

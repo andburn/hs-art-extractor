@@ -60,7 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssetBundleHeaderTest.cs" />
     <Compile Include="AssetBundleEntryTest.cs" />
-    <Compile Include="QuickTest.cs" />
     <Compile Include="TypeTreeTest.cs" />
   </ItemGroup>
   <ItemGroup>

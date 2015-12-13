@@ -14,7 +14,7 @@ namespace HearthstoneDisunity.Unity.Extract
                 var path = Path.Combine(dir, unityClass.ToString());
                 Directory.CreateDirectory(path);
 
-                var block = BinaryBlock.CreateFromByteArray(data.Buffer);
+                var block = BinaryBlock.Create(data.Buffer);
                 var texture = new Texture2D(block);
                 texture.Save(path);
             }

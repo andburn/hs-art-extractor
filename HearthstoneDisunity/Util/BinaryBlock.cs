@@ -16,8 +16,7 @@ namespace HearthstoneDisunity.Util
             _bigEndian = false;
         }
 
-        // TODO: why isn't this just overloaded constructor?
-        public static BinaryBlock CreateFromByteArray(byte[] buffer)
+        public static BinaryBlock Create(byte[] buffer)
         {
             MemoryStream ms = new MemoryStream(buffer);
             return new BinaryBlock(ms);

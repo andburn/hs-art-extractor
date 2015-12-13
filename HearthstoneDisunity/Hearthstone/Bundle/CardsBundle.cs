@@ -1,138 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.Generic;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Objects;
 using HearthstoneDisunity.Util;
+
+using ArtCard = HearthstoneDisunity.Hearthstone.CardArt.Card;
+using GameMaterial = HearthstoneDisunity.Unity.Objects.Material;
 
 namespace HearthstoneDisunity.Hearthstone.Bundle
 {
     public class CardsBundle
     {
-        public List<CardArtOld> CardArtOld { get; private set; }
-        public Dictionary<string, List<CardArtOld>> CardArtOldByTexture { get; private set; }
+        public List<ArtCard> Cards { get; set; }
 
         private AssestFile _bundle;
-        private Dictionary<long, ObjectInfo> _bundleObjects;
+        private List<ObjectData> _bundleObjects;
+        private Dictionary<long, GameObject> _gameObjects;
+        private Dictionary<long, GameMaterial> _materialObjects;
+        private Dictionary<long, CardDef> _cardDefObjects;
 
         public CardsBundle()
         {
-            CardArtOld = new List<CardArtOld>();
-            CardArtOldByTexture = new Dictionary<string, List<CardArtOld>>();
-            // TODO: this is useless
+            Cards = new List<ArtCard>();
+            _gameObjects = new Dictionary<long, GameObject>();
+            _materialObjects = new Dictionary<long, GameMaterial>();
+            _cardDefObjects = new Dictionary<long, CardDef>();
         }
 
         public CardsBundle(AssestFile bundle) : this()
         {
             _bundle = bundle;
-            _bundleObjects = bundle.ObjectMap;
-            Process();
+            _bundleObjects = bundle.Objects;
+            BuildReferences();
+            ProcessObjects();
         }
 
-        private void Process()
+        private void ProcessObjects()
         {
-            Dictionary<long, object> fileMap = new Dictionary<long, object>();
-            List<GameObject> gameObjects = new List<GameObject>();
-
-            foreach (var pair in _bundleObjects)
+            foreach (var entry in _gameObjects)
             {
-                var info = pair.Value;
-                var id = pair.Key;
-                Debug.Assert(!fileMap.ContainsKey(id));
+                var go = entry.Value;
 
-                //var data = BinaryBlock.CreateFromByteArray(objectData.Buffer);
-                try
+                if (string.IsNullOrWhiteSpace(go.Name))
                 {
-                    // TODO: open/close for every object! just seek
-                    using (BinaryBlock b = new BinaryBlock(File.Open(_bundle.FilePath, FileMode.Open)))
-                    {
-                        b.Seek(info.Offset + _bundle.DataOffset);
-                        switch (info.ClassId)
-                        {
-                            case 1: // GameObject
-                                var go = new GameObject(b);
-                                fileMap[id] = go;
-                                gameObjects.Add(go);
-                                break;
-
-                            case 4: // Transform
-                                fileMap[id] = new Transform(b);
-                                break;
-
-                            case 21: // Material
-                                fileMap[id] = new Material(b);
-                                break;
-
-                            case 28: // Texture2D
-                                fileMap[id] = new Texture2D(b);
-                                break;
-
-                            case 114: // MonoBehaviour
-                                fileMap[id] = new CardDef(b);
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
+                    Logger.Log(LogLevel.WARN, "GameObject id={0} has no Name", entry.Key);
                 }
-                catch (Exception e) { throw e; }
-            }
-
-            foreach (var go in gameObjects)
-            {
-                if (!string.IsNullOrWhiteSpace(go.Name))
+                else
                 {
-                    CardArtOld card = new CardArtOld();
-                    card.Name = go.Name;
-
+                    // go through all the GameObject file references
                     foreach (var fp in go.Components)
                     {
-                        if (fp.ClassID == 114) // CardDef in this case
+                        // only interested in CardDef (MonoBehaviour)
+                        if ((UnityClass)fp.ClassID == UnityClass.MonoBehaviour)
                         {
-                            if (fileMap.ContainsKey(fp.PathID))
+                            var pathId = fp.PathID;
+                            // find the CarDef object from the file reference
+                            if (_cardDefObjects.ContainsKey(pathId))
                             {
-                                CardDef cd = (CardDef)fileMap[fp.PathID];
-                                card.PortraitPath = cd.PortratitTexturePath;
-                                var em = cd.EnchantmentPortrait;
-                                var dm = cd.DeckCardBarPortrait;
-                                if (fileMap.ContainsKey(em.PathID))
-                                    card.Portrait = new CardMaterial((Material)fileMap[em.PathID]);
-                                if (fileMap.ContainsKey(dm.PathID))
-                                    card.DeckBar = new CardMaterial((Material)fileMap[dm.PathID]);
-
-                                if (card.PortraitName != null)
-                                {
-                                    if (!CardArtOldByTexture.ContainsKey(card.PortraitName))
-                                    {
-                                        CardArtOldByTexture[card.PortraitName] = new List<CardArtOld>();
-                                    }
-                                    CardArtOldByTexture[card.PortraitName].Add(card);
-
-                                    CardArtOld.Add(card);
-
-                                    //// save text info by cardid
-                                    //var outFile = Path.Combine(dir, card.Name + ".txt");
-                                    //// TODO: duplicate check, => rename _2
-                                    //using(StreamWriter sw = new StreamWriter(outFile, false))
-                                    //{
-                                    //    sw.WriteLine(fp.PathID);
-                                    //    sw.Write(DebugUtils.AllPropsToString(card));
-                                    //}
-                                }
-                                else
-                                {
-                                    // TODO: list all with now portrait name
-                                }
+                                CardDef def = _cardDefObjects[pathId];
+                                GameMaterial portMat = FindMaterial(def.EnchantmentPortrait);
+                                GameMaterial barMat = FindMaterial(def.DeckCardBarPortrait);
+                                ArtCard card = new ArtCard(go.Name, def, portMat, barMat);
+                                Cards.Add(card);
                             }
                             else
                             {
-                                Console.WriteLine("Not found in filemap: " + fp.PathID);
+                                // TODO: CardDef not found
                             }
                         }
                     }
                 }
+            }
+        }
+
+        private void BuildReferences()
+        {
+            foreach (var obj in _bundleObjects)
+            {
+                var unityClass = (UnityClass)obj.Info.ClassId;
+                var data = BinaryBlock.Create(obj.Buffer);
+                switch (unityClass)
+                {
+                    case UnityClass.GameObject:
+                        _gameObjects[obj.Id] = new GameObject(data);
+                        break;
+
+                    case UnityClass.MonoBehaviour:
+                        // In this bundle, its a HS CardDef
+                        _cardDefObjects[obj.Id] = new CardDef(data);
+                        break;
+
+                    case UnityClass.Material:
+                        _materialObjects[obj.Id] = new GameMaterial(data);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private GameMaterial FindMaterial(FilePointer fp)
+        {
+            if (_materialObjects.ContainsKey(fp.PathID))
+            {
+                return _materialObjects[fp.PathID];
+            }
+            else
+            {
+                return null;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace HearthstoneDisunity.Hearthstone.CardArt
 {
@@ -16,25 +17,48 @@ namespace HearthstoneDisunity.Hearthstone.CardArt
 
     public class CoordinateTransform
     {
+        private float _x;
+        private float _y;
+
         [XmlAttribute("x")]
-        public double X { get; set; }
+        public float X
+        {
+            get
+            {
+                return _x;
+            }
+            set
+            {
+                _x = (float)Math.Round(value, 4);
+            }
+        }
 
         [XmlAttribute("y")]
-        public double Y { get; set; }
+        public float Y
+        {
+            get
+            {
+                return _y;
+            }
+            set
+            {
+                _y = (float)Math.Round(value, 4);
+            }
+        }
 
         public CoordinateTransform()
         {
-            X = 0.0;
-            Y = 0.0;
+            X = 0.0f;
+            Y = 0.0f;
         }
 
-        public CoordinateTransform(double x, double y)
+        public CoordinateTransform(float x, float y)
         {
             X = x;
             Y = y;
         }
 
-        public CoordinateTransform(double u)
+        public CoordinateTransform(float u)
         {
             X = u;
             Y = u;
