@@ -56,13 +56,16 @@ namespace HearthstoneDisunityTest
         [TestMethod]
         public void CardEquality()
         {
-            Assert.AreEqual(new Card("CS1_112", "Holy Nova", CardType.ABILITY), _cards["CS1_112"]);
+            Assert.AreEqual(
+                new Card("CS1_112", "Holy Nova", CardType.ABILITY, CardSet.CORE),
+                _cards["CS1_112"]);
         }
 
         [TestMethod]
         public void CardEqualityOperator()
         {
-            Assert.IsFalse(new Card("CS1_112", "Holy Nova", CardType.ABILITY) == _cards["CS1_112"]);
+            Assert.IsFalse(
+                new Card("CS1_112", "Holy Nova", CardType.ABILITY, CardSet.CORE) == _cards["CS1_112"]);
         }
     }
 }

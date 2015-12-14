@@ -6,13 +6,15 @@ namespace HearthstoneDisunity.Hearthstone
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public CardSet Set { get; set; }
         public CardType Type { get; set; }
 
-        public Card(string id, string name, CardType type)
+        public Card(string id, string name, CardType type, CardSet set)
         {
             Id = id;
             Name = name;
             Type = type;
+            Set = set;
         }
 
         public Card(Entity e)
@@ -21,6 +23,8 @@ namespace HearthstoneDisunity.Hearthstone
             Name = e.GetInnerValue((int)CardTag.CARDNAME);
             var typeId = e.GetTag((int)CardTag.CARDTYPE);
             Type = (CardType)typeId;
+            var setId = e.GetTag((int)CardTag.CARD_SET);
+            Set = (CardSet)setId;
         }
 
         public override bool Equals(object obj)
@@ -46,6 +50,7 @@ namespace HearthstoneDisunity.Hearthstone
 
     public enum CardTag
     {
+        CARD_SET = 183,
         CARDNAME = 185,
         CARDTYPE = 202,
         COLLECTIBLE = 321
@@ -64,5 +69,33 @@ namespace HearthstoneDisunity.Hearthstone
         ITEM = 8,
         TOKEN = 9,
         HERO_POWER = 10
+    }
+
+    public enum CardSet
+    {
+        INVALID = 0,
+        TEST_TEMPORARY = 1,
+        CORE = 2,
+        EXPERT1 = 3,
+        REWARD = 4,
+        MISSIONS = 5,
+        DEMO = 6,
+        NONE = 7,
+        CHEAT = 8,
+        BLANK = 9,
+        DEBUG_SP = 10,
+        PROMO = 11,
+        FP1 = 12,
+        PE1 = 13,
+        BRM = 14,
+        TGT = 15,
+        CREDITS = 16,
+        HERO_SKINS = 17,
+        TB = 18,
+        SLUSH = 19,
+        LOE = 20,
+
+        FP2 = BRM,
+        PE2 = TGT
     }
 }

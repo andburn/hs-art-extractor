@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.Generic;
+using System.Linq;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Objects;
 using HearthstoneDisunity.Util;
@@ -10,58 +8,101 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
 {
     public class TexturesBundle
     {
-        private Dictionary<string, List<CardArtOld>> _CardArtOld;
         private AssestFile _bundle;
-        private Dictionary<long, ObjectInfo> _bundleObjects;
+        private List<ObjectData> _bundleObjects;
+        private Dictionary<string, FilePointer> _texPathMap;
 
-        public TexturesBundle(AssestFile bundle, Dictionary<string, List<CardArtOld>> map)
+        public TexturesBundle(AssestFile bundle, string outDir)
         {
-            _bundle = bundle;
-            _bundleObjects = bundle.ObjectMap;
-            _CardArtOld = map;
+            _bundle = bundle; // TODO: not used
+            _bundleObjects = bundle.Objects;
+            BuildReferences();
+            ProcessObjects(outDir);
         }
 
-        public void Extract(string dir)
+        private void BuildReferences()
         {
-            try
+            foreach (var obj in _bundleObjects)
             {
-                using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(_bundle.FilePath, FileMode.Open)))
+                var unityClass = (UnityClass)obj.Info.ClassId;
+                if (unityClass == UnityClass.AssetBundle)
                 {
-                    foreach (var pair in _bundleObjects)
-                    {
-                        var info = pair.Value;
-                        //var subdir = Path.Combine(dir, (UnityClass)info.ClassId);
-                        // TODO: don't create dir if not supported type
-                        //Directory.CreateDirectory(subdir);
+                    var data = BinaryBlock.Create(obj.Buffer);
+                    var ab = new AssetBundle(data);
+                    _texPathMap = ab.Container;
+                    Logger.Log("AssetBundle loaded, Container size = " + _texPathMap.Count);
+                }
+            }
+        }
 
-                        b.Seek(info.Offset + _bundle.DataOffset);
-                        byte[] data = new byte[info.Length];
-                        // TODO: can there be loss of precision here, long to int?
-                        Debug.Assert(info.Length <= int.MaxValue);
-                        b.Read(data, 0, (int)info.Length);
-                        var block = BinaryBlock.Create(data);
-                        if (info.ClassId == 28)
+        private void ProcessObjects(string dir)
+        {
+            foreach (var obj in _bundleObjects)
+            {
+                var pathId = obj.Id;
+                var matchedPath = _texPathMap.FirstOrDefault(x => x.Value.PathID == pathId);
+                if (matchedPath.Equals(default(KeyValuePair<string, FilePointer>)))
+                {
+                    Logger.Log(LogLevel.WARN, "PathId {0} not matched.", pathId);
+                }
+                else
+                {
+                    var refPath = matchedPath.Key;
+
+                    var unityClass = (UnityClass)obj.Info.ClassId;
+                    if (unityClass == UnityClass.Texture2D)
+                    {
+                        var data = BinaryBlock.Create(obj.Buffer);
+                        var tex = new Texture2D(data);
+
+                        if (tex.Name.ToUpper() == StringUtils.GetFilenameNoExt(refPath).ToUpper())
                         {
-                            var tex = new Texture2D(block);
-                            if (_CardArtOld.ContainsKey(tex.Name))
-                            {
-                                //Console.WriteLine("Tex: " + tex.Name);
-                                var list = _CardArtOld[tex.Name];
-                                //Console.WriteLine(list.Count);
-                                foreach (var c in list)
-                                {
-                                    //Console.WriteLine(c.Name);
-                                    tex.Save(dir, c.Name);
-                                }
-                            }
+                            var cardid = StringUtils.GetFilePathParentDir(refPath).ToUpper();
+                            tex.Save(dir, cardid);
                         }
                     }
                 }
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
+
+            //try
+            //{
+            //    using (BinaryBlock b = new BinaryBlock(System.IO.File.Open(_bundle.FilePath, FileMode.Open)))
+            //    {
+            //        foreach (var pair in _bundleObjects)
+            //        {
+            //            var info = pair.Value;
+            //            //var subdir = Path.Combine(dir, (UnityClass)info.ClassId);
+            //            // TODO: don't create dir if not supported type
+            //            //Directory.CreateDirectory(subdir);
+
+            //            b.Seek(info.Offset + _bundle.DataOffset);
+            //            byte[] data = new byte[info.Length];
+            //            // TODO: can there be loss of precision here, long to int?
+            //            Debug.Assert(info.Length <= int.MaxValue);
+            //            b.Read(data, 0, (int)info.Length);
+            //            var block = BinaryBlock.Create(data);
+            //            if (info.ClassId == 28)
+            //            {
+            //                var tex = new Texture2D(block);
+            //                if (_CardArtOld.ContainsKey(tex.Name))
+            //                {
+            //                    //Console.WriteLine("Tex: " + tex.Name);
+            //                    var list = _CardArtOld[tex.Name];
+            //                    //Console.WriteLine(list.Count);
+            //                    foreach (var c in list)
+            //                    {
+            //                        //Console.WriteLine(c.Name);
+            //                        tex.Save(dir, c.Name);
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    throw e;
+            //}
         }
     }
 }

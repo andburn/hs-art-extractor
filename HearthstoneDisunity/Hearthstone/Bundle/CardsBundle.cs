@@ -28,7 +28,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
 
         public CardsBundle(AssestFile bundle) : this()
         {
-            _bundle = bundle;
+            _bundle = bundle; // TODO: not used?
             _bundleObjects = bundle.Objects;
             BuildReferences();
             ProcessObjects();

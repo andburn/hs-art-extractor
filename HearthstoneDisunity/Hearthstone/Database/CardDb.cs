@@ -11,6 +11,27 @@ namespace HearthstoneDisunity.Hearthstone.Database
     {
         public static Dictionary<string, Card> All = new Dictionary<string, Card>();
 
+        private static List<CardSet> CardSetExclusions = new List<CardSet>() {
+            CardSet.INVALID,
+            CardSet.TEST_TEMPORARY,
+            CardSet.DEMO,
+            CardSet.CHEAT,
+            CardSet.BLANK,
+            CardSet.DEBUG_SP,
+            CardSet.SLUSH
+        };
+
+        private static List<CardType> CardTypeExclusions = new List<CardType>() {
+            CardType.HERO,
+            CardType.HERO_POWER,
+            CardType.INVALID,
+            CardType.GAME,
+            CardType.PLAYER,
+            CardType.ENCHANTMENT,
+            CardType.ITEM,
+            CardType.TOKEN
+        };
+
         public static void Read(string file)
         {
             using (TextReader tr = new StreamReader(file))
