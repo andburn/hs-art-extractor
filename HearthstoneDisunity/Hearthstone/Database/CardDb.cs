@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace HearthstoneDisunity.Hearthstone.Database
@@ -7,9 +8,10 @@ namespace HearthstoneDisunity.Hearthstone.Database
     /// <summary>
     /// A basic card database, for card ids, types and sets.
     /// </summary>
+
     public static class CardDb
     {
-        public static Dictionary<string, Card> All = new Dictionary<string, Card>();
+        private static Dictionary<string, Card> _cards = new Dictionary<string, Card>();
 
         private static List<CardSet> CardSetExclusions = new List<CardSet>() {
             CardSet.INVALID,
@@ -32,8 +34,28 @@ namespace HearthstoneDisunity.Hearthstone.Database
             CardType.TOKEN
         };
 
+        public static Dictionary<string, Card> All
+        {
+            get
+            {
+                return _cards;
+            }
+        }
+
+        public static Dictionary<string, Card> Filtered
+        {
+            get
+            {
+                return _cards.Where(x =>
+                    !CardSetExclusions.Contains(x.Value.Set)
+                    && !CardTypeExclusions.Contains(x.Value.Type))
+                    .ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
+
         public static void Read(string file)
         {
+            _cards.Clear();
             using (TextReader tr = new StreamReader(file))
             {
                 var xml = new XmlSerializer(typeof(CardDefs));
@@ -41,7 +63,7 @@ namespace HearthstoneDisunity.Hearthstone.Database
                 foreach (var entity in cardDefs.Entites)
                 {
                     var card = new Card(entity);
-                    All.Add(entity.CardId, card);
+                    _cards.Add(entity.CardId, card);
                 }
             }
         }

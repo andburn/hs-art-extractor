@@ -10,14 +10,14 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
     {
         private AssestFile _bundle;
         private List<ObjectData> _bundleObjects;
+        private List<CardArt.Card> _cards;
         private Dictionary<string, FilePointer> _texPathMap;
 
-        public TexturesBundle(AssestFile bundle, string outDir)
+        public TexturesBundle(AssestFile bundle, string outDir, List<CardArt.Card> cards)
         {
             _bundle = bundle; // TODO: not used
             _bundleObjects = bundle.Objects;
-            BuildReferences();
-            ProcessObjects(outDir);
+            _cards = cards;
         }
 
         private void BuildReferences()
@@ -30,6 +30,7 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                     var data = BinaryBlock.Create(obj.Buffer);
                     var ab = new AssetBundle(data);
                     _texPathMap = ab.Container;
+                    // TODO: no good for shared0
                     Logger.Log("AssetBundle loaded, Container size = " + _texPathMap.Count);
                 }
             }
@@ -48,21 +49,42 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                 else
                 {
                     var refPath = matchedPath.Key;
+                    var refCardId = StringUtils.GetFilePathParentDir(refPath).ToUpper();
+                    var refTexName = StringUtils.GetFilenameNoExt(refPath).ToUpper();
+                    Logger.Log("{0} : {1} : {2}", refPath, refCardId, refTexName);
+                    // match path with cards of interest
+                    var matchedCards = _cards.Where(x =>
+                        !string.IsNullOrWhiteSpace(x.Texture.Name)
+                        && !string.IsNullOrWhiteSpace(x.Id)
+                        && x.Texture.Name.ToUpper() == refTexName
+                        && x.Id.ToUpper() == refCardId)
+                        .ToList();
+                    Logger.Log("{1} matched with {0} cards", matchedCards.Count, refPath);
 
-                    var unityClass = (UnityClass)obj.Info.ClassId;
-                    if (unityClass == UnityClass.Texture2D)
+                    if (matchedCards.Count > 0)
                     {
-                        var data = BinaryBlock.Create(obj.Buffer);
-                        var tex = new Texture2D(data);
-
-                        if (tex.Name.ToUpper() == StringUtils.GetFilenameNoExt(refPath).ToUpper())
+                        var unityClass = (UnityClass)obj.Info.ClassId;
+                        if (unityClass == UnityClass.Texture2D)
                         {
-                            var cardid = StringUtils.GetFilePathParentDir(refPath).ToUpper();
-                            tex.Save(dir, cardid);
+                            var data = BinaryBlock.Create(obj.Buffer);
+                            var tex = new Texture2D(data);
+                            foreach (var card in matchedCards)
+                            {
+                                tex.Save(dir, card.Id);
+                            }
                         }
                     }
                 }
             }
+
+            //var ddsList = Directory.GetFiles(_outDirRaw, "*.dds");
+            //foreach (var ddsFile in ddsList)
+            //{
+            //    var id = StringUtils.GetFilenameNoExt(ddsFile);
+            //    var bmp = DDS.LoadImage(ddsFile, false);
+            //    bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            //    bmp.Save(Path.Combine(_outDirPng, id + ".png"));
+            //}
 
             //try
             //{

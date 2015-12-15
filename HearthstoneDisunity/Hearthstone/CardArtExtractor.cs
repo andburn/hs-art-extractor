@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using HearthstoneDisunity.Hearthstone.Bundle;
 using HearthstoneDisunity.Hearthstone.Database;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Extract;
+using HearthstoneDisunity.Unity.Objects;
 using HearthstoneDisunity.Util;
 using ArtCard = HearthstoneDisunity.Hearthstone.CardArt.Card;
 using GameCard = HearthstoneDisunity.Hearthstone.Card;
@@ -48,6 +50,7 @@ namespace HearthstoneDisunity.Hearthstone
 
         public void Extract()
         {
+            // TODO: may not need this as dictionary
             Dictionary<string, GameCard> cardDb = LoadCardDb();
 
             var defs = new CardArt.CardArtDefs();
@@ -55,33 +58,89 @@ namespace HearthstoneDisunity.Hearthstone
             defs.Cards = LoadCards();
             // TODO: remove
             CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);
+            // Filter CardArts
+            List<ArtCard> ucards = defs.Cards.Where(x => cardDb.ContainsKey(x.Id)).ToList();
 
             // get all textures (cardtextures<n>.unity3d, shared<n>.unity3d)
             var textureFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cardtextures?.unity3d"));
+            //textureFiles.AddRange(Directory.GetFiles(_hsDataPath, "shared?.unity3d"));
+
+            // First pass over texture bundles, collect texture path data
+            var textureRefs = LoadTextureInfo(textureFiles);
+
+            // Add shared bundles to texture list
             textureFiles.AddRange(Directory.GetFiles(_hsDataPath, "shared?.unity3d"));
-
-            foreach (var tf in textureFiles)
-            {
-                AssestFile ab = new AssestFile(tf);
-                TexturesBundle tb = new TexturesBundle(ab, _outDirRaw);
-            }
-
-            //var ddsList = Directory.GetFiles(_outDirRaw, "*.dds");
-            //foreach (var ddsFile in ddsList)
-            //{
-            //    var id = StringUtils.GetFilenameNoExt(ddsFile);
-            //    var bmp = DDS.LoadImage(ddsFile, false);
-            //    bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            //    bmp.Save(Path.Combine(_outDirPng, id + ".png"));
-            //}
+            // Load all the texture files using the refs
+            LoadTextures(textureFiles, textureRefs);
         }
 
-        //
-        private Dictionary<string, long> LoadTextureInfo(List<ObjectData> objects)
+        // First pass over texture bundles, collect texture path data
+        private Dictionary<long, string> LoadTextureInfo(List<string> textureFiles)
         {
-            Dictionary<string, long> info = new Dictionary<string, long>();
+            var textureRefs = new Dictionary<long, string>();
+            foreach (var file in textureFiles)
+            {
+                AssestFile af = new AssestFile(file);
+                foreach (var obj in af.Objects)
+                {
+                    var unityClass = (UnityClass)obj.Info.ClassId;
+                    // only interested in AssetBundle class, on this pass to collect refs
+                    if (unityClass == UnityClass.AssetBundle)
+                    {
+                        var data = BinaryBlock.Create(obj.Buffer);
+                        var ab = new AssetBundle(data);
+                        foreach (var kp in ab.Container)
+                        {
+                            var text = kp.Key;
+                            var id = kp.Value.PathID;
+                            if (!textureRefs.ContainsKey(id))
+                            {
+                                textureRefs[id] = text;
+                            }
+                            else
+                            {
+                                Logger.Log("Path entry duplicated: " + text + " (" + id + ")");
+                            }
+                        }
+                    }
+                }
+            }
+            Logger.Log("{0} tex refs found.", textureRefs.Count);
 
-            return info;
+            return textureRefs;
+        }
+
+        // Second pass over all texture bundles, guided by textureRefs from pass one
+        private void LoadTextures(List<string> textureFiles, Dictionary<long, string> textureRefs)
+        {
+            var countFound = 0;
+            foreach (var tf in textureFiles)
+            {
+                AssestFile af = new AssestFile(tf);
+
+                foreach (var obj in af.Objects)
+                {
+                    // check to see if obj id is found in texrefs
+                    var unityClass = (UnityClass)obj.Info.ClassId;
+                    if (unityClass == UnityClass.Texture2D && textureRefs.ContainsKey(obj.Id))
+                    {
+                        countFound++;
+                        var refPath = textureRefs[obj.Id];
+                        var refName = StringUtils.GetFilenameNoExt(refPath).ToUpper();
+                        var refCardId = StringUtils.GetFilePathParentDir(refPath).ToUpper();
+                        Texture2D tex = new Texture2D(BinaryBlock.Create(obj.Buffer));
+                        if (tex.Name.ToUpper() == refName)
+                        {
+                            tex.Save(_outDirRaw, refCardId);
+                        }
+                        else
+                        {
+                            Logger.Log("TexName mismatch: {0} != {1}", tex.Name, refName);
+                        }
+                    }
+                }
+            }
+            Logger.Log("Refs matched: " + countFound);
         }
 
         // Load the card art info from "cards?.unity3d"
@@ -102,6 +161,7 @@ namespace HearthstoneDisunity.Hearthstone
                 cards.AddRange(cb.Cards);
             }
 
+            Logger.Log("ArtCards loaded: {0} cards", cards.Count);
             return cards;
         }
 
@@ -124,8 +184,8 @@ namespace HearthstoneDisunity.Hearthstone
                 if (File.Exists(xmlFile))
                 {
                     CardDb.Read(xmlFile);
-                    cardDb = CardDb.All;
-                    Logger.Log("CardDB loaded: {0} cards", cardDb.Count);
+                    cardDb = CardDb.Filtered;
+                    Logger.Log("CardDB loaded: {0} cards (filtered)", cardDb.Count);
                 }
                 else
                 {

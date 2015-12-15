@@ -7,6 +7,7 @@ namespace HearthstoneDisunity.Unity.Objects
     {
         private List<FilePointer> _preload;
         private Dictionary<string, FilePointer> _container;
+        private List<FilePointer> _nameless;
 
         public string Name { get; private set; }
 
@@ -43,7 +44,11 @@ namespace HearthstoneDisunity.Unity.Objects
                 var size = b.ReadInt();
                 var file = new FilePointer(b.ReadInt(), b.ReadLong());
 
-                if (_container.ContainsKey(str))
+                if (string.IsNullOrWhiteSpace(str))
+                {
+                    _nameless.Add(file);
+                }
+                else if (_container.ContainsKey(str))
                 {
                     Logger.Log(LogLevel.ERROR,
                         "Duplicate AssetBundle entry for {0} -> {1}", str, file.PathID);

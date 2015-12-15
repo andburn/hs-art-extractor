@@ -102,6 +102,16 @@ namespace HearthstoneDisunity.Unity.Objects
                 filename = Name;
             }
             // TODO: handle save overwriting
+            // this wont work if overwriting!
+            var tries = 0;
+            var filenamedups = Directory.GetFiles(outputDir, filename + "*");
+            while (filenamedups.Length > 0)
+            {
+                tries++;
+                filenamedups = Directory.GetFiles(outputDir, filename + "_" + tries + "*");
+            }
+            if (tries > 0)
+                filename += "_" + tries;
 
             // for HS check if DDS, otherwise assume TGA
             if (Format == TextureFormat.DXT1 || Format == TextureFormat.DXT5)
