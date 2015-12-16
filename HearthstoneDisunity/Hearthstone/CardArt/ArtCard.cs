@@ -5,7 +5,7 @@ using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Hearthstone.CardArt
 {
-    public class Card
+    public class ArtCard
     {
         [XmlAttribute("id")]
         public string Id { get; set; }
@@ -16,14 +16,14 @@ namespace HearthstoneDisunity.Hearthstone.CardArt
         [XmlElement("Material")]
         public List<Material> Materials { get; set; }
 
-        public Card()
+        public ArtCard()
         {
             Id = "";
             Texture = new Texture();
             Materials = new List<Material>();
         }
 
-        public Card(string id,
+        public ArtCard(string id,
             Unity.Objects.CardDef def,
             Unity.Objects.Material portrait,
             Unity.Objects.Material bar)

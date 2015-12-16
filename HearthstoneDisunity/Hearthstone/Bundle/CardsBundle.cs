@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using HearthstoneDisunity.Hearthstone.CardArt;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Objects;
 using HearthstoneDisunity.Util;
-
-using ArtCard = HearthstoneDisunity.Hearthstone.CardArt.Card;
 using GameMaterial = HearthstoneDisunity.Unity.Objects.Material;
 
 namespace HearthstoneDisunity.Hearthstone.Bundle
@@ -57,10 +56,14 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                             if (_cardDefObjects.ContainsKey(pathId))
                             {
                                 CardDef def = _cardDefObjects[pathId];
-                                GameMaterial portMat = FindMaterial(def.EnchantmentPortrait);
-                                GameMaterial barMat = FindMaterial(def.DeckCardBarPortrait);
-                                ArtCard card = new ArtCard(go.Name, def, portMat, barMat);
-                                Cards.Add(card);
+                                // if no texture path defined, skip it
+                                if (!string.IsNullOrWhiteSpace(def.PortratitTexturePath))
+                                {
+                                    GameMaterial portMat = FindMaterial(def.EnchantmentPortrait);
+                                    GameMaterial barMat = FindMaterial(def.DeckCardBarPortrait);
+                                    ArtCard card = new ArtCard(go.Name, def, portMat, barMat);
+                                    Cards.Add(card);
+                                }
                             }
                             else
                             {
