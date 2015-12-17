@@ -7,7 +7,7 @@ namespace HearthstoneDisunity.Unity.Objects
     {
         private List<FilePointer> _preload;
         private Dictionary<string, FilePointer> _container;
-        private List<FilePointer> _nameless;
+        private List<FilePointer> _nameless; // TODO: is this needed
 
         public string Name { get; private set; }
 
@@ -26,6 +26,7 @@ namespace HearthstoneDisunity.Unity.Objects
             Name = b.ReadStringToNull();
             b.Align(4);
 
+            _nameless = new List<FilePointer>();
             _preload = new List<FilePointer>();
             var preSize = b.ReadInt();
             for (int i = 0; i < preSize; i++)

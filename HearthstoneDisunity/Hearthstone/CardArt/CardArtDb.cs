@@ -11,15 +11,15 @@ namespace HearthstoneDisunity.Hearthstone.CardArt
     {
         private static CardArtDefs _defs;
 
-        public static Dictionary<string, Card> All = new Dictionary<string, Card>();
+        public static Dictionary<string, ArtCard> All = new Dictionary<string, ArtCard>();
 
         public static string GameVersion
         {
             get
             {
-                if (_defs.Patch == null)
+                if (_defs.Version == null)
                     return "0.0.0.0";
-                return _defs.Patch;
+                return _defs.Version;
             }
         }
 

@@ -11,7 +11,7 @@ namespace HearthstoneDisunityTest
     [TestClass]
     public class CardArtDbTest
     {
-        private static Dictionary<string, Card> _db;
+        private static Dictionary<string, ArtCard> _db;
         private static string _tempXml;
 
         [ClassInitialize]
@@ -93,10 +93,10 @@ namespace HearthstoneDisunityTest
         private CardArtDefs CreateSampleDefs()
         {
             var root = new CardArtDefs();
-            root.Patch = "1.0.0.0";
-            root.Cards = new List<Card>();
+            root.Version = "1.0.0.0";
+            root.Cards = new List<ArtCard>();
 
-            var card1 = new Card();
+            var card1 = new ArtCard();
             card1.Id = "AC_123";
             card1.Texture = new Texture() {
                 Name = "WOW_1223",

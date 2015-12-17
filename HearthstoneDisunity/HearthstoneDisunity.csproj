@@ -46,7 +46,7 @@
     <Compile Include="Hearthstone\Bundle\TexturesBundle.cs" />
     <Compile Include="Hearthstone\Card.cs" />
     <Compile Include="Hearthstone\CardArtOld.cs" />
-    <Compile Include="Hearthstone\CardArt\Card.cs" />
+    <Compile Include="Hearthstone\CardArt\ArtCard.cs" />
     <Compile Include="Hearthstone\CardArt\CardArtDb.cs" />
     <Compile Include="Hearthstone\CardArt\CardArtDefs.cs" />
     <Compile Include="Hearthstone\CardArt\Material.cs" />

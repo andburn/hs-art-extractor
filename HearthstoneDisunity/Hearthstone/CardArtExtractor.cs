@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using HearthstoneDisunity.Hearthstone.Bundle;
+using HearthstoneDisunity.Hearthstone.CardArt;
 using HearthstoneDisunity.Hearthstone.Database;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Extract;
 using HearthstoneDisunity.Unity.Objects;
 using HearthstoneDisunity.Util;
-using ArtCard = HearthstoneDisunity.Hearthstone.CardArt.Card;
-using GameCard = HearthstoneDisunity.Hearthstone.Card;
 
 namespace HearthstoneDisunity.Hearthstone
 {
@@ -19,8 +18,6 @@ namespace HearthstoneDisunity.Hearthstone
         private string _hsPath;
         private string _hsDataPath;
         private string _outDir;
-        private string _outDirRaw;
-        private string _outDirPng;
 
         public CardArtExtractor(string outDir, string hsDir)
         {
@@ -40,38 +37,32 @@ namespace HearthstoneDisunity.Hearthstone
             {
                 Directory.CreateDirectory(outDir);
             }
-
-            _outDirRaw = Path.Combine(outDir, "Raw");
-            Directory.CreateDirectory(_outDirRaw);
-
-            _outDirPng = Path.Combine(outDir, "Png");
-            Directory.CreateDirectory(_outDirPng);
         }
 
         public void Extract()
         {
-            // TODO: may not need this as dictionary
-            Dictionary<string, GameCard> cardDb = LoadCardDb();
-
+            // Load selected card data
+            // TODO: why is this a dictionary
+            Dictionary<string, Card> cardDb = LoadCardDb();
+            // Load card art data
             var defs = new CardArt.CardArtDefs();
-            defs.Patch = GetPatchVersion(_hsPath);
+            defs.Version = GetPatchVersion();
             defs.Cards = LoadCards();
             // TODO: remove
             CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);
-            // Filter CardArts
-            List<ArtCard> ucards = defs.Cards.Where(x => cardDb.ContainsKey(x.Id)).ToList();
+            // Filter CardArts, only those cards in the cardDb
+            List<ArtCard> filteredCards = defs.Cards.Where(x => cardDb.ContainsKey(x.Id)).ToList();
+            Logger.Log("Filtered art cards: " + filteredCards.Count);
 
-            // get all textures (cardtextures<n>.unity3d, shared<n>.unity3d)
+            // get all textures (cardtextures<n>.unity3d)
             var textureFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cardtextures?.unity3d"));
-            //textureFiles.AddRange(Directory.GetFiles(_hsDataPath, "shared?.unity3d"));
-
             // First pass over texture bundles, collect texture path data
             var textureRefs = LoadTextureInfo(textureFiles);
-
-            // Add shared bundles to texture list
+            // Add shared bundles to texture list (shared<n>.unity3d)
             textureFiles.AddRange(Directory.GetFiles(_hsDataPath, "shared?.unity3d"));
-            // Load all the texture files using the refs
-            LoadTextures(textureFiles, textureRefs);
+            // Extract all the texture files using the refs and required cards
+            var tb = new TexturesBundle(textureFiles, _outDir);
+            tb.Extract(textureRefs, filteredCards);
         }
 
         // First pass over texture bundles, collect texture path data
@@ -110,39 +101,6 @@ namespace HearthstoneDisunity.Hearthstone
             return textureRefs;
         }
 
-        // Second pass over all texture bundles, guided by textureRefs from pass one
-        private void LoadTextures(List<string> textureFiles, Dictionary<long, string> textureRefs)
-        {
-            var countFound = 0;
-            foreach (var tf in textureFiles)
-            {
-                AssestFile af = new AssestFile(tf);
-
-                foreach (var obj in af.Objects)
-                {
-                    // check to see if obj id is found in texrefs
-                    var unityClass = (UnityClass)obj.Info.ClassId;
-                    if (unityClass == UnityClass.Texture2D && textureRefs.ContainsKey(obj.Id))
-                    {
-                        countFound++;
-                        var refPath = textureRefs[obj.Id];
-                        var refName = StringUtils.GetFilenameNoExt(refPath).ToUpper();
-                        var refCardId = StringUtils.GetFilePathParentDir(refPath).ToUpper();
-                        Texture2D tex = new Texture2D(BinaryBlock.Create(obj.Buffer));
-                        if (tex.Name.ToUpper() == refName)
-                        {
-                            tex.Save(_outDirRaw, refCardId);
-                        }
-                        else
-                        {
-                            Logger.Log("TexName mismatch: {0} != {1}", tex.Name, refName);
-                        }
-                    }
-                }
-            }
-            Logger.Log("Refs matched: " + countFound);
-        }
-
         // Load the card art info from "cards?.unity3d"
         private List<ArtCard> LoadCards()
         {
@@ -166,9 +124,9 @@ namespace HearthstoneDisunity.Hearthstone
         }
 
         // Load a simple card db from "cardxml0.unity3d"
-        private Dictionary<string, GameCard> LoadCardDb()
+        private Dictionary<string, Card> LoadCardDb()
         {
-            Dictionary<string, GameCard> cardDb = new Dictionary<string, Card>();
+            Dictionary<string, Card> cardDb = new Dictionary<string, Card>();
             // Extract card xml files
             var cardXml = Path.Combine(_hsDataPath, "cardxml0.unity3d");
             if (File.Exists(cardXml))
@@ -199,31 +157,16 @@ namespace HearthstoneDisunity.Hearthstone
             return cardDb;
         }
 
-        // Quick way to grab the HS patch version.
-        private string GetPatchVersion(string hsDir)
+        // Grab the HS version
+        private string GetPatchVersion()
         {
-            // TODO: don't know how reliable existence of this file is.
-            var agentFile = Path.Combine(hsDir, ".agent.db");
-            var localRegex = new Regex("\"local_version\" : \"([0-9\\.]+)\"");
-            try
-            {
-                if (File.Exists(agentFile))
-                {
-                    var text = File.ReadAllText(agentFile);
-                    var match = localRegex.Match(text);
-                    if (match.Success)
-                        return match.Groups[1].Captures[0].Value;
-                }
-                else
-                {
-                    Logger.Log(LogLevel.WARN, "Version not found, missing ({0})", agentFile);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Log(LogLevel.ERROR, "GetVersion failed. {0}", e.Message);
-            }
-            return "0.0.0.0";
+            var hsExe = Path.Combine(_hsPath, "Hearthstone.exe");
+            // TODO: check it exists
+            var vi = FileVersionInfo.GetVersionInfo(hsExe);
+            // NOTE: FileVersion & ProductVersion strings are same, need to use parts
+            Version version = new Version(
+                vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart);
+            return version.ToString();
         }
     }
 }
