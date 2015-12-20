@@ -29,10 +29,9 @@ namespace HearthstoneDisunity
             ExtractAssets(new TextureExtractor(), outDir, files);
         }
 
-        // TODO: add set filter, include/exclude?
-        public static void CardArt(string outDir, string hsDir)
+        public static void CardArt(string outDir, string hsDir, int setId = -1)
         {
-            var extractor = new CardArtExtractor(outDir, hsDir);
+            var extractor = new CardArtExtractor(outDir, hsDir, setId);
             extractor.Extract();
         }
 

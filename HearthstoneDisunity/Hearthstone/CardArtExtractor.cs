@@ -18,13 +18,15 @@ namespace HearthstoneDisunity.Hearthstone
         private string _hsPath;
         private string _hsDataPath;
         private string _outDir;
+        private int _set;
 
-        public CardArtExtractor(string outDir, string hsDir)
+        public CardArtExtractor(string outDir, string hsDir, int setId)
         {
             Logger.Log("Initializing CardArtOld ({0} to {1})", hsDir, outDir);
 
             _hsDataPath = Path.Combine(hsDir, "Data", "Win");
             _hsPath = hsDir;
+            _set = setId;
 
             if (!Directory.Exists(_hsDataPath))
             {
@@ -51,7 +53,13 @@ namespace HearthstoneDisunity.Hearthstone
             // TODO: remove
             CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);
             // Filter CardArts, only those cards in the cardDb
+
             List<ArtCard> filteredCards = defs.Cards.Where(x => cardDb.ContainsKey(x.Id)).ToList();
+            if (_set >= 0)
+            {
+                var setDb = cardDb.Where(x => (int)x.Value.Set == _set).ToDictionary(x => x.Key, y => y.Value);
+                filteredCards = defs.Cards.Where(x => setDb.ContainsKey(x.Id)).ToList();
+            }
             Logger.Log("Filtered art cards: " + filteredCards.Count);
 
             // get all textures (cardtextures<n>.unity3d)

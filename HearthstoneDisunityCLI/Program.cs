@@ -1,38 +1,35 @@
 ﻿using System;
-
+using System.Text;
 using HearthstoneDisunity;
 
 namespace HearthstoneDisunityCLI
 {
     internal class Program
     {
+        private static string _usage;
+
         private static void Main(string[] args)
         {
-            if (args.Length != 3)
+            _usage = UsuageText();
+
+            if (args.Length < 1)
             {
                 PrintUsageAndExit();
             }
 
             var command = args[0];
-            var fileDir = args[1];
-            var outDir = args[2];
-
             switch (command.ToLower())
             {
-                case "text":
-                    ExtractText(fileDir, outDir);
-                    break;
-
-                case "texture":
-                    ExtractTextures(fileDir, outDir);
+                case "textures":
+                    ExtractTextures(args);
                     break;
 
                 case "dump":
-                    ExtractRaw(fileDir, outDir);
+                    ExtractRaw(args);
                     break;
 
                 case "cardart":
-                    CardArt(fileDir, outDir);
+                    CardArt(args);
                     break;
 
                 default:
@@ -41,12 +38,18 @@ namespace HearthstoneDisunityCLI
             }
         }
 
-        private static void ExtractText(string file, string outDir)
+        private static void ExtractTextures(string[] args)
         {
-            Console.WriteLine("Extracting TextAssets from {0} to {1}", file, outDir);
+            if (args.Length != 3)
+                PrintUsageAndExit();
+
+            var file = args[1];
+            var dir = args[2];
+
+            Console.WriteLine("Extracting texture assets from {0} to {1}", file, dir);
             try
             {
-                Extract.Text(outDir, file);
+                Extract.Textures(dir, file);
             }
             catch (Exception e)
             {
@@ -54,12 +57,18 @@ namespace HearthstoneDisunityCLI
             }
         }
 
-        private static void ExtractTextures(string file, string outDir)
+        private static void ExtractRaw(string[] args)
         {
-            Console.WriteLine("Extracting Textures from {0} to {1}", file, outDir);
+            if (args.Length != 3)
+                PrintUsageAndExit();
+
+            var file = args[1];
+            var dir = args[2];
+
+            Console.WriteLine("Dumping all assets from {0} to {1}", file, dir);
             try
             {
-                Extract.Textures(outDir, file);
+                Extract.Raw(dir, file);
             }
             catch (Exception e)
             {
@@ -67,25 +76,34 @@ namespace HearthstoneDisunityCLI
             }
         }
 
-        private static void CardArt(string hsDir, string outDir)
+        private static void CardArt(string[] args)
         {
-            Console.WriteLine("Extracting Card Art from {0} to {1}", hsDir, outDir);
-            try
-            {
-                Extract.CardArt(outDir, hsDir);
-            }
-            catch (Exception e)
-            {
-                PrintErrorAndExit(e.Message);
-            }
-        }
+            string hsDir = "";
+            string outDir = "";
+            int set = -1;
 
-        private static void ExtractRaw(string file, string outDir)
-        {
-            Console.WriteLine("Extracting Raw Assets from {0} to {1}", file, outDir);
+            if (args.Length < 3)
+            {
+                PrintUsageAndExit();
+            }
+            else if (args.Length >= 3)
+            {
+                hsDir = args[1];
+                outDir = args[2];
+            }
+            if (args.Length >= 4)
+            {
+                hsDir = args[1];
+                outDir = args[2];
+                var success = int.TryParse(args[3], out set);
+                if (success == false)
+                    set = -1;
+            }
+
+            Console.WriteLine("Extracting card art from {0} to {1}", hsDir, outDir);
             try
             {
-                Extract.Raw(outDir, file);
+                Extract.CardArt(outDir, hsDir, set);
             }
             catch (Exception e)
             {
@@ -101,8 +119,18 @@ namespace HearthstoneDisunityCLI
 
         private static void PrintUsageAndExit()
         {
-            Console.WriteLine("Usage: ");
+            Console.WriteLine(_usage);
             Environment.Exit(1);
+        }
+
+        private static string UsuageText()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Usage:");
+            sb.AppendLine("\tcardart <hs_dir> <output_dir>");
+            sb.AppendLine("\ttextures <file> <output_dir>");
+            sb.AppendLine("\tdump <file> <output_dir>");
+            return sb.ToString();
         }
     }
 }
