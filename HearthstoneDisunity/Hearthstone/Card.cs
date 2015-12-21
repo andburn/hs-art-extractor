@@ -8,13 +8,15 @@ namespace HearthstoneDisunity.Hearthstone
         public string Name { get; set; }
         public CardSet Set { get; set; }
         public CardType Type { get; set; }
+        public bool IsCollectible { get; set; }
 
-        public Card(string id, string name, CardType type, CardSet set)
+        public Card(string id, string name, CardType type, CardSet set, bool collectible)
         {
             Id = id;
             Name = name;
             Type = type;
             Set = set;
+            IsCollectible = collectible;
         }
 
         public Card(Entity e)
@@ -25,6 +27,8 @@ namespace HearthstoneDisunity.Hearthstone
             Type = (CardType)typeId;
             var setId = e.GetTag((int)CardTag.CARD_SET);
             Set = (CardSet)setId;
+            var collectible = e.GetTag((int)CardTag.COLLECTIBLE);
+            IsCollectible = collectible == 1;
         }
 
         public override bool Equals(object obj)

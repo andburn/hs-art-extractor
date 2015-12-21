@@ -6,7 +6,7 @@ namespace HearthstoneDisunity.Hearthstone.CardArt
     [XmlRoot("CardArtDefs")]
     public class CardArtDefs
     {
-        public string Version { get; set; }
+        public string Patch { get; set; }
 
         [XmlElement("Card")]
         public List<ArtCard> Cards { get; set; }

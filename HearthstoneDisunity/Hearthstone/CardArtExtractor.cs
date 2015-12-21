@@ -48,7 +48,7 @@ namespace HearthstoneDisunity.Hearthstone
             Dictionary<string, Card> cardDb = LoadCardDb();
             // Load card art data
             var defs = new CardArt.CardArtDefs();
-            defs.Version = GetPatchVersion();
+            defs.Patch = GetPatchVersion();
             defs.Cards = LoadCards();
             // TODO: remove
             CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);

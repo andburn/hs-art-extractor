@@ -23,9 +23,9 @@ namespace HearthstoneDisunityTest
         }
 
         [TestMethod]
-        public void GameVersion()
+        public void GamePatchVersion()
         {
-            Assert.AreEqual("3.2.0.10604", CardArtDb.GameVersion);
+            Assert.AreEqual("4.1.0.10956", CardArtDb.GamePatch);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@ namespace HearthstoneDisunityTest
         private CardArtDefs CreateSampleDefs()
         {
             var root = new CardArtDefs();
-            root.Version = "1.0.0.0";
+            root.Patch = "1.0.0.0";
             root.Cards = new List<ArtCard>();
 
             var card1 = new ArtCard();

@@ -13,13 +13,13 @@ namespace HearthstoneDisunity.Hearthstone.CardArt
 
         public static Dictionary<string, ArtCard> All = new Dictionary<string, ArtCard>();
 
-        public static string GameVersion
+        public static string GamePatch
         {
             get
             {
-                if (_defs.Version == null)
+                if (_defs.Patch == null)
                     return "0.0.0.0";
-                return _defs.Version;
+                return _defs.Patch;
             }
         }
 
