@@ -1,6 +1,10 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text;
 using HearthstoneDisunity;
+using HearthstoneDisunity.Hearthstone;
+using HearthstoneDisunity.Hearthstone.Database;
 
 namespace HearthstoneDisunityCLI
 {
@@ -30,6 +34,10 @@ namespace HearthstoneDisunityCLI
 
                 case "cardart":
                     CardArt(args);
+                    break;
+
+                case "query":
+                    QueryCardDb(args);
                     break;
 
                 default:
@@ -111,6 +119,29 @@ namespace HearthstoneDisunityCLI
             }
         }
 
+        private static void QueryCardDb(string[] args)
+        {
+            if (args.Length != 3)
+                PrintUsageAndExit();
+
+            var hsDir = args[1];
+            var outDir = args[2];
+
+            Console.WriteLine("Generating card counts from cardxml");
+            try
+            {
+                var cardxml = Path.Combine(hsDir, "cardxml0.unity3d");
+                Extract.Text(outDir, cardxml);
+                var cardtxt = Path.Combine(outDir, "TextAsset", "enUS.txt");
+                CardDb.Read(cardtxt);
+                PrintCardCounts();
+            }
+            catch (Exception e)
+            {
+                PrintErrorAndExit(e.Message);
+            }
+        }
+
         private static void PrintErrorAndExit(string message)
         {
             Console.WriteLine("Error: " + message);
@@ -131,6 +162,41 @@ namespace HearthstoneDisunityCLI
             sb.AppendLine("\ttextures <file> <output_dir>");
             sb.AppendLine("\tdump <file> <output_dir>");
             return sb.ToString();
+        }
+
+        private static void PrintCardCounts()
+        {
+            var cards = CardDb.All.Values.ToList<Card>();
+
+            Console.WriteLine("\nTotals:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count, cards.Count(x => x.IsCollectible && x.Type != CardType.HERO));
+            Console.WriteLine("Basic:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.CORE),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.CORE && x.Type != CardType.HERO));
+            Console.WriteLine("Classic:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.EXPERT1),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.EXPERT1));
+            Console.WriteLine("Naxx:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.FP1),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.FP1));
+            Console.WriteLine("BRM:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.BRM),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.BRM));
+            Console.WriteLine("LOE:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.LOE),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.LOE));
+            Console.WriteLine("TGT:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.TGT),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.TGT));
+            Console.WriteLine("GVG:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.GVG),
+                cards.Count(x => x.IsCollectible && x.Set == CardSet.GVG));
+            Console.WriteLine("Reward:\n\tall: {0}\n\tcollectible: {1}",
+                cards.Count(x => x.Set == CardSet.REWARD || x.Set == CardSet.PROMO),
+                cards.Count(x => x.IsCollectible && (x.Set == CardSet.REWARD || x.Set == CardSet.PROMO)));
+
+            var filtered = CardDb.Filtered.Values.ToList<Card>();
+            Console.WriteLine("\nFiltered: {0}", filtered.Count);
         }
     }
 }

@@ -99,6 +99,7 @@ namespace HearthstoneDisunity.Hearthstone
         SLUSH = 19,
         LOE = 20,
 
+        GVG = PE1,
         FP2 = BRM,
         PE2 = TGT
     }
