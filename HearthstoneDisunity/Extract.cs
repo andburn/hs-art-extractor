@@ -2,18 +2,11 @@
 using HearthstoneDisunity.Hearthstone;
 using HearthstoneDisunity.Unity;
 using HearthstoneDisunity.Unity.Extract;
-using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity
 {
     public static class Extract
     {
-        static Extract()
-        {
-            Logger.SetLogLevel(LogLevel.DEBUG);
-            Logger.SetLogLocation(@"E:\Dump\_extract_test_");
-        }
-
         public static void Raw(string outDir, params string[] files)
         {
             ExtractAssets(new RawExtractor(), outDir, files);

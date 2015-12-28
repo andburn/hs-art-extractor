@@ -22,7 +22,7 @@ namespace HearthstoneDisunity.Hearthstone
 
         public CardArtExtractor(string outDir, string hsDir, int setId)
         {
-            Logger.Log("Initializing CardArtOld ({0} to {1})", hsDir, outDir);
+            Logger.Log("Initializing CardArt ({0} to {1})", hsDir, outDir);
 
             _hsDataPath = Path.Combine(hsDir, "Data", "Win");
             _hsPath = hsDir;
@@ -43,21 +43,22 @@ namespace HearthstoneDisunity.Hearthstone
 
         public void Extract()
         {
-            // Load selected card data
-            // TODO: why is this a dictionary
-            Dictionary<string, Card> cardDb = LoadCardDb();
-            // Load card art data
+            // Load card data
+            LoadCardDb();
+            // Load card art data (cards<n>.unity3d)
+            var cardsFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cards?.unity3d"));
+            var artCards = new CardsBundle(cardsFiles);
+            // create CardArtDb defs
             var defs = new CardArt.CardArtDefs();
             defs.Patch = GetPatchVersion();
-            defs.Cards = LoadCards();
-            // TODO: remove
+            defs.Cards = artCards.Cards;
+            // TODO: keep?
             CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);
             // Filter CardArts, only those cards in the cardDb
-
-            List<ArtCard> filteredCards = defs.Cards.Where(x => cardDb.ContainsKey(x.Id)).ToList();
+            List<ArtCard> filteredCards = defs.Cards.Where(x => CardDb.All.ContainsKey(x.Id)).ToList();
             if (_set >= 0)
             {
-                var setDb = cardDb.Where(x => (int)x.Value.Set == _set).ToDictionary(x => x.Key, y => y.Value);
+                var setDb = CardDb.All.Where(x => (int)x.Value.Set == _set).ToDictionary(x => x.Key, y => y.Value);
                 filteredCards = defs.Cards.Where(x => setDb.ContainsKey(x.Id)).ToList();
             }
             Logger.Log("Filtered art cards: " + filteredCards.Count);
@@ -109,32 +110,9 @@ namespace HearthstoneDisunity.Hearthstone
             return textureRefs;
         }
 
-        // Load the card art info from "cards?.unity3d"
-        private List<ArtCard> LoadCards()
-        {
-            List<ArtCard> cards = new List<ArtCard>();
-
-            // get all card defs (cards<n>.unity3d)
-            var cardFiles = Directory.GetFiles(_hsDataPath, "cards?.unity3d");
-
-            foreach (var cf in cardFiles)
-            {
-                // create a standard bundle
-                AssestFile ab = new AssestFile(cf);
-                // process the bundle as a HS card bundle
-                CardsBundle cb = new CardsBundle(ab);
-                // add this bundles cards to the full list
-                cards.AddRange(cb.Cards);
-            }
-
-            Logger.Log("ArtCards loaded: {0} cards", cards.Count);
-            return cards;
-        }
-
         // Load a simple card db from "cardxml0.unity3d"
-        private Dictionary<string, Card> LoadCardDb()
+        private void LoadCardDb()
         {
-            Dictionary<string, Card> cardDb = new Dictionary<string, Card>();
             // Extract card xml files
             var cardXml = Path.Combine(_hsDataPath, "cardxml0.unity3d");
             if (File.Exists(cardXml))
@@ -150,8 +128,8 @@ namespace HearthstoneDisunity.Hearthstone
                 if (File.Exists(xmlFile))
                 {
                     CardDb.Read(xmlFile);
-                    cardDb = CardDb.Filtered;
-                    Logger.Log("CardDB loaded: {0} cards (filtered)", cardDb.Count);
+                    Logger.Log("CardDB loaded: {0} cards", CardDb.All.Count);
+                    Logger.Log("CardDB loaded: {0} cards (filtered)", CardDb.Filtered.Count);
                 }
                 else
                 {
@@ -162,7 +140,6 @@ namespace HearthstoneDisunity.Hearthstone
             {
                 Logger.Log(LogLevel.ERROR, "{0} does not exist.", cardXml);
             }
-            return cardDb;
         }
 
         // Grab the HS version

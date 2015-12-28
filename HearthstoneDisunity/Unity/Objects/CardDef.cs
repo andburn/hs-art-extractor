@@ -1,5 +1,5 @@
-﻿using HearthstoneDisunity.Util;
-using System.IO;
+﻿using System.IO;
+using HearthstoneDisunity.Util;
 
 namespace HearthstoneDisunity.Unity.Objects
 {
@@ -78,11 +78,10 @@ namespace HearthstoneDisunity.Unity.Objects
         {
             string outFile = Name;
             if (string.IsNullOrEmpty(Name))
-            {
                 outFile = name;
-            }
-            outFile = Path.Combine(dir, outFile + ".txt");
-            // TODO: duplicate check, => rename _2
+            outFile = StringUtils.GetFilenameNoOverwrite(
+                Path.Combine(dir, outFile + ".txt"));
+
             using (StreamWriter sw = new StreamWriter(outFile, false))
             {
                 sw.WriteLine("CardDef");

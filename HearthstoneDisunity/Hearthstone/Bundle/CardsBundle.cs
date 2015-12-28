@@ -11,8 +11,6 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
     {
         public List<ArtCard> Cards { get; set; }
 
-        private AssestFile _bundle;
-        private List<ObjectData> _bundleObjects;
         private Dictionary<long, GameObject> _gameObjects;
         private Dictionary<long, GameMaterial> _materialObjects;
         private Dictionary<long, CardDef> _cardDefObjects;
@@ -25,11 +23,14 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
             _cardDefObjects = new Dictionary<long, CardDef>();
         }
 
-        public CardsBundle(AssestFile bundle) : this()
+        public CardsBundle(List<string> bundles) : this()
         {
-            _bundle = bundle; // TODO: not used?
-            _bundleObjects = bundle.Objects;
-            BuildReferences();
+            // get all card objects over all files
+            foreach (var file in bundles)
+            {
+                var af = new AssestFile(file);
+                BuildReferences(af);
+            }
             ProcessObjects();
         }
 
@@ -64,10 +65,14 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
                                     ArtCard card = new ArtCard(go.Name, def, portMat, barMat);
                                     Cards.Add(card);
                                 }
+                                else
+                                {
+                                    Logger.Log(LogLevel.WARN, "Portriat texture not found for: {0}", go.Name);
+                                }
                             }
                             else
                             {
-                                // TODO: CardDef not found
+                                Logger.Log(LogLevel.WARN, "CardDef not found for {0}", pathId);
                             }
                         }
                     }
@@ -75,9 +80,9 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
             }
         }
 
-        private void BuildReferences()
+        private void BuildReferences(AssestFile bundle)
         {
-            foreach (var obj in _bundleObjects)
+            foreach (var obj in bundle.Objects)
             {
                 var unityClass = (UnityClass)obj.Info.ClassId;
                 var data = BinaryBlock.Create(obj.Buffer);

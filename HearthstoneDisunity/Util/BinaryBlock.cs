@@ -41,10 +41,15 @@ namespace HearthstoneDisunity.Util
             {
                 BaseStream.Seek(offset, SeekOrigin.Begin);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO: offset beyond eof check
+                Logger.Log(LogLevel.ERROR, "Seek error: {0}", e.Message);
             }
+        }
+
+        public void ResetPos()
+        {
+            Seek(0);
         }
 
         public short ReadShort()

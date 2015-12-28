@@ -17,6 +17,31 @@ namespace HearthstoneDisunity.Util
             return (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
         }
 
+        public static string GetFilenameNoOverwrite(string filename)
+        {
+            if (File.Exists(filename))
+            {
+                var count = 1;
+                try
+                {
+                    var fi = new FileInfo(filename);
+                    var name = fi.Name.Replace(fi.Extension, "");
+                    var renamed = filename;
+                    do
+                    {
+                        renamed = Path.Combine(fi.DirectoryName, name + "_" + count + fi.Extension);
+                        count++;
+                    } while (File.Exists(renamed));
+                    return renamed;
+                }
+                catch
+                {
+                    Logger.Log("Failed to create new filename for existing file: {0}", filename);
+                }
+            }
+            return filename;
+        }
+
         // To get the filename without the extension, mainly for texture asset path
         public static string GetFilenameNoExt(string filename)
         {
@@ -28,11 +53,12 @@ namespace HearthstoneDisunity.Util
             {
                 fi = new FileInfo(filename);
             }
-            catch (Exception)
+            catch
             {
                 fi = new FileInfo("C:/" + filename);
             }
-            return fi.Name.Replace(fi.Extension, "");
+            var extIdx = fi.Name.LastIndexOf(fi.Extension);
+            return fi.Name.Substring(0, extIdx);
         }
 
         // To get the filename without the extension, mainly for texture asset path
@@ -55,4 +81,3 @@ namespace HearthstoneDisunity.Util
         }
     }
 }
-
