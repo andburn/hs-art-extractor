@@ -65,23 +65,22 @@ namespace HearthstoneDisunity.Hearthstone.Bundle
         private void SaveImages(Texture2D tex, ArtCard match)
         {
             Bitmap original = null;
-            RotateFlipType flip = RotateFlipType.RotateNoneFlipNone;
-
             if (tex.IsDDS)
             {
                 original = DDS.LoadImage(tex.Image, false);
-                flip = RotateFlipType.RotateNoneFlipY;
             }
             else
             {
                 // Assumimg it is TGA
                 var tga = new TargaImage(new MemoryStream(tex.Image));
                 original = tga.Image;
+                // Flip original on y, so like dds
+                original.RotateFlip(RotateFlipType.RotateNoneFlipY);
             }
-
             // save full size image to disk
             var full = new Bitmap(original);
-            full.RotateFlip(flip);
+            // flip right way up
+            full.RotateFlip(RotateFlipType.RotateNoneFlipY);
             full.Save(Path.Combine(_dirFull, match.Id + ".png"));
             // save card bar image to disk
             Export.CardBar(match, original, _dirBars);
