@@ -11,7 +11,7 @@ namespace HsArtExtractor.Hearthstone.Database
 
     public static class CardDb
     {
-        // TODO: does this need to be a dictionary
+        // TODO: why is this a dictionary
         private static Dictionary<string, Card> _cards = new Dictionary<string, Card>();
 
         private static List<CardSet> CardSetExclusions = new List<CardSet>() {

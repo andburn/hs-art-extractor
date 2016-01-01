@@ -55,7 +55,6 @@
     <Compile Include="AssetHeaderTest.cs" />
     <Compile Include="CardArtDbTest.cs" />
     <Compile Include="CardDbTest.cs" />
-    <Compile Include="ExtractRawTest.cs" />
     <Compile Include="ObjectInfoTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssetBundleHeaderTest.cs" />

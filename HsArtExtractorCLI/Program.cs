@@ -131,7 +131,7 @@ namespace HsArtExtractorCLI
             try
             {
                 Extract.CardArt(outDir, hsDir, set);
-                // TODO: debug
+                // TODO: Debug only, remove
                 // check extracted full cards (name = id) against cardb
                 if (set > 0)
                 {
@@ -224,7 +224,6 @@ namespace HsArtExtractorCLI
             PrintSetCount(cards, cardart, "Naxx", CardSet.FP1);
             PrintSetCount(cards, cardart, "BRM", CardSet.BRM);
             PrintSetCount(cards, cardart, "LOE", CardSet.LOE);
-            //cards.Where(x => x.IsCollectible && x.Set == CardSet.LOE).ToList().ForEach(t => Console.WriteLine("\t" + t.Id + ", " + t.Name));
             PrintSetCount(cards, cardart, "TGT", CardSet.TGT);
             PrintSetCount(cards, cardart, "GVG", CardSet.GVG);
             PrintSetCount(cards, cardart, "Reward", CardSet.PROMO, CardSet.REWARD);

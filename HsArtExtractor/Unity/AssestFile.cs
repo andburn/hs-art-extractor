@@ -47,7 +47,7 @@ namespace HsArtExtractor.Unity
                     AssetHeader = new AssetHeader(b);
                     Logger.Log(LogLevel.DEBUG, AssetHeader);
 
-                    // TODO: references? UnityVersion object
+                    // TODO: should have a UnityVersion object
                     var version = AssetHeader.AssetVersion;
 
                     // Should be LittleEndian for assets

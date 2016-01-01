@@ -23,7 +23,7 @@ namespace HsArtExtractor.Hearthstone
             Name = mat.Name;
             foreach (var p in mat.Floats)
             {
-                // TODO: check, is more than this now?
+                // TODO: actually more than this in 5.x
                 switch (p.Key.ToLower())
                 {
                     case "_offsetx":

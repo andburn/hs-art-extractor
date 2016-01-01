@@ -59,7 +59,7 @@ namespace HsArtExtractor.Util
     internal class Logging
     {
         private static Logging _instance;
-        private static readonly string _logFileName = "hs-disunity.log";
+        private static readonly string _logFileName = "hs-art-extractor.log";
         private static readonly string _defaultLocation = ".\\";
 
         private LogLevel _level;
@@ -112,7 +112,7 @@ namespace HsArtExtractor.Util
                 {
                     using (var writer = new StreamWriter(_logFile, true))
                     {
-                        var ts = DateTime.Now.ToString("HH:mm:ss");
+                        var ts = DateTime.Now.ToString("yyyyMMdd HH:mm:ss");
                         writer.WriteLine("[" + ts + "] " + message);
                     }
                 }

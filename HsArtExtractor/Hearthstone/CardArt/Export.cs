@@ -10,7 +10,7 @@ namespace HsArtExtractor.Hearthstone.CardArt
         private static readonly int TexDim = 512;
         private static readonly PointF CardBarTL = new PointF(0.0f, 0.3856f);
         private static readonly PointF CardBarBR = new PointF(1.0f, 0.6144f);
-        private static readonly Rectangle CardBarCrop = new Rectangle(114, 4, 385, 105);
+        private static readonly Rectangle CardBarCrop = new Rectangle(112, 4, 388, 105);
 
         public static void CardBar(ArtCard card, Bitmap bmp, string dir)
         {

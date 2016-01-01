@@ -145,12 +145,15 @@ namespace HsArtExtractor.Hearthstone
         // Grab the HS version
         private string GetPatchVersion()
         {
+            var version = new Version();
             var hsExe = Path.Combine(_hsPath, "Hearthstone.exe");
-            // TODO: check it exists
-            var vi = FileVersionInfo.GetVersionInfo(hsExe);
-            // NOTE: FileVersion & ProductVersion strings are same, need to use parts
-            Version version = new Version(
-                vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart);
+            if (File.Exists(hsExe))
+            {
+                var vi = FileVersionInfo.GetVersionInfo(hsExe);
+                // NOTE: FileVersion & ProductVersion strings are same, need to use parts
+                version = new Version(vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart);
+            }
+
             return version.ToString();
         }
     }
