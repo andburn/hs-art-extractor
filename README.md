@@ -10,8 +10,11 @@ A tool for windows to extract hearthstone card art from the unity game files. Th
 Incomplete:
 - [ ] Allow filtering of extracted cards by set and card type.
 - [ ] Extract all card bars, using some default coordinates.
+- [ ] Efficiency/Performance improvements.
 
 ## Usage
+You need to ensure Hearthstone is not running for the program to work correctly.
+
 Command line interface
 ```
 extractor.exe cardart <hearthstone_directory> <output_directory>

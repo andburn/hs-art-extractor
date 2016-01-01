@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,6 +44,10 @@ namespace HsArtExtractorCLI
 
                 case "query":
                     QueryCardDb(args);
+                    break;
+
+                case "test":
+                    Test(args);
                     break;
 
                 default:
@@ -185,6 +190,69 @@ namespace HsArtExtractorCLI
             {
                 PrintErrorAndExit(e.Message);
             }
+        }
+
+        private static void Test(string[] args)
+        {
+            string hsDir = "";
+            string outDir = "";
+
+            if (args.Length < 3)
+            {
+                PrintUsageAndExit();
+            }
+            else if (args.Length >= 3)
+            {
+                hsDir = args[1];
+                outDir = args[2];
+            }
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            CardArt(args);
+            sw.Stop();
+
+            // Check cardxml was written
+            var textDir = Path.Combine(outDir, "TextAsset");
+            if (Directory.Exists(textDir))
+            {
+                var textFiles = Directory.GetFiles(textDir, "*.txt");
+                if (textFiles.Length == 14)
+                    Console.WriteLine("CardXml extracted.");
+                else
+                    Console.WriteLine("CardXml failed.");
+            }
+            else
+                Console.WriteLine("CardXml dir failed.");
+
+            // Check full images were written
+            var fullDir = Path.Combine(outDir, "Full");
+            if (Directory.Exists(textDir))
+            {
+                var imgFiles = Directory.GetFiles(fullDir, "*.png");
+                if (imgFiles.Length == 1875)
+                    Console.WriteLine("Full images extracted.");
+                else
+                    Console.WriteLine("Full images failed.");
+            }
+            else
+                Console.WriteLine("Full images dir failed.");
+
+            // Check bar images were written
+            var barDir = Path.Combine(outDir, "Bars");
+            if (Directory.Exists(textDir))
+            {
+                var imgFiles = Directory.GetFiles(barDir, "*.png");
+                if (imgFiles.Length == 916)
+                    Console.WriteLine("Bar images extracted.");
+                else
+                    Console.WriteLine("Bar images failed.");
+            }
+            else
+                Console.WriteLine("Bar images dir failed.");
+
+            // Extraction time
+            Console.WriteLine("Extraction time: {0}", sw.Elapsed);
         }
 
         private static void PrintErrorAndExit(string message)
