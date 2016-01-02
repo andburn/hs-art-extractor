@@ -52,8 +52,8 @@ namespace HsArtExtractor.Hearthstone
             var defs = new CardArt.CardArtDefs();
             defs.Patch = GetPatchVersion();
             defs.Cards = artCards.Cards;
-            // TODO: keep?
-            CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);
+            // TODO: how to use this best
+            //CardArt.CardArtDb.Write(Path.Combine(_outDir, "CardArtDefs.xml"), defs);
             // Filter CardArts, only those cards in the cardDb
             List<ArtCard> filteredCards = defs.Cards.Where(x => CardDb.All.ContainsKey(x.Id)).ToList();
             if (_set >= 0)
@@ -72,6 +72,8 @@ namespace HsArtExtractor.Hearthstone
             // Extract all the texture files using the refs and required cards
             var tb = new TexturesBundle(textureFiles, _outDir);
             tb.Extract(textureRefs, filteredCards);
+            // Delete TextAsset directory
+            Directory.Delete(Path.Combine(_outDir, "TextAsset"), true);
         }
 
         // First pass over texture bundles, collect texture path data

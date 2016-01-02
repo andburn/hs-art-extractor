@@ -68,14 +68,7 @@ namespace HsArtExtractor.Hearthstone.CardArt
                         target.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
                     var output = new Bitmap(target, baseWidth, baseHeight);
-                    var final = new Bitmap(output, CardBarCrop.Width, CardBarCrop.Height);
-                    using (Graphics g = Graphics.FromImage(final))
-                    {
-                        g.DrawImage(output,
-                            new Rectangle(0, 0, final.Width, final.Height),
-                            CardBarCrop, GraphicsUnit.Pixel);
-                    }
-                    final.Save(Path.Combine(dir, card.Id + ".png"));
+                    output.Save(Path.Combine(dir, card.Id + ".png"));
                 }
                 catch (Exception e)
                 {
