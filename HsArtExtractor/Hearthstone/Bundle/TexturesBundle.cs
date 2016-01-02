@@ -17,11 +17,14 @@ namespace HsArtExtractor.Hearthstone.Bundle
         private List<string> _files;
         private string _dirFull;
         private string _dirBars;
+        private string _dirRaw;
 
         public TexturesBundle(List<string> files, string outDir)
         {
             _files = files;
             _dir = outDir;
+            _dirRaw = Path.Combine(outDir, "Raw");
+            Directory.CreateDirectory(_dirRaw);
             _dirFull = Path.Combine(outDir, "Full");
             Directory.CreateDirectory(_dirFull);
             _dirBars = Path.Combine(outDir, "Bars");
@@ -67,6 +70,7 @@ namespace HsArtExtractor.Hearthstone.Bundle
             Bitmap original = null;
             if (tex.IsDDS)
             {
+                tex.Save(_dirRaw, match.Id);
                 original = DDS.LoadImage(tex.Image, false);
             }
             else
@@ -80,7 +84,7 @@ namespace HsArtExtractor.Hearthstone.Bundle
             // save full size image to disk
             var full = new Bitmap(original);
             // flip right way up
-            full.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            //full.RotateFlip(RotateFlipType.RotateNoneFlipY);
             full.Save(Path.Combine(_dirFull, match.Id + ".png"));
             // save card bar image to disk
             Export.CardBar(match, original, _dirBars);
