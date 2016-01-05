@@ -234,9 +234,42 @@ namespace HsArtExtractor.Unity.Objects
         private void ConvertToRGBA32()
         {
             BinaryBlock imageBuffer = null;
-            // Convert 16 bit RGB to 24 bit
-            if (Format == TextureFormat.RGB565)
+            if (Format == TextureFormat.RGBA32 || Format == TextureFormat.ARGB32)
             {
+                // convert ARGB and RGBA directly by swapping the bytes to get BGRA
+                int bufferSize = (int)_data.BaseStream.Length;
+                MemoryStream ms = new MemoryStream(bufferSize);
+
+                byte[] pixelOld = new byte[4];
+                byte[] pixelNew = new byte[4];
+                for (int i = 0; i < bufferSize / 4; i++)
+                {
+                    _data.Read(pixelOld, 0, pixelOld.Length);
+
+                    if (Format == TextureFormat.ARGB32)
+                    {
+                        // ARGB -> BGRA
+                        pixelNew[0] = pixelOld[3];
+                        pixelNew[1] = pixelOld[2];
+                        pixelNew[2] = pixelOld[1];
+                        pixelNew[3] = pixelOld[0];
+                    }
+                    else {
+                        // RGBA -> BGRA
+                        pixelNew[0] = pixelOld[2];
+                        pixelNew[1] = pixelOld[1];
+                        pixelNew[2] = pixelOld[0];
+                        pixelNew[3] = pixelOld[3];
+                    }
+
+                    ms.Write(pixelNew, 0, 4);
+                }
+
+                imageBuffer = new BinaryBlock(ms);
+            }
+            else if (Format == TextureFormat.RGB565)
+            {
+                // Convert 16 bit RGB to 24 bit
                 int bufferSize = (int)_data.BaseStream.Length;
                 int halfSize = bufferSize / 2;
                 int newImageSize = halfSize * 3;
@@ -265,11 +298,77 @@ namespace HsArtExtractor.Unity.Objects
                 }
                 imageBuffer = new BinaryBlock(ms);
             }
+            else if (Format == TextureFormat.ARGB4444 || Format == TextureFormat.RGBA4444)
+            {
+                // convert 16 bit RGBA/ARGB to 32 bit BGRA
+                int bufferSize = (int)_data.BaseStream.Length;
+                int newImageSize = bufferSize * 2;
+                MemoryStream ms = new MemoryStream(newImageSize);
+
+                byte[] pixelOld = new byte[4];
+                byte[] pixelNew = new byte[4];
+                for (int i = 0; i < bufferSize / 2; i++)
+                {
+                    int pixelOldShort = _data.ReadShort();
+
+                    pixelOld[0] = (byte)((pixelOldShort & 0xf000) >> 12);
+                    pixelOld[1] = (byte)((pixelOldShort & 0x0f00) >> 8);
+                    pixelOld[2] = (byte)((pixelOldShort & 0x00f0) >> 4);
+                    pixelOld[3] = (byte)(pixelOldShort & 0x000f);
+
+                    // convert range
+                    pixelOld[0] <<= 4;
+                    pixelOld[1] <<= 4;
+                    pixelOld[2] <<= 4;
+                    pixelOld[3] <<= 4;
+
+                    if (Format == TextureFormat.ARGB4444)
+                    {
+                        // ARBG -> BGRA
+                        pixelNew[0] = pixelOld[3];
+                        pixelNew[1] = pixelOld[2];
+                        pixelNew[2] = pixelOld[1];
+                        pixelNew[3] = pixelOld[0];
+                    }
+                    else {
+                        // RBGA -> BGRA
+                        pixelNew[0] = pixelOld[2];
+                        pixelNew[1] = pixelOld[1];
+                        pixelNew[2] = pixelOld[0];
+                        pixelNew[3] = pixelOld[3];
+                    }
+
+                    ms.Write(pixelNew, 0, 4);
+                }
+                imageBuffer = new BinaryBlock(ms);
+            }
+            else if (Format == TextureFormat.RGB24)
+            {
+                int bufferSize = (int)_data.BaseStream.Length;
+                int thirdSize = bufferSize / 3;
+                MemoryStream ms = new MemoryStream(bufferSize);
+
+                // convert RGB directly to BGR
+                byte[] pixelOld = new byte[3];
+                byte[] pixelNew = new byte[3];
+                for (int i = 0; i < thirdSize; i++)
+                {
+                    _data.Read(pixelOld, 0, 3);
+
+                    pixelNew[0] = pixelOld[2];
+                    pixelNew[1] = pixelOld[1];
+                    pixelNew[2] = pixelOld[0];
+
+                    ms.Write(pixelNew, 0, 3);
+                }
+                imageBuffer = new BinaryBlock(ms);
+            }
             else
             {
-                throw new TextureException("Texture format "
-                    + Format + " not supported for RGBA32 conversion");
+                // TODO: do nothing, add check to caller
+                return;
             }
+
             _data = imageBuffer;
         }
 
