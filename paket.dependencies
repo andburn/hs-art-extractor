@@ -1,0 +1,6 @@
+source https://nuget.org/api/v2
+
+github andburn/dds-reader DDSReader/DDS.cs
+github andburn/dds-reader DDSReader/DDSImage.cs
+github andburn/dds-reader DDSReader/Decompressor.cs
+github andburn/dds-reader DDSReader/Utils.cs
