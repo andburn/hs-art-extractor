@@ -68,15 +68,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\cardartdefs.xml">
+    <Content Include="Data\cardartdefs.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="data\cardxml.txt">
+    <Content Include="Data\cardxml.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\cardtextures.unity3d">
+    <None Include="Data\cardtextures.unity3d">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
