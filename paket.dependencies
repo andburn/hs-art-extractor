@@ -1,5 +1,7 @@
 source https://nuget.org/api/v2
 
+nuget CommandLineParser >= 2.0
+
 github andburn/dds-reader DDSReader/DDS.cs
 github andburn/dds-reader DDSReader/DDSImage.cs
 github andburn/dds-reader DDSReader/Decompressor.cs
