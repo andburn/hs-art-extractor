@@ -17,20 +17,61 @@ namespace HsArtExtractorCLI
 	{
 		private static int Main(string[] args)
 		{
-			var result = CommandLine.Parser.Default.ParseArguments<DumpOptions>(args);
-			var exitCode = result.MapResult(
-				options =>
-				{
-					if (options.Verbose)
-						Console.WriteLine("Filenames: {0}", string.Join(",", options.InputFiles.ToArray()));
-					return 0;
-				},
-				errors =>
-				{
-					Logger.Log(errors);
-					return 1;
-				});
-			return exitCode;
+			return CommandLine.Parser.Default.ParseArguments<DumpOptions, CardArtOptions>(args)
+				.MapResult(
+				(DumpOptions opts) => DumpCommand(opts),
+				(CardArtOptions opts) => CardArtCommand(opts),
+				errors => 1);
+		}
+
+		private static int CardArtCommand(CardArtOptions opts)
+		{
+			Console.WriteLine("CARDART");
+
+			Console.WriteLine("HsDir: {0}", opts.HsDirectory);
+
+			if (string.IsNullOrWhiteSpace(opts.Output))
+				Console.WriteLine("Output: current directory");
+			else
+				Console.WriteLine("Output: " + opts.Output);
+
+			if (opts.NoFlip)
+				Console.WriteLine("+ no-flip");
+			if (opts.NoAlpha)
+				Console.WriteLine("+ no-alpha");
+			if (opts.Group)
+				Console.WriteLine("+ group");
+			if (opts.Name)
+				Console.WriteLine("+ name");
+			if (opts.Sets.Count() > 0)
+				Console.WriteLine("Sets: {0}", string.Join(",", opts.Sets.ToArray()));
+			if (opts.Types.Count() > 0)
+				Console.WriteLine("Types: {0}", string.Join(",", opts.Types.ToArray()));
+			if (!string.IsNullOrWhiteSpace(opts.MapFile))
+				Console.WriteLine("MapFile: {0}", opts.MapFile);
+
+			return 0;
+		}
+
+		private static int DumpCommand(DumpOptions opts)
+		{
+			Console.WriteLine("DUMP");
+
+			Console.WriteLine("Input: {0}", string.Join(",", opts.InputFiles.ToArray()));
+
+			if (string.IsNullOrWhiteSpace(opts.Output))
+				Console.WriteLine("Output: current directory");
+			else
+				Console.WriteLine("Output: " + opts.Output);
+
+			if (opts.RawAssets)
+				Console.WriteLine("+ raw");
+			if (opts.TextAssets)
+				Console.WriteLine("+ text");
+			if (opts.TextureAssets)
+				Console.WriteLine("+ texture");
+
+			return 0;
 		}
 	}
 
