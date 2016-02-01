@@ -49,7 +49,7 @@ namespace HsArtExtractorCLI
 	internal class DumpOptions
 	{
 		[Option('o', "output-dir",
-			HelpText = "The directory where output files will be extracted to.")]
+			HelpText = "The directory to save the extracted files to.")]
 		public string Output { get; set; }
 
 		[Option("text",

@@ -2,8 +2,8 @@
 
 namespace HsArtExtractor.Unity.Extract
 {
-    internal interface IExtractor
-    {
-        void Extract(ObjectData data, string dir);
-    }
+	internal interface IExtractor
+	{
+		void Extract(ObjectData data, string dir);
+	}
 }
