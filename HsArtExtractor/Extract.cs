@@ -23,10 +23,9 @@ namespace HsArtExtractor
 			ExtractAssets(new TextureExtractor(), outDir, files);
 		}
 
-		public static void CardArt(string outDir, string hsDir, int setId = -1)
+		public static void CardArt(CardArtExtractorOptions options)
 		{
-			var extractor = new CardArtExtractor(outDir, hsDir, setId);
-			extractor.Extract();
+			CardArtExtractor.Extract(options);
 		}
 
 		// TODO this could be done better
