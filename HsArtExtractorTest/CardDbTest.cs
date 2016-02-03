@@ -20,7 +20,7 @@ namespace HsArtExtractorTest
 		[TestMethod]
 		public void CardDbCount()
 		{
-			Assert.AreEqual(3, _cards.Count);
+			Assert.AreEqual(4, _cards.Count);
 		}
 
 		[TestMethod]
@@ -66,6 +66,42 @@ namespace HsArtExtractorTest
 		{
 			Assert.IsFalse(
 				new Card("CS1_112", "Holy Nova", CardType.ABILITY, CardSet.CORE, true) == _cards["CS1_112"]);
+		}
+
+		[TestMethod]
+		public void FilterWithEmptyLists()
+		{
+			var f = CardDb.FilterBy(new List<CardSet>(), new List<CardType>());
+			Assert.AreEqual(4, f.Count);
+		}
+
+		[TestMethod]
+		public void FilterWithTypeList()
+		{
+			var f = CardDb.FilterBy(new List<CardSet>(), new List<CardType> { CardType.ABILITY });
+			Assert.AreEqual(1, f.Count);
+		}
+
+		[TestMethod]
+		public void FilterWithSetList()
+		{
+			var f = CardDb.FilterBy(new List<CardSet> { CardSet.FP1 }, new List<CardType>());
+			Assert.AreEqual(1, f.Count);
+		}
+
+		[TestMethod]
+		public void FilterWithSetAndTypeList()
+		{
+			var f = CardDb.FilterBy(new List<CardSet> { CardSet.FP1 }, new List<CardType> { CardType.MINION });
+			Assert.AreEqual(1, f.Count);
+		}
+
+		[TestMethod]
+		public void FilterWithMultiSetAndTypeList()
+		{
+			var f = CardDb.FilterBy(new List<CardSet> { CardSet.FP1, CardSet.CORE },
+				new List<CardType> { CardType.MINION });
+			Assert.AreEqual(2, f.Count);
 		}
 	}
 }

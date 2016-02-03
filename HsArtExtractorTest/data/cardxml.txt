@@ -56,4 +56,9 @@ Restore #2 Health.</Tag>
     <Tag enumID="365" type="String">Unlocked at Level 45.</Tag>
     <Power definition="add8d26e-2838-4f10-97f4-d2a9312b79b5" />
   </Entity>
+  <Entity version="2" CardID="FP1_001">
+    <Tag enumID="185" type="String">Zombie Chow</Tag>
+    <Tag enumID="183" type="" value="12" />
+    <Tag enumID="202" type="" value="4" />
+  </Entity>
 </CardDefs>
