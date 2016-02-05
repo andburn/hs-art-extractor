@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AndBurn.DDSReader;
 using HsArtExtractor.Hearthstone.CardArt;
+using HsArtExtractor.Hearthstone.Database;
 using HsArtExtractor.Image;
 using HsArtExtractor.Unity;
 using HsArtExtractor.Unity.Objects;
@@ -75,6 +76,26 @@ namespace HsArtExtractor.Hearthstone.Bundle
 
 		private void SaveImages(Texture2D tex, ArtCard match)
 		{
+			var cardId = match.Id;
+			var card = CardDb.All[cardId];
+			var cardName = card.Name;
+			var cardSet = card.Set;
+			var filename = cardId;
+			var subDir = "";
+
+			if (_opts.AddCardName)
+				filename = StringUtils.SafeString(cardName) + "-" + filename;
+
+			if (_opts.GroupBySet)
+			{
+				if (CardEnumConverter.FriendlySetName.ContainsKey(cardSet))
+					subDir = CardEnumConverter.FriendlySetName[cardSet];
+				else
+					subDir = "Other";
+				// TODO need for all formats
+				Directory.CreateDirectory(Path.Combine(_dirFull, subDir));
+			}
+
 			// TODO: raw tga?
 			Bitmap original = null;
 			if (tex.IsDDS)
@@ -95,7 +116,7 @@ namespace HsArtExtractor.Hearthstone.Bundle
 			// flip "right" way up
 			if (_opts.FlipY)
 				full.RotateFlip(RotateFlipType.RotateNoneFlipY);
-			full.Save(Path.Combine(_dirFull, match.Id + ".png"));
+			full.Save(Path.Combine(_dirFull, subDir, filename + ".png"));
 			// save card bar image to disk
 			//Export.CardBar(match, original, _dirBars);
 		}

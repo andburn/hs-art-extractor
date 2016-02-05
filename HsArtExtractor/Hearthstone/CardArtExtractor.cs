@@ -24,18 +24,31 @@ namespace HsArtExtractor.Hearthstone
 			// Init set and type filters
 			List<CardSet> includeSets = CardEnumConverter.SetIds(opts.Sets);
 			List<CardType> includeTypes = CardEnumConverter.TypeIds(opts.Types);
-			var filtering = includeSets.Count > 0 || includeTypes.Count > 0;
 
 			// Load card data
 			LoadCardDb(opts.OutputDir);
 
-			// Load card art data (cards<n>.unity3d)
-			var cardsFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cards?.unity3d"));
-			var artCards = new CardsBundle(cardsFiles);
-			// create CardArtDb defs
-			var defs = new CardArt.CardArtDefs();
-			defs.Patch = GetPatchVersion(opts.HearthstoneDir);
-			defs.Cards = artCards.Cards;
+			// If a map file was supplied, use that instead of parsing cards files
+			CardArtDefs defs = null;
+			if (File.Exists(opts.MapFile))
+			{
+				Logger.Log(LogLevel.INFO, "using map file: {0}", opts.MapFile);
+				CardArtDb.Read(opts.MapFile);
+				defs = CardArtDb.Defs;
+			}
+			else
+			{
+				// map file not found, using default method
+				Logger.Log(LogLevel.WARN, "map file not found: {0}", opts.MapFile);
+
+				// Load card art data (cards<n>.unity3d)
+				var cardsFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cards?.unity3d"));
+				var artCards = new CardsBundle(cardsFiles);
+				// create CardArtDb defs
+				defs = new CardArtDefs();
+				defs.Patch = GetPatchVersion(opts.HearthstoneDir);
+				defs.Cards = artCards.Cards;
+			}
 
 			// Create the list of cards we want to output
 			List<ArtCard> filteredCards = null;

@@ -7,6 +7,24 @@ namespace HsArtExtractor.Hearthstone
 	// TODO use proper converter?
 	internal class CardEnumConverter
 	{
+		internal static Dictionary<CardSet, string> FriendlySetName =
+			new Dictionary<CardSet, string> {
+				{ CardSet.CORE, "Basic" },
+				{ CardSet.EXPERT1, "Classic" },
+				{ CardSet.REWARD, "Reward" },
+				{ CardSet.MISSIONS, "Missions" },
+				{ CardSet.CHEAT, "Cheat" },
+				{ CardSet.PROMO, "Promo" },
+				{ CardSet.FP1, "Curse of Naxxramas" },
+				{ CardSet.PE1, "Goblins vs Gnomes" },
+				{ CardSet.BRM, "Black Rock Mountain" },
+				{ CardSet.TGT, "The Grand Tournament" },
+				{ CardSet.CREDITS, "Credits" },
+				{ CardSet.HERO_SKINS, "Hero Skins" },
+				{ CardSet.TB, "Tavern Brawl" },
+				{ CardSet.LOE, "League of Explorers" }
+			};
+
 		internal static List<CardSet> SetIds(List<string> sets)
 		{
 			List<CardSet> setIds = new List<CardSet>();

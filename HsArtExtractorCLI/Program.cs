@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CommandLine;
@@ -23,6 +24,9 @@ namespace HsArtExtractorCLI
 
 		private static int CardArtCommand(CardArtOptions opts)
 		{
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
 			var dir = Directory.GetCurrentDirectory();
 
 			Console.WriteLine("Hearthstone Dir: {0}", opts.HsDirectory);
@@ -77,6 +81,10 @@ namespace HsArtExtractorCLI
 			exOptions.MapFile = opts.MapFile;
 
 			Extract.CardArt(exOptions);
+
+			stopWatch.Stop();
+			TimeSpan ts = stopWatch.Elapsed;
+			Console.WriteLine(ts);
 
 			return 0;
 		}
