@@ -38,6 +38,8 @@ namespace HsArtExtractorCLI
 			CardArtExtractorOptions exOptions = new CardArtExtractorOptions();
 			exOptions.HearthstoneDir = opts.HsDirectory;
 			exOptions.OutputDir = dir;
+			exOptions.FullArtOnly = opts.FullArtOnly;
+			exOptions.BarArtOnly = opts.BarArtOnly;
 
 			if (opts.FullArtOnly)
 			{
@@ -46,27 +48,15 @@ namespace HsArtExtractorCLI
 				if (!parsed)
 					Logger.Log(LogLevel.ERROR, "integer parse failed for: {0}", opts.Height);
 
-				exOptions.Width = height;
 				exOptions.Height = height;
 			}
 			else if (opts.BarArtOnly)
 			{
-				var width = 0;
 				var height = 0;
-				if (!string.IsNullOrWhiteSpace(opts.BarSize))
-				{
-					var splits = opts.BarSize.Split('x');
-					if (splits.Length == 2)
-					{
-						int.TryParse(splits[0], out width);
-						int.TryParse(splits[1], out height);
-					}
-					else
-					{
-						Logger.Log(LogLevel.WARN, "BarSize format incorrect: ", opts.BarSize);
-					}
-				}
-				exOptions.BarWidth = width;
+				var parsed = int.TryParse(opts.BarHeight, out height);
+				if (!parsed)
+					Logger.Log(LogLevel.ERROR, "integer parse failed for: {0}", opts.BarHeight);
+
 				exOptions.BarHeight = height;
 			}
 
@@ -79,6 +69,7 @@ namespace HsArtExtractorCLI
 			exOptions.Types = opts.Types.ToList();
 			exOptions.NoFiltering = opts.NoFiltering;
 			exOptions.MapFile = opts.MapFile;
+			exOptions.ImageType = opts.ImageType;
 
 			Extract.CardArt(exOptions);
 

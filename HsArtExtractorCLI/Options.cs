@@ -18,6 +18,11 @@ namespace HsArtExtractorCLI
 			SetName = "full")]
 		public string Height { get; set; }
 
+		[Option("image-type",
+			HelpText = "Specify the image type; png or jpg (or dds not compatible with height or flip).",
+			SetName = "full")]
+		public string ImageType { get; set; }
+
 		// card bar specific options
 
 		[Option("bar-only",
@@ -25,10 +30,10 @@ namespace HsArtExtractorCLI
 			SetName = "bar")]
 		public bool BarArtOnly { get; set; }
 
-		[Option("bar-size",
+		[Option("bar-height",
 			SetName = "bar",
-			HelpText = "The desired size of the card bar images (resize and crop original). Format is <width>x<height> e.g. 100x20.")]
-		public string BarSize { get; set; }
+			HelpText = "The desired height of the card bar images.")]
+		public string BarHeight { get; set; }
 
 		// general options
 
