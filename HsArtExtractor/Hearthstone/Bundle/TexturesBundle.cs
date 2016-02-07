@@ -19,21 +19,20 @@ namespace HsArtExtractor.Hearthstone.Bundle
 		private List<string> _files;
 		private string _dirFull;
 		private string _dirBars;
-		private string _dirRaw;
 
 		public TexturesBundle(List<string> files, CardArtExtractorOptions opts)
 		{
 			_files = files;
 			_opts = opts;
-
 			_dir = opts.OutputDir;
-			// TODO: may not need all these, opts
-			_dirRaw = Path.Combine(_dir, "Raw");
-			Directory.CreateDirectory(_dirRaw);
 			_dirFull = Path.Combine(_dir, "Full");
-			Directory.CreateDirectory(_dirFull);
 			_dirBars = Path.Combine(_dir, "Bars");
-			Directory.CreateDirectory(_dirBars);
+
+			if (!opts.BarArtOnly)
+				Directory.CreateDirectory(_dirFull);
+
+			if (!opts.FullArtOnly)
+				Directory.CreateDirectory(_dirBars);
 		}
 
 		public Dictionary<string, string> Extract(Dictionary<long, string> refs, List<ArtCard> cards)
@@ -92,19 +91,25 @@ namespace HsArtExtractor.Hearthstone.Bundle
 					subDir = CardEnumConverter.FriendlySetName[cardSet];
 				else
 					subDir = "Other";
-				// TODO need for all formats
-				Directory.CreateDirectory(Path.Combine(_dirFull, subDir));
+
+				if (!_opts.BarArtOnly)
+					Directory.CreateDirectory(Path.Combine(_dirFull, subDir));
 			}
 
-			// TODO: raw tga?
+			if (_opts.ImageType?.ToLower() == "dds" && !_opts.BarArtOnly)
+			{
+				tex.Save(Path.Combine(_dirFull, subDir), filename);
+				return;
+			}
+
 			Bitmap original = null;
 			if (tex.IsDDS)
 			{
-				//tex.Save(_dirRaw, match.Id);
 				original = DDS.LoadImage(tex.Image, _opts.PreserveAlphaChannel);
 			}
 			else
 			{
+				// TODO: tga alpha channel?
 				// Assumimg it is TGA
 				var tga = new TargaImage(new MemoryStream(tex.Image));
 				original = tga.Image;
@@ -112,13 +117,19 @@ namespace HsArtExtractor.Hearthstone.Bundle
 				original.RotateFlip(RotateFlipType.RotateNoneFlipY);
 			}
 			// save full size image to disk
-			var full = new Bitmap(original);
+			Bitmap full = new Bitmap(original);
+			if (_opts.Height > 0)
+				full = new Bitmap(original, _opts.Height, _opts.Height);
+
 			// flip "right" way up
 			if (_opts.FlipY)
 				full.RotateFlip(RotateFlipType.RotateNoneFlipY);
-			full.Save(Path.Combine(_dirFull, subDir, filename + ".png"));
-			// save card bar image to disk
-			//Export.CardBar(match, original, _dirBars);
+
+			if (!_opts.BarArtOnly)
+				full.Save(Path.Combine(_dirFull, subDir, filename + "." + _opts.ImageType.ToLower()));
+
+			if (!_opts.FullArtOnly)
+				Export.CardBar(match, original, _dirBars, _opts.BarHeight);
 		}
 	}
 }
