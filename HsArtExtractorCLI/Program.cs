@@ -69,7 +69,9 @@ namespace HsArtExtractorCLI
 			exOptions.Types = opts.Types.ToList();
 			exOptions.NoFiltering = opts.NoFiltering;
 			exOptions.MapFile = opts.MapFile;
-			exOptions.ImageType = opts.ImageType;
+
+			if (opts.ImageType != null)
+				exOptions.ImageType = opts.ImageType;
 
 			Extract.CardArt(exOptions);
 
