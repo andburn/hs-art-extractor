@@ -23,22 +23,19 @@
         <!-- Main Controls -->
         <StackPanel Grid.Column="0" Grid.RowSpan="4" Margin="0,0,5,0">
             <!-- Folder Browse button and label -->
-            <GroupBox Header="Open Folder">
+            <GroupBox Header="Image Folder">
                 <StackPanel Margin="0,6,0,0">
                     <Button x:Name="BtnBrowse" Content="Browse" Click="BtnBrowse_Click" Padding="4" />
                     <Label x:Name="LblFolder" HorizontalAlignment="Left" Content="Folder Path" />
                 </StackPanel>
             </GroupBox>
-
-            <!-- Manually adjust offsets (TODO probably don't need this) -->
-            <DockPanel Margin="0,4">
-                <Label DockPanel.Dock="Left" Width="64" Content="Adjust X"></Label>
-                <TextBox x:Name="AdjustX" Text="0" />
-            </DockPanel>
-            <DockPanel Margin="0,4">
-                <Label DockPanel.Dock="Left" Width="64" Content="AdjustY"></Label>
-                <TextBox x:Name="AdjustY" Text="0" />
-            </DockPanel>
+            <!-- File Browse button and label -->
+            <GroupBox Header="Map File">
+                <StackPanel Margin="0,6,0,0">
+                    <Button x:Name="BtnMapBrowse" Content="Browse" Click="BtnMapBrowse_Click" Padding="4" />
+                    <Label x:Name="LblMapFile" HorizontalAlignment="Left" Content="Map File" />
+                </StackPanel>
+            </GroupBox>
 
             <!-- Offsets in the format they appear in the material object -->
             <Label FontWeight="Bold">Standard</Label>
@@ -88,10 +85,12 @@
         </StackPanel>
 
         <!-- Navigation panel prev/next image in set -->
-        <WrapPanel Grid.Column="1" Grid.Row="1">
-            <Button x:Name="BtnPrevious" Click="BtnPrevious_Click" Content="Prev" />
-            <Button x:Name="BtnNext" Click="BtnNext_Click" Content="Next" />
-        </WrapPanel>
+        <DockPanel Grid.Column="1" Grid.Row="1">
+            <Button DockPanel.Dock="Left" Width="100"
+                    x:Name="BtnPrevious" Click="BtnPrevious_Click" Content="Prev" />
+            <Button DockPanel.Dock="Right" Width="100"
+                    x:Name="BtnNext" Click="BtnNext_Click" Content="Next" HorizontalAlignment="Right" />
+        </DockPanel>
 
         <!-- Canvas to display images -->
         <Canvas Grid.Column="1" Grid.Row="2"
