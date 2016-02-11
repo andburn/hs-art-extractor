@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HsBarArtViewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="720">
+        Title="MainWindow" Height="827.017" Width="720">
 
     <Grid Margin="5" ShowGridLines="False">
         <!-- Grid Definitions -->
@@ -42,33 +42,33 @@
             <Separator Height="4" Margin="0,0,0,2" />
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Tiling X"></Label>
-                <TextBox x:Name="Std_TileX" Text="1" />
+                <TextBox x:Name="Std_TileX" Text="{Binding StandardScale.X}" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Tiling Y"></Label>
-                <TextBox x:Name="Std_TileY" Text="1" />
+                <TextBox x:Name="Std_TileY" Text="{Binding StandardScale.Y}" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset X"></Label>
-                <TextBox x:Name="Std_OffsetX" Text="-0.2" />
+                <TextBox x:Name="Std_OffsetX" Text="{Binding StandardOffset.X}" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset Y"></Label>
-                <TextBox x:Name="Std_OffsetY" Text="0.25" />
+                <TextBox x:Name="Std_OffsetY" Text="{Binding StandardOffset.Y}" />
             </DockPanel>
             <Label Margin="0, 10, 0, 0" FontWeight="Bold">Shader</Label>
             <Separator Height="4" Margin="0,0,0,10" />
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Scale"></Label>
-                <TextBox x:Name="Shd_Scale" Text="1" />
+                <TextBox x:Name="Shd_Scale" Text="{Binding ShaderScale.X}" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset X"></Label>
-                <TextBox x:Name="Shd_OffsetX" Text="0" />
+                <TextBox x:Name="Shd_OffsetX" Text="{Binding ShaderOffset.X}" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset Y"></Label>
-                <TextBox x:Name="Shd_OffsetY" Text="0" />
+                <TextBox x:Name="Shd_OffsetY" Text="{Binding ShaderOffset.Y}" />
             </DockPanel>
 
             <!-- Calculate image position based on inputs (TODO could use binding instead) -->
@@ -81,11 +81,11 @@
 
         <!-- The name of the currently loaded image -->
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label x:Name="LblImageTitle" HorizontalAlignment="Center">Image Title</Label>
+            <Label x:Name="LblImageTitle" HorizontalAlignment="Center" Content="{Binding CardId}" />
         </StackPanel>
 
         <!-- Navigation panel prev/next image in set -->
-        <DockPanel Grid.Column="1" Grid.Row="1">
+        <DockPanel Grid.Column="1" Grid.Row="1" Margin="0,4">
             <Button DockPanel.Dock="Left" Width="100"
                     x:Name="BtnPrevious" Click="BtnPrevious_Click" Content="Prev" />
             <Button DockPanel.Dock="Right" Width="100"
@@ -101,14 +101,16 @@
                 PreviewMouseUp="Canvas_MouseLeftUp"
                 PreviewMouseMove="Canvas_MouseMove"
                 PreviewMouseWheel="Canvas_MouseWheel">
+            <!-- Default portrait image -->
             <Image x:Name="ImgBase" Source="pack://application:,,,/Resources/portrait.png" Stretch="None" />
+            <!-- Bar overlay image for positioning -->
             <Image x:Name="ImgOverlay" Source="pack://application:,,,/Resources/overlay.png" Stretch="None" />
         </Canvas>
 
         <!-- Status output panel -->
-        <Border Grid.ColumnSpan="2" Grid.Row="3" Margin="8,0,0,0" BorderThickness="1" BorderBrush="Gray">
-            <ScrollViewer>
-                <TextBlock x:Name="tbStatus" />
+        <Border Grid.ColumnSpan="2" Grid.Row="3" Margin="0,6,0,0" BorderThickness="1" BorderBrush="Gray" Padding="0">
+            <ScrollViewer x:Name="svStatus">
+                <TextBlock x:Name="tbStatus" Background="Black" Foreground="White" />
             </ScrollViewer>
         </Border>
     </Grid>

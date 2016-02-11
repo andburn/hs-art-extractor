@@ -35,10 +35,15 @@ namespace HsBarArtViewer
 		// Current file index in the list
 		private int _fileIndex;
 
+		// Data context object
+		private BarTransform _barContext;
+
 		public MainWindow()
 		{
 			_zoomPercent = 1;
 			_fileIndex = 0;
+			_barContext = new BarTransform();
+			DataContext = _barContext;
 			InitializeComponent();
 		}
 
@@ -47,6 +52,7 @@ namespace HsBarArtViewer
 		private void BtnBrowse_Click(object sender, RoutedEventArgs e)
 		{
 			var dialog = new FolderBrowserDialog();
+			//dialog.RootFolder = Environment.SpecialFolder.MyDocuments;
 			var result = dialog.ShowDialog();
 			if (result == FormsDialogResult.OK)
 			{
@@ -78,6 +84,7 @@ namespace HsBarArtViewer
 		private void BtnCalculate_Click(object sender, RoutedEventArgs e)
 		{
 			StatusWrite("Calculate Clicked");
+			StatusWrite(_barContext.GetRectangle().ToString());
 		}
 
 		private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -148,30 +155,18 @@ namespace HsBarArtViewer
 
 		private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
 		{
-			if (_original == null)
-				_original = (BitmapImage)ImgBase.Source; // TODO cast can be bad here
-
 			// defuault: 120 forward scroll, -120 backward scroll
 			int movement = e.Delta;
-
-			StatusWrite("Zoom level: " + _zoomPercent);
 			StatusWrite("Delta:" + movement);
 
 			if (movement != 0)
 			{
 				var tick = movement > 0 ? 0.05 : -0.05;
 				_zoomPercent = Math.Round(_zoomPercent + tick, 2);
+				ZoomImage(_zoomPercent);
 			}
 
 			StatusWrite("Zoom level after: " + _zoomPercent);
-			if (movement != 0)
-			{
-				var bitmap = new TransformedBitmap(_original,
-					new ScaleTransform(_zoomPercent, _zoomPercent)
-				);
-
-				ImgBase.Source = bitmap;
-			}
 		}
 
 		// Utility Methods
@@ -179,6 +174,21 @@ namespace HsBarArtViewer
 		private void StatusWrite(string text)
 		{
 			tbStatus.Text += $"{text}\n";
+			svStatus.ScrollToBottom();
+		}
+
+		private void ZoomImage(double amount)
+		{
+			if (_original == null)
+				_original = (BitmapImage)ImgBase.Source; // TODO cast can be bad here
+
+			StatusWrite("Zoom level: " + amount);
+
+			var bitmap = new TransformedBitmap(_original,
+				new ScaleTransform(amount, amount)
+			);
+
+			ImgBase.Source = bitmap;
 		}
 
 		private void ResetView()
@@ -199,11 +209,39 @@ namespace HsBarArtViewer
 				var cardId = StringUtils.GetFilenameNoExt(filename);
 				ImgBase.Source = BitmapToImageSource(new Bitmap(filename));
 				_original = (BitmapImage)ImgBase.Source; // TODO same problem as above
+				Rectangle rect = new Rectangle();
 				if (CardArtDb.All.ContainsKey(cardId))
 				{
 					StatusWrite(CardArtDb.All[cardId].Texture.Path);
+					_barContext = new BarTransform(CardArtDb.All[cardId]);
+					DataContext = _barContext;
+					// Rect stuff
+					rect = _barContext.GetRectangle();
 				}
 				ResetView();
+				// unset view!
+				if (rect.Width != 0 && rect.Height != 0)
+				{
+					var scale = 512.0 / rect.Width;
+					StatusWrite("bar scale = " + scale);
+					ZoomImage(scale);
+
+					var yFlip = 512.0 - rect.Y - rect.Height; // TODO need to double check this, seems wrong
+					var wDash = rect.Width * scale;
+					var hDash = rect.Height * scale;
+					var xDash = ((double)rect.X * scale) * -1;
+					var yDash = (yFlip * scale) * -1 + 197.5;
+
+					ImgBase.SetValue(Canvas.LeftProperty, xDash);
+					ImgBase.SetValue(Canvas.TopProperty, yDash);
+					//var shape = new System.Windows.Shapes.Rectangle();
+					//shape.Width = rect.Width;
+					//shape.Height = rect.Height;
+					//shape.SetValue(Canvas.LeftProperty, (double)rect.X);
+					//shape.SetValue(Canvas.TopProperty, yFlip);
+					//shape.Stroke = new SolidColorBrush() { Color = System.Windows.Media.Colors.Azure };
+					//CnvMain.Children.Add(shape);
+				}
 			}
 		}
 
