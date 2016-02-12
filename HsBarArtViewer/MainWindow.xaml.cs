@@ -85,6 +85,27 @@ namespace HsBarArtViewer
 		{
 			StatusWrite("Calculate Clicked");
 			StatusWrite(_barContext.GetRectangle().ToString());
+
+			var barX = 0.0;
+			var barY = 197.5;
+			var imgX = Canvas.GetLeft(ImgBase);
+			var imgY = Canvas.GetTop(ImgBase);
+			//var pt = new System.Drawing.PointF((float)(barX - imgX), (float)(barY - imgY));
+			var rect = new Rectangle();
+
+			StatusWrite($"{barX},{barY} {imgX},{imgY}");
+
+			rect.Width = (int)Math.Round(512 / _zoomPercent);
+			rect.Height = (int)Math.Round(117 / _zoomPercent);
+			rect.X = (int)Math.Round((imgX * -1) / _zoomPercent);
+			var yFlip = (int)Math.Round((197.5 - imgY) / _zoomPercent);
+			rect.Y = (int)Math.Round(512.0 - rect.Height - yFlip);
+
+			StatusWrite(yFlip.ToString());
+			StatusWrite(rect.ToString());
+
+			var bout = _barContext.SetRectangle(rect);
+			StatusWrite(bout);
 		}
 
 		private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -179,6 +200,9 @@ namespace HsBarArtViewer
 
 		private void ZoomImage(double amount)
 		{
+			// TODO ehh
+			_zoomPercent = amount;
+
 			if (_original == null)
 				_original = (BitmapImage)ImgBase.Source; // TODO cast can be bad here
 
@@ -227,6 +251,7 @@ namespace HsBarArtViewer
 					ZoomImage(scale);
 
 					var yFlip = 512.0 - rect.Y - rect.Height; // TODO need to double check this, seems wrong
+					StatusWrite(yFlip.ToString());
 					var wDash = rect.Width * scale;
 					var hDash = rect.Height * scale;
 					var xDash = ((double)rect.X * scale) * -1;

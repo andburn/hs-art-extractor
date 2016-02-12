@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using HsArtExtractor.Hearthstone.CardArt;
 
 namespace HsBarArtViewer
@@ -70,6 +71,33 @@ namespace HsBarArtViewer
 		public Rectangle GetRectangle()
 		{
 			return Export.GetCardBarRect(_tStandard, _tShader);
+		}
+
+		public string SetRectangle(Rectangle rect)
+		{
+			PointF CardBarTL = new PointF(0.0f, 0.3856f);
+			PointF CardBarBR = new PointF(1.0f, 0.6144f);
+			float TexDim = 512.0f;
+
+			PointF shd = new PointF(rect.X / TexDim, rect.Y / TexDim);
+			var scale = rect.Width / TexDim;
+			var offX = shd.X / scale - CardBarTL.X;
+			var offY = shd.Y / scale - CardBarTL.Y;
+
+			StandardOffset.X = 0;
+			StandardOffset.Y = 0;
+			StandardScale.X = StandardScale.Y = 1;
+
+			ShaderOffset.X = (float)Math.Round(offX, 2);
+			ShaderOffset.Y = (float)Math.Round(offY, 2);
+			ShaderScale.X = ShaderScale.Y = (float)Math.Round(scale, 2);
+
+			return $"{shd} {offX} {offY} {scale}";
+		}
+
+		public override string ToString()
+		{
+			return $"{ShaderOffset.X} {ShaderOffset.Y} {ShaderScale.X} {ShaderScale.Y}";
 		}
 	}
 }
