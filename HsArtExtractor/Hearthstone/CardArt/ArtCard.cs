@@ -54,5 +54,14 @@ namespace HsArtExtractor.Hearthstone.CardArt
 		{
 			return Materials.FirstOrDefault(x => x.Type == type);
 		}
+
+		public bool HasBarCoords()
+		{
+			var mat = GetMaterial(MaterialType.CardBar);
+			if (mat != null && !mat.IsEmpty())
+				return true;
+
+			return false;
+		}
 	}
 }

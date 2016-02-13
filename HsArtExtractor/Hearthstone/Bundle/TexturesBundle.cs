@@ -126,7 +126,11 @@ namespace HsArtExtractor.Hearthstone.Bundle
 				full.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
 			if (!_opts.BarArtOnly)
+			{
+				if (_opts.WithoutBarCoords && match.HasBarCoords())
+					return;
 				full.Save(Path.Combine(_dirFull, subDir, filename + "." + _opts.ImageType.ToLower()));
+			}
 
 			if (!_opts.FullArtOnly)
 				Export.CardBar(match, original, _dirBars, _opts.BarHeight);

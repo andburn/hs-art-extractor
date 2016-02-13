@@ -19,6 +19,7 @@ namespace HsArtExtractor.Hearthstone
 		public int Height { get; set; }
 		public bool FlipY { get; set; } = true;
 		public int BarHeight { get; set; }
+		public bool WithoutBarCoords { get; set; }
 		public string ImageType { get; set; } = "png";
 
 		public override string ToString()

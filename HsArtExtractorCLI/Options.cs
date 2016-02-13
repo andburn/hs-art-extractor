@@ -23,6 +23,11 @@ namespace HsArtExtractorCLI
 			SetName = "full")]
 		public string ImageType { get; set; }
 
+		[Option("without-bar-coords-only",
+			SetName = "full",
+			HelpText = "Only output images without any card bar coordinates.")]
+		public bool WithoutBarCoords { get; set; }
+
 		// card bar specific options
 
 		[Option("bar-only",

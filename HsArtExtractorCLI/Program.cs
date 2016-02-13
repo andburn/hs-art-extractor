@@ -49,6 +49,7 @@ namespace HsArtExtractorCLI
 					Logger.Log(LogLevel.ERROR, "integer parse failed for: {0}", opts.Height);
 
 				exOptions.Height = height;
+				exOptions.WithoutBarCoords = opts.WithoutBarCoords;
 			}
 			else if (opts.BarArtOnly)
 			{
