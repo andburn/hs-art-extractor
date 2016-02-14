@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using HsArtExtractor.Hearthstone.CardArt;
 
 namespace HsBarArtViewer
 {
-	public class BarTransform
+	public class ArtCardBarWrapper
 	{
 		public string CardId { get; set; }
 		public string TextureName { get; set; }
@@ -18,7 +19,7 @@ namespace HsBarArtViewer
 		private Transform _tStandard;
 		private Transform _tShader;
 
-		public BarTransform()
+		public ArtCardBarWrapper()
 		{
 			_artCard = new ArtCard();
 			_tStandard = new Transform() {
@@ -28,8 +29,8 @@ namespace HsBarArtViewer
 			};
 			_tShader = new Transform() {
 				Type = TransformType.Shader,
-				Offset = new CoordinateTransform(1, 1),
-				Scale = new CoordinateTransform(0, 0)
+				Offset = new CoordinateTransform(0, 0),
+				Scale = new CoordinateTransform(1, 1)
 			};
 			CardId = "NA";
 			TextureName = "NA";
@@ -40,7 +41,7 @@ namespace HsBarArtViewer
 			ShaderOffset = _tShader.Offset;
 		}
 
-		public BarTransform(ArtCard card) : this()
+		public ArtCardBarWrapper(ArtCard card) : this()
 		{
 			_artCard = card;
 			CardId = card.Id;
@@ -93,6 +94,28 @@ namespace HsBarArtViewer
 			ShaderScale.X = ShaderScale.Y = (float)Math.Round(scale, 2);
 
 			return $"{shd} {offX} {offY} {scale}";
+		}
+
+		public void Save()
+		{
+			if (_artCard.GetMaterial(MaterialType.CardBar) == null)
+			{
+				var barmat = new Material() {
+					Type = MaterialType.CardBar,
+					Transforms = new List<Transform>() {
+						new Transform() { Type = TransformType.Standard },
+						new Transform() { Type = TransformType.Shader }
+					}
+				};
+				_artCard.Materials.Add(barmat);
+			}
+			var barMaterial = _artCard.GetMaterial(MaterialType.CardBar);
+			var shdr = barMaterial.GetTransform(TransformType.Shader);
+			var std = barMaterial.GetTransform(TransformType.Standard);
+			std.Offset = new CoordinateTransform(StandardOffset.X, StandardOffset.Y);
+			std.Scale = new CoordinateTransform(StandardScale.X, StandardScale.Y);
+			shdr.Offset = new CoordinateTransform(ShaderOffset.X, ShaderOffset.Y);
+			shdr.Scale = new CoordinateTransform(ShaderScale.X, ShaderScale.Y);
 		}
 
 		public override string ToString()

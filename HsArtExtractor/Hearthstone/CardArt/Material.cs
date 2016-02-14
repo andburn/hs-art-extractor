@@ -77,6 +77,11 @@ namespace HsArtExtractor.Hearthstone.CardArt
 			Transforms.Add(t);
 		}
 
+		public void AddTransform(Transform transform)
+		{
+			Transforms.Add(transform);
+		}
+
 		public Transform GetTransform(TransformType type)
 		{
 			return Transforms.FirstOrDefault(x => x.Type == type);

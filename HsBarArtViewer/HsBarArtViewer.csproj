@@ -66,6 +66,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BarTransform.cs" />
+    <Compile Include="FileList.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -109,6 +110,9 @@
       <Project>{286713de-2dd7-4399-808a-dbe1c53ad4c6}</Project>
       <Name>HsArtExtractor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\overlay_opaque.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

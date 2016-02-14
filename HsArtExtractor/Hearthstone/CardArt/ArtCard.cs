@@ -50,6 +50,15 @@ namespace HsArtExtractor.Hearthstone.CardArt
 			Materials.Add(mat);
 		}
 
+		public void AddMaterial(Transform standard, Transform shader, MaterialType type)
+		{
+			var mat = new Material();
+			mat.Type = type;
+			mat.AddTransform(standard);
+			mat.AddTransform(shader);
+			Materials.Add(mat);
+		}
+
 		public Material GetMaterial(MaterialType type)
 		{
 			return Materials.FirstOrDefault(x => x.Type == type);

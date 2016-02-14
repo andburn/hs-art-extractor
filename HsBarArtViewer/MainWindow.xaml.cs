@@ -26,23 +26,26 @@ namespace HsBarArtViewer
 		private ControlsImage _draggedImage;
 		private BitmapImage _original;
 
+		// current mask image
+		private bool _isOpaque;
+
 		// For zoom in/out
 		private double _zoomPercent;
 
 		// File list
-		private string[] _fileList;
-
-		// Current file index in the list
-		private int _fileIndex;
+		private FileList _fileList;
 
 		// Data context object
-		private BarTransform _barContext;
+		private ArtCardBarWrapper _barContext;
+
+		private string _mapFile;
 
 		public MainWindow()
 		{
 			_zoomPercent = 1;
-			_fileIndex = 0;
-			_barContext = new BarTransform();
+			_isOpaque = false;
+			_mapFile = null;
+			_barContext = new ArtCardBarWrapper();
 			DataContext = _barContext;
 			InitializeComponent();
 		}
@@ -57,8 +60,9 @@ namespace HsBarArtViewer
 			if (result == FormsDialogResult.OK)
 			{
 				StatusWrite("Loading from " + dialog.SelectedPath);
-				_fileList = Directory.GetFiles(dialog.SelectedPath, "*.png");
-				LoadFile();
+				_fileList = new FileList(
+					Directory.GetFiles(dialog.SelectedPath, "*.png"));
+				LoadFile(_fileList.First());
 			}
 		}
 
@@ -77,7 +81,8 @@ namespace HsBarArtViewer
 				// read db info from file
 				// TODO: handle exceptions?
 				CardArtDb.Read(filename);
-				LoadFile();
+				_mapFile = filename;
+				LoadFile(_fileList.Current());
 			}
 		}
 
@@ -85,6 +90,37 @@ namespace HsBarArtViewer
 		{
 			StatusWrite("Calculate Clicked");
 			StatusWrite(_barContext.GetRectangle().ToString());
+		}
+
+		private void BtnReset_Click(object sender, RoutedEventArgs e)
+		{
+			StatusWrite("Reset Clicked");
+			ResetView();
+		}
+
+		private void BtnPrevious_Click(object sender, RoutedEventArgs e)
+		{
+			StatusWrite("Previous Clicked");
+			LoadFile(_fileList.Previous());
+		}
+
+		private void BtnNext_Click(object sender, RoutedEventArgs e)
+		{
+			StatusWrite("Next Clicked");
+			LoadFile(_fileList.Next());
+		}
+
+		private void BtnToggleMask_Click(object sender, RoutedEventArgs e)
+		{
+			ImgOverlayOpaque.Visibility =
+				ImgOverlayOpaque.IsVisible ? Visibility.Hidden : Visibility.Visible;
+			ImgOverlay.Visibility =
+				ImgOverlay.IsVisible ? Visibility.Hidden : Visibility.Visible;
+		}
+
+		private void BtnSave_Click(object sender, RoutedEventArgs e)
+		{
+			StatusWrite("Save Clicked");
 
 			var barX = 0.0;
 			var barY = 197.5;
@@ -106,28 +142,9 @@ namespace HsBarArtViewer
 
 			var bout = _barContext.SetRectangle(rect);
 			StatusWrite(bout);
-		}
 
-		private void BtnReset_Click(object sender, RoutedEventArgs e)
-		{
-			StatusWrite("Reset Clicked");
-			ResetView();
-		}
-
-		private void BtnPrevious_Click(object sender, RoutedEventArgs e)
-		{
-			StatusWrite("Previous Clicked");
-			if (_fileList != null && _fileIndex - 1 >= 0)
-				_fileIndex -= 1;
-			LoadFile();
-		}
-
-		private void BtnNext_Click(object sender, RoutedEventArgs e)
-		{
-			StatusWrite("Next Clicked");
-			if (_fileList != null && _fileIndex + 1 < _fileList.Length)
-				_fileIndex += 1;
-			LoadFile();
+			_barContext.Save();
+			CardArtDb.Write(_mapFile + ".custom", CardArtDb.Defs);
 		}
 
 		// Canvas image movement handlers
@@ -225,11 +242,10 @@ namespace HsBarArtViewer
 			ImgBase.SetValue(Canvas.TopProperty, _offset.Y);
 		}
 
-		private void LoadFile()
+		private void LoadFile(string filename)
 		{
-			if (_fileList != null && _fileList.Length > 0)
+			if (!string.IsNullOrEmpty(filename))
 			{
-				var filename = _fileList[_fileIndex];
 				var cardId = StringUtils.GetFilenameNoExt(filename);
 				ImgBase.Source = BitmapToImageSource(new Bitmap(filename));
 				_original = (BitmapImage)ImgBase.Source; // TODO same problem as above
@@ -237,7 +253,7 @@ namespace HsBarArtViewer
 				if (CardArtDb.All.ContainsKey(cardId))
 				{
 					StatusWrite(CardArtDb.All[cardId].Texture.Path);
-					_barContext = new BarTransform(CardArtDb.All[cardId]);
+					_barContext = new ArtCardBarWrapper(CardArtDb.All[cardId]);
 					DataContext = _barContext;
 					// Rect stuff
 					rect = _barContext.GetRectangle();

@@ -74,9 +74,15 @@
             <!-- Calculate image position based on inputs (TODO could use binding instead) -->
             <Button x:Name="BtnCalculate" Content="Calculate"
                     Margin="0,10" Padding="6" Click="BtnCalculate_Click" />
-            <!-- Reset the position and zoom of the image -->
-            <Button x:Name="BtnReset" Content="Reset"
-                    Margin="0,5" Padding="6" Click="BtnReset_Click" />
+            <DockPanel Margin="0,4">
+                <!-- Reset the position and zoom of the image -->
+                <Button x:Name="BtnReset" Content="Reset" Width="80"
+                   DockPanel.Dock="Left" Padding="6" Click="BtnReset_Click" />
+                <!-- Button to toggle transparent/opaque mask image -->
+                <Button x:Name="BtnToggleMask" Content="Toggle" Width="80"
+                    DockPanel.Dock="Right" HorizontalAlignment="Right"
+                    Padding="6" Click="BtnToggleMask_Click" />
+            </DockPanel>
         </StackPanel>
 
         <!-- The name of the currently loaded image -->
@@ -90,6 +96,8 @@
                     x:Name="BtnPrevious" Click="BtnPrevious_Click" Content="Prev" />
             <Button DockPanel.Dock="Right" Width="100"
                     x:Name="BtnNext" Click="BtnNext_Click" Content="Next" HorizontalAlignment="Right" />
+            <Button Width="100"
+                    x:Name="BtnSave" Click="BtnSave_Click" Content="Save" />
         </DockPanel>
 
         <!-- Canvas to display images -->
@@ -105,6 +113,7 @@
             <Image x:Name="ImgBase" Source="pack://application:,,,/Resources/portrait.png" Stretch="None" />
             <!-- Bar overlay image for positioning -->
             <Image x:Name="ImgOverlay" Source="pack://application:,,,/Resources/overlay.png" Stretch="None" />
+            <Image x:Name="ImgOverlayOpaque" Source="pack://application:,,,/Resources/overlay_opaque.png" Stretch="None" Visibility="Hidden" />
         </Canvas>
 
         <!-- Status output panel -->
