@@ -14,8 +14,8 @@
             <ColumnDefinition Width="512"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="26"></RowDefinition>
             <RowDefinition Height="512"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
@@ -85,20 +85,25 @@
             </DockPanel>
         </StackPanel>
 
-        <!-- The name of the currently loaded image -->
-        <StackPanel Grid.Column="1" Grid.Row="0">
-            <Label x:Name="LblImageTitle" HorizontalAlignment="Center" Content="{Binding CardId}" />
-        </StackPanel>
-
         <!-- Navigation panel prev/next image in set -->
-        <DockPanel Grid.Column="1" Grid.Row="1" Margin="0,4">
+        <DockPanel Grid.Column="1" Grid.Row="0" Margin="0,4">
             <Button DockPanel.Dock="Left" Width="100"
                     x:Name="BtnPrevious" Click="BtnPrevious_Click" Content="Prev" />
             <Button DockPanel.Dock="Right" Width="100"
                     x:Name="BtnNext" Click="BtnNext_Click" Content="Next" HorizontalAlignment="Right" />
             <Button Width="100"
-                    x:Name="BtnSave" Click="BtnSave_Click" Content="Save" />
+                    x:Name="BtnUsePrev" Click="BtnUsePrev_Click" Content="Use Previous" />
         </DockPanel>
+
+        <!-- The name of the currently loaded image -->
+        <Border Grid.Column="1" Grid.Row="1" Margin="0,2"
+               BorderBrush="Black" BorderThickness="1" Background="#FFF0F0F0">
+            <StackPanel VerticalAlignment="Center">
+                <Label x:Name="LblImageTitle" FontWeight="Bold"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Content="{Binding CardId}" />
+            </StackPanel>
+        </Border>
 
         <!-- Canvas to display images -->
         <Canvas Grid.Column="1" Grid.Row="2"

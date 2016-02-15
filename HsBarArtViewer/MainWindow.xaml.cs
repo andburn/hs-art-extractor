@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using HsArtExtractor.Hearthstone.CardArt;
 using HsArtExtractor.Util;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ControlsImage = System.Windows.Controls.Image;
 using FormsDialogResult = System.Windows.Forms.DialogResult;
 using WindowsPoint = System.Windows.Point;
@@ -25,9 +26,6 @@ namespace HsBarArtViewer
 
 		private ControlsImage _draggedImage;
 		private BitmapImage _original;
-
-		// current mask image
-		private bool _isOpaque;
 
 		// For zoom in/out
 		private double _zoomPercent;
@@ -54,15 +52,21 @@ namespace HsBarArtViewer
 
 		private void BtnBrowse_Click(object sender, RoutedEventArgs e)
 		{
-			var dialog = new FolderBrowserDialog();
-			//dialog.RootFolder = Environment.SpecialFolder.MyDocuments;
-			var result = dialog.ShowDialog();
-			if (result == FormsDialogResult.OK)
+			// dialog ref: http://stackoverflow.com/a/17712949/2762059
+			var dialog = new CommonOpenFileDialog();
+			dialog.IsFolderPicker = true;
+			CommonFileDialogResult result = dialog.ShowDialog();
+			if (result == CommonFileDialogResult.Ok)
 			{
-				StatusWrite("Loading from " + dialog.SelectedPath);
+				StatusWrite("Loading from " + dialog.FileName);
 				_fileList = new FileList(
-					Directory.GetFiles(dialog.SelectedPath, "*.png"));
+					Directory.GetFiles(dialog.FileName, "*.png"));
 				LoadFile(_fileList.First());
+				LblFolder.Content = dialog.FileName;
+			}
+			else
+			{
+				LblFolder.Content = "None";
 			}
 		}
 
@@ -83,6 +87,11 @@ namespace HsBarArtViewer
 				CardArtDb.Read(filename);
 				_mapFile = filename;
 				LoadFile(_fileList.Current());
+				LblMapFile.Content = dialog.FileName;
+			}
+			else
+			{
+				LblMapFile.Content = "None";
 			}
 		}
 
@@ -118,7 +127,11 @@ namespace HsBarArtViewer
 				ImgOverlay.IsVisible ? Visibility.Hidden : Visibility.Visible;
 		}
 
-		private void BtnSave_Click(object sender, RoutedEventArgs e)
+		private void BtnUsePrev_Click(object sender, RoutedEventArgs e)
+		{
+		}
+
+		private void BtnSave2_Click(object sender, RoutedEventArgs e)
 		{
 			StatusWrite("Save Clicked");
 
@@ -208,6 +221,11 @@ namespace HsBarArtViewer
 		}
 
 		// Utility Methods
+
+		private void StatusWrite(object obj)
+		{
+			StatusWrite(obj.ToString());
+		}
 
 		private void StatusWrite(string text)
 		{
