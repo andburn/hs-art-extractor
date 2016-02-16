@@ -3,45 +3,35 @@ using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using HsArtExtractor.Hearthstone.CardArt;
-using HsArtExtractor.Util;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ControlsImage = System.Windows.Controls.Image;
-using FormsDialogResult = System.Windows.Forms.DialogResult;
 using WindowsPoint = System.Windows.Point;
 
 namespace HsBarArtViewer
 {
 	public partial class MainWindow : Window
 	{
-		private static bool _isDragging = false;
-
-		// The offset from the top, left of the item being dragged
-		// and the original mouse down
-		private static WindowsPoint _offset;
+		// Dragging and Zoom
 
 		private ControlsImage _draggedImage;
 		private BitmapImage _original;
+		private static WindowsPoint _offset;
+		private double _imgScale;
+		private static bool _isDragging = false;
 
-		// For zoom in/out
-		private double _zoomPercent;
+		// Bar info
 
-		// File list
 		private FileList _fileList;
-
-		// Data context object
-		private ArtCardBarWrapper _barContext;
-
 		private string _mapFile;
+		private ArtCardBarWrapper _barContext;
 
 		public MainWindow()
 		{
-			_zoomPercent = 1;
-			_isOpaque = false;
+			_imgScale = 1;
 			_mapFile = null;
 			_barContext = new ArtCardBarWrapper();
 			DataContext = _barContext;
@@ -52,71 +42,46 @@ namespace HsBarArtViewer
 
 		private void BtnBrowse_Click(object sender, RoutedEventArgs e)
 		{
-			// dialog ref: http://stackoverflow.com/a/17712949/2762059
-			var dialog = new CommonOpenFileDialog();
-			dialog.IsFolderPicker = true;
-			CommonFileDialogResult result = dialog.ShowDialog();
-			if (result == CommonFileDialogResult.Ok)
+			var fileExt = "*.png";
+			var dirpath = OpenBrowseDialog(true);
+			if (dirpath != null)
 			{
-				StatusWrite("Loading from " + dialog.FileName);
+				StatusWrite("Loading from " + dirpath);
 				_fileList = new FileList(
-					Directory.GetFiles(dialog.FileName, "*.png"));
-				LoadFile(_fileList.First());
-				LblFolder.Content = dialog.FileName;
-			}
-			else
-			{
-				LblFolder.Content = "None";
+					Directory.GetFiles(dirpath, fileExt));
+				LoadFile(_fileList.First);
+				LblFolder.Content = dirpath;
 			}
 		}
 
 		private void BtnMapBrowse_Click(object sender, RoutedEventArgs e)
 		{
-			StatusWrite("MapBrowse Clicked");
-			var dialog = new OpenFileDialog();
-			dialog.DefaultExt = ".xml";
-			dialog.Filter = "XML Files (*.xml)|*.xml";
-
-			var result = dialog.ShowDialog();
-			if (result == FormsDialogResult.OK)
+			var filepath = OpenBrowseDialog(false, "XML Files;xml");
+			if (filepath != null)
 			{
-				string filename = dialog.FileName;
-				StatusWrite("MapBrowse: " + filename);
-				// read db info from file
-				// TODO: handle exceptions?
-				CardArtDb.Read(filename);
-				_mapFile = filename;
-				LoadFile(_fileList.Current());
-				LblMapFile.Content = dialog.FileName;
+				CardArtDb.Read(filepath);
+				_fileList.UpdateBars();
+				LoadFile(_fileList.Current);
+				LblMapFile.Content = filepath;
+				_mapFile = filepath;
 			}
-			else
-			{
-				LblMapFile.Content = "None";
-			}
-		}
-
-		private void BtnCalculate_Click(object sender, RoutedEventArgs e)
-		{
-			StatusWrite("Calculate Clicked");
-			StatusWrite(_barContext.GetRectangle().ToString());
 		}
 
 		private void BtnReset_Click(object sender, RoutedEventArgs e)
 		{
-			StatusWrite("Reset Clicked");
-			ResetView();
+			ResetView(_barContext);
 		}
 
 		private void BtnPrevious_Click(object sender, RoutedEventArgs e)
 		{
-			StatusWrite("Previous Clicked");
-			LoadFile(_fileList.Previous());
+			SaveChanges();
+			LoadFile(_fileList.Previous);
 		}
 
 		private void BtnNext_Click(object sender, RoutedEventArgs e)
 		{
-			StatusWrite("Next Clicked");
-			LoadFile(_fileList.Next());
+			SaveChanges();
+			LoadFile(_fileList.Next);
 		}
 
 		private void BtnToggleMask_Click(object sender, RoutedEventArgs e)
@@ -129,35 +94,8 @@ namespace HsBarArtViewer
 
 		private void BtnUsePrev_Click(object sender, RoutedEventArgs e)
 		{
-		}
-
-		private void BtnSave2_Click(object sender, RoutedEventArgs e)
-		{
-			StatusWrite("Save Clicked");
-
-			var barX = 0.0;
-			var barY = 197.5;
-			var imgX = Canvas.GetLeft(ImgBase);
-			var imgY = Canvas.GetTop(ImgBase);
-			//var pt = new System.Drawing.PointF((float)(barX - imgX), (float)(barY - imgY));
-			var rect = new Rectangle();
-
-			StatusWrite($"{barX},{barY} {imgX},{imgY}");
-
-			rect.Width = (int)Math.Round(512 / _zoomPercent);
-			rect.Height = (int)Math.Round(117 / _zoomPercent);
-			rect.X = (int)Math.Round((imgX * -1) / _zoomPercent);
-			var yFlip = (int)Math.Round((197.5 - imgY) / _zoomPercent);
-			rect.Y = (int)Math.Round(512.0 - rect.Height - yFlip);
-
-			StatusWrite(yFlip.ToString());
-			StatusWrite(rect.ToString());
-
-			var bout = _barContext.SetRectangle(rect);
-			StatusWrite(bout);
-
-			_barContext.Save();
-			CardArtDb.Write(_mapFile + ".custom", CardArtDb.Defs);
+			var prev = _fileList.Peek(-1);
+			ResetView(prev.CardBar);
 		}
 
 		// Canvas image movement handlers
@@ -208,16 +146,13 @@ namespace HsBarArtViewer
 		{
 			// defuault: 120 forward scroll, -120 backward scroll
 			int movement = e.Delta;
-			StatusWrite("Delta:" + movement);
-
 			if (movement != 0)
 			{
+				// amount to scale per delta
 				var tick = movement > 0 ? 0.05 : -0.05;
-				_zoomPercent = Math.Round(_zoomPercent + tick, 2);
-				ZoomImage(_zoomPercent);
+				_imgScale = Math.Round(_imgScale + tick, 2);
+				ScaleImage(_imgScale);
 			}
-
-			StatusWrite("Zoom level after: " + _zoomPercent);
 		}
 
 		// Utility Methods
@@ -233,15 +168,12 @@ namespace HsBarArtViewer
 			svStatus.ScrollToBottom();
 		}
 
-		private void ZoomImage(double amount)
+		private void ScaleImage(double amount)
 		{
-			// TODO ehh
-			_zoomPercent = amount;
+			_imgScale = amount;
 
 			if (_original == null)
-				_original = (BitmapImage)ImgBase.Source; // TODO cast can be bad here
-
-			StatusWrite("Zoom level: " + amount);
+				_original = _fileList.Current.Image;
 
 			var bitmap = new TransformedBitmap(_original,
 				new ScaleTransform(amount, amount)
@@ -252,7 +184,7 @@ namespace HsBarArtViewer
 
 		private void ResetView()
 		{
-			_zoomPercent = 1;
+			_imgScale = 1;
 			_offset = new WindowsPoint(0, 0);
 			if (_original != null)
 				ImgBase.Source = _original;
@@ -260,63 +192,88 @@ namespace HsBarArtViewer
 			ImgBase.SetValue(Canvas.TopProperty, _offset.Y);
 		}
 
-		private void LoadFile(string filename)
+		private void ResetView(ArtCardBarWrapper bar)
 		{
-			if (!string.IsNullOrEmpty(filename))
+			Rectangle rect = bar.GetRectangle();
+			if (rect.Width != 0 && rect.Height != 0)
 			{
-				var cardId = StringUtils.GetFilenameNoExt(filename);
-				ImgBase.Source = BitmapToImageSource(new Bitmap(filename));
-				_original = (BitmapImage)ImgBase.Source; // TODO same problem as above
-				Rectangle rect = new Rectangle();
-				if (CardArtDb.All.ContainsKey(cardId))
-				{
-					StatusWrite(CardArtDb.All[cardId].Texture.Path);
-					_barContext = new ArtCardBarWrapper(CardArtDb.All[cardId]);
-					DataContext = _barContext;
-					// Rect stuff
-					rect = _barContext.GetRectangle();
-				}
+				var calc = CalculateFromBar(rect);
+				ScaleImage(calc.Item1);
+				ImgBase.SetValue(Canvas.LeftProperty, calc.Item2);
+				ImgBase.SetValue(Canvas.TopProperty, calc.Item3);
+			}
+			else
+			{
 				ResetView();
-				// unset view!
-				if (rect.Width != 0 && rect.Height != 0)
-				{
-					var scale = 512.0 / rect.Width;
-					StatusWrite("bar scale = " + scale);
-					ZoomImage(scale);
-
-					var yFlip = 512.0 - rect.Y - rect.Height; // TODO need to double check this, seems wrong
-					StatusWrite(yFlip.ToString());
-					var wDash = rect.Width * scale;
-					var hDash = rect.Height * scale;
-					var xDash = ((double)rect.X * scale) * -1;
-					var yDash = (yFlip * scale) * -1 + 197.5;
-
-					ImgBase.SetValue(Canvas.LeftProperty, xDash);
-					ImgBase.SetValue(Canvas.TopProperty, yDash);
-					//var shape = new System.Windows.Shapes.Rectangle();
-					//shape.Width = rect.Width;
-					//shape.Height = rect.Height;
-					//shape.SetValue(Canvas.LeftProperty, (double)rect.X);
-					//shape.SetValue(Canvas.TopProperty, yFlip);
-					//shape.Stroke = new SolidColorBrush() { Color = System.Windows.Media.Colors.Azure };
-					//CnvMain.Children.Add(shape);
-				}
 			}
 		}
 
-		private BitmapImage BitmapToImageSource(Bitmap bitmap)
+		private Tuple<double, double, double> CalculateFromBar(Rectangle rect)
 		{
-			using (MemoryStream memory = new MemoryStream())
-			{
-				bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
-				memory.Position = 0;
-				BitmapImage bitmapimage = new BitmapImage();
-				bitmapimage.BeginInit();
-				bitmapimage.StreamSource = memory;
-				bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-				bitmapimage.EndInit();
+			var scale = 512.0 / rect.Width;
+			var yFlip = 512.0 - rect.Y - rect.Height;
+			var wDash = rect.Width * scale;
+			var hDash = rect.Height * scale;
+			var xDash = ((double)rect.X * scale) * -1;
+			var yDash = (yFlip * scale) * -1 + 197.5;
 
-				return bitmapimage;
+			return new Tuple<double, double, double>(scale, xDash, yDash);
+		}
+
+		private string OpenBrowseDialog(bool folderSelect = false, string filter = null)
+		{
+			var dialog = new CommonOpenFileDialog();
+			dialog.IsFolderPicker = folderSelect;
+
+			if (!string.IsNullOrEmpty(filter))
+			{
+				var fs = filter.Split(new char[] { ';' }, 2);
+				if (fs.Length >= 2)
+					dialog.Filters.Add(new CommonFileDialogFilter(fs[0], fs[1]));
+			}
+
+			CommonFileDialogResult result = dialog.ShowDialog();
+
+			if (result == CommonFileDialogResult.Ok)
+				return dialog.FileName;
+			else
+				return null;
+		}
+
+		private void LoadFile(FileObject file)
+		{
+			if (file != null)
+			{
+				StatusWrite(file.CardBar.CardId);
+				StatusWrite(file.CardBar.TexturePath);
+				ImgBase.Source = _original = file.Image;
+				_barContext = file.CardBar;
+				DataContext = _barContext;
+				ResetView(_barContext);
+			}
+		}
+
+		private void SaveChanges()
+		{
+			var imgX = Canvas.GetLeft(ImgBase);
+			var imgY = Canvas.GetTop(ImgBase);
+
+			var rect = new Rectangle();
+			rect.Width = (int)Math.Round(512 / _imgScale);
+			rect.Height = (int)Math.Round(117 / _imgScale);
+			rect.X = (int)Math.Round((imgX * -1) / _imgScale);
+			var yFlip = (int)Math.Round((197.5 - imgY) / _imgScale);
+			rect.Y = (int)Math.Round(512.0 - rect.Height - yFlip);
+
+			var original = _barContext.GetRectangle();
+			if (original != rect)
+			{
+				// rectangles are different save changes
+				_barContext.SetRectangle(rect);
+				_barContext.Save();
+				StatusWrite($"Changes saved {_barContext.CardId}");
+				// write the changes to the mapfile
+				CardArtDb.Write(_mapFile, CardArtDb.Defs);
 			}
 		}
 	}

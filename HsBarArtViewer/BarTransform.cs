@@ -74,7 +74,7 @@ namespace HsBarArtViewer
 			return Export.GetCardBarRect(_tStandard, _tShader);
 		}
 
-		public string SetRectangle(Rectangle rect)
+		public void SetRectangle(Rectangle rect)
 		{
 			PointF CardBarTL = new PointF(0.0f, 0.3856f);
 			PointF CardBarBR = new PointF(1.0f, 0.6144f);
@@ -92,8 +92,6 @@ namespace HsBarArtViewer
 			ShaderOffset.X = (float)Math.Round(offX, 2);
 			ShaderOffset.Y = (float)Math.Round(offY, 2);
 			ShaderScale.X = ShaderScale.Y = (float)Math.Round(scale, 2);
-
-			return $"{shd} {offX} {offY} {scale}";
 		}
 
 		public void Save()

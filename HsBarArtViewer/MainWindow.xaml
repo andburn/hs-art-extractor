@@ -42,47 +42,43 @@
             <Separator Height="4" Margin="0,0,0,2" />
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Tiling X"></Label>
-                <TextBox x:Name="Std_TileX" Text="{Binding StandardScale.X}" />
+                <TextBox x:Name="Std_TileX" Text="{Binding StandardScale.X}" IsEnabled="False" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Tiling Y"></Label>
-                <TextBox x:Name="Std_TileY" Text="{Binding StandardScale.Y}" />
+                <TextBox x:Name="Std_TileY" Text="{Binding StandardScale.Y}" IsEnabled="False" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset X"></Label>
-                <TextBox x:Name="Std_OffsetX" Text="{Binding StandardOffset.X}" />
+                <TextBox x:Name="Std_OffsetX" Text="{Binding StandardOffset.X}" IsEnabled="False" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset Y"></Label>
-                <TextBox x:Name="Std_OffsetY" Text="{Binding StandardOffset.Y}" />
+                <TextBox x:Name="Std_OffsetY" Text="{Binding StandardOffset.Y}" IsEnabled="False" />
             </DockPanel>
             <Label Margin="0, 10, 0, 0" FontWeight="Bold">Shader</Label>
             <Separator Height="4" Margin="0,0,0,10" />
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Scale"></Label>
-                <TextBox x:Name="Shd_Scale" Text="{Binding ShaderScale.X}" />
+                <TextBox x:Name="Shd_Scale" Text="{Binding ShaderScale.X}" IsEnabled="False" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset X"></Label>
-                <TextBox x:Name="Shd_OffsetX" Text="{Binding ShaderOffset.X}" />
+                <TextBox x:Name="Shd_OffsetX" Text="{Binding ShaderOffset.X}" IsEnabled="False" />
             </DockPanel>
             <DockPanel Margin="0,4">
                 <Label DockPanel.Dock="Left" Width="64" Content="Offset Y"></Label>
-                <TextBox x:Name="Shd_OffsetY" Text="{Binding ShaderOffset.Y}" />
+                <TextBox x:Name="Shd_OffsetY" Text="{Binding ShaderOffset.Y}" IsEnabled="False" />
             </DockPanel>
 
-            <!-- Calculate image position based on inputs (TODO could use binding instead) -->
-            <Button x:Name="BtnCalculate" Content="Calculate"
-                    Margin="0,10" Padding="6" Click="BtnCalculate_Click" />
-            <DockPanel Margin="0,4">
-                <!-- Reset the position and zoom of the image -->
-                <Button x:Name="BtnReset" Content="Reset" Width="80"
-                   DockPanel.Dock="Left" Padding="6" Click="BtnReset_Click" />
-                <!-- Button to toggle transparent/opaque mask image -->
-                <Button x:Name="BtnToggleMask" Content="Toggle" Width="80"
-                    DockPanel.Dock="Right" HorizontalAlignment="Right"
-                    Padding="6" Click="BtnToggleMask_Click" />
-            </DockPanel>
+            <Label FontWeight="Bold">Image</Label>
+            <Separator Height="4" Margin="0,0,0,2" />
+            <!-- Reset the position and zoom of the image -->
+            <Button x:Name="BtnReset" Content="Reset"
+                Margin="0,4" Padding="6"  Click="BtnReset_Click" />
+            <!-- Button to toggle transparent/opaque mask image -->
+            <Button x:Name="BtnToggleMask" Content="Toggle"
+                Margin="0,4" Padding="6"  Click="BtnToggleMask_Click" />
         </StackPanel>
 
         <!-- Navigation panel prev/next image in set -->
@@ -99,9 +95,9 @@
         <Border Grid.Column="1" Grid.Row="1" Margin="0,2"
                BorderBrush="Black" BorderThickness="1" Background="#FFF0F0F0">
             <StackPanel VerticalAlignment="Center">
-                <Label x:Name="LblImageTitle" FontWeight="Bold"
+                <TextBlock x:Name="LblImageTitle" FontWeight="Bold"
                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Content="{Binding CardId}" />
+                       Text="{Binding CardId}" />
             </StackPanel>
         </Border>
 
