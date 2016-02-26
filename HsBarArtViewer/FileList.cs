@@ -30,6 +30,16 @@ namespace HsBarArtViewer
 			}
 		}
 
+		public int Size
+		{
+			get { return _length; }
+		}
+
+		public int Index
+		{
+			get { return _current; }
+		}
+
 		public FileObject First
 		{
 			get
@@ -124,7 +134,11 @@ namespace HsBarArtViewer
 			{
 				if (string.IsNullOrEmpty(FilePath))
 					return null;
-				return BitmapToImageSource(new Bitmap(FilePath));
+				var bmp = new Bitmap(FilePath);
+				// force resize
+				if (bmp.Width > 512)
+					bmp = new Bitmap(bmp, 512, 512);
+				return BitmapToImageSource(bmp);
 			}
 		}
 

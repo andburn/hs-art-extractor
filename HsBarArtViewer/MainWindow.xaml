@@ -97,7 +97,7 @@
             <StackPanel VerticalAlignment="Center">
                 <TextBlock x:Name="LblImageTitle" FontWeight="Bold"
                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Text="{Binding CardId}" />
+                       Text="NA" />
             </StackPanel>
         </Border>
 

@@ -240,6 +240,12 @@ namespace HsBarArtViewer
 				return null;
 		}
 
+		private void SetImageTitle()
+		{
+			LblImageTitle.Text =
+				$"{_barContext.CardId} ({_fileList.Index + 1}/{_fileList.Size})";
+		}
+
 		private void LoadFile(FileObject file)
 		{
 			if (file != null)
@@ -250,6 +256,7 @@ namespace HsBarArtViewer
 				_barContext = file.CardBar;
 				DataContext = _barContext;
 				ResetView(_barContext);
+				SetImageTitle();
 			}
 		}
 
