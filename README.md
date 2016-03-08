@@ -2,10 +2,10 @@
 A tool for windows to extract hearthstone card art from the unity game files. The project includes a partial port of [Disunity](https://github.com/ata4/disunity), it also utilizes the [DDSReader](https://github.com/andburn/dds-reader) project.
 
 ## Features
-- Extract all card art named by card id.
-- Extract available card bars (deck list images) by card id.
+- Extract all card art.
+- Extract available card bars (deck list images).
 - Extracts the card xml text files.
-- Extracted cards can be filtered by set and card type.
+- Extracted cards can be filtered by set and card type, they can also be named by card name rather than by id.
 
 ## Build
 - Clone the repository.
@@ -17,23 +17,28 @@ A tool for windows to extract hearthstone card art from the unity game files. Th
 - Open the solution in Visual Studio and build as normal.
 
 ## Usage
-You need to ensure Hearthstone is not running for the program to work correctly.
+When Hearthstone is running the necessary game files cannot be accessed. Therefore, you need to ensure Hearthstone is not running for the program to work correctly.
 
 #### Programming interface
 ```csharp
 using HsArtExtractor;
 using HsArtExtractor.Hearthstone;
+using HsArtExtractor.Util;
 
 class Program
 {
   private static void Main(string[] args)
   {
+    // set the logging level and location
+    Logger.SetLogLevel(LogLevel.WARN);
+    Logger.SetLogLocation(@"C:\CardArt");
+
+    // do the extraction
     Extract.CardArt(new CardArtExtractorOptions() {
       HearthstoneDir = @"C:\Program Files\Hearthstone",
       OutputDir = @"C:\CardArt",
       MapFile = "CardArtDefs.xml",
-      PreserveAlphaChannel = false,
-      FlipY = true,
+      Height = 256,
       BarHeight = 35
     });
   }
@@ -47,7 +52,7 @@ extractor.exe cardart [options] <hearthstone directory>
 ```
 Example:
 ```
-extractor.exe cardart -o "C:\CardArt" -m "CardArtDefs.xml" 
+extractor.exe cardart -o "C:\CardArt" -m "CardArtDefs.xml" --height 256 --bar-height 35 "C:\Hearthstone"
 ```
 
 Options:

@@ -13,7 +13,7 @@ namespace HsArtExtractorCLI
 	{
 		private static int Main(string[] args)
 		{
-			Logger.SetLogLevel(LogLevel.DEBUG);
+			Logger.SetLogLevel(LogLevel.WARN);
 
 			return CommandLine.Parser.Default.ParseArguments<DumpOptions, CardArtOptions>(args)
 				.MapResult(
@@ -41,26 +41,13 @@ namespace HsArtExtractorCLI
 			exOptions.FullArtOnly = opts.FullArtOnly;
 			exOptions.BarArtOnly = opts.BarArtOnly;
 
-			if (opts.FullArtOnly)
-			{
-				var height = 0;
-				var parsed = int.TryParse(opts.Height, out height);
-				if (!parsed)
-					Logger.Log(LogLevel.ERROR, "integer parse failed for: {0}", opts.Height);
+			if (!string.IsNullOrEmpty(opts.Height))
+				exOptions.Height = ParseInt(opts.Height);
 
-				exOptions.Height = height;
-				exOptions.WithoutBarCoords = opts.WithoutBarCoords;
-			}
-			else if (opts.BarArtOnly)
-			{
-				var height = 0;
-				var parsed = int.TryParse(opts.BarHeight, out height);
-				if (!parsed)
-					Logger.Log(LogLevel.ERROR, "integer parse failed for: {0}", opts.BarHeight);
+			if (!string.IsNullOrEmpty(opts.BarHeight))
+				exOptions.BarHeight = ParseInt(opts.BarHeight);
 
-				exOptions.BarHeight = height;
-			}
-
+			exOptions.WithoutBarCoords = opts.WithoutBarCoords;
 			exOptions.FlipY = !opts.NoFlip;
 			exOptions.SaveMapFile = opts.SaveMapFile;
 			exOptions.PreserveAlphaChannel = opts.KeepAlpha;
@@ -105,6 +92,15 @@ namespace HsArtExtractorCLI
 			}
 
 			return 0;
+		}
+
+		private static int ParseInt(string num)
+		{
+			var height = 0;
+			var parsed = int.TryParse(num, out height);
+			if (!parsed)
+				Logger.Log(LogLevel.ERROR, "integer parse failed for: {0}", num);
+			return height;
 		}
 	}
 }

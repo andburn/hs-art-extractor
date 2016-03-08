@@ -5,6 +5,7 @@ namespace HsArtExtractor.Hearthstone
 	// Convert card set and type for CardArtExtractor
 	// TODO needs overhaul, less maintenance
 	// TODO use proper converter?
+	// TOOD use hs-data or HearthDB
 	internal class CardEnumConverter
 	{
 		internal static Dictionary<CardSet, string> FriendlySetName =

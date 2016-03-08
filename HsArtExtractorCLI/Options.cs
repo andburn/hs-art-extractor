@@ -13,11 +13,6 @@ namespace HsArtExtractorCLI
 			SetName = "full")]
 		public bool FullArtOnly { get; set; }
 
-		[Option("height",
-			HelpText = "Specify the height of full size card art (height == width).",
-			SetName = "full")]
-		public string Height { get; set; }
-
 		[Option("image-type",
 			HelpText = "Specify the image type; png or jpg (or dds not compatible with height or flip).",
 			SetName = "full")]
@@ -35,10 +30,15 @@ namespace HsArtExtractorCLI
 			SetName = "bar")]
 		public bool BarArtOnly { get; set; }
 
+		// dimensions
+
 		[Option("bar-height",
-			SetName = "bar",
 			HelpText = "The desired height of the card bar images.")]
 		public string BarHeight { get; set; }
+
+		[Option("height",
+			HelpText = "Specify the height of full size card art (height == width).")]
+		public string Height { get; set; }
 
 		// general options
 

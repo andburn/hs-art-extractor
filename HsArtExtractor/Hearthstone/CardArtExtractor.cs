@@ -96,7 +96,7 @@ namespace HsArtExtractor.Hearthstone
 				if (map.ContainsKey(d.Id))
 					d.Texture.Bundle = StringUtils.GetFilenameNoExt(map[d.Id]);
 			}
-			// TODO is this format we want for map file? and what about json
+			// TODO what about json
 			// save to disk
 			CardArt.CardArtDb.Write(Path.Combine(dir, "CardArtDefs.xml"), defs);
 		}
