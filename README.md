@@ -7,19 +7,14 @@ A tool for windows to extract hearthstone card art from the unity game files. Th
 - Extracts the card xml text files.
 - Extracted cards can be filtered by set and card type, they can also be named by card name rather than by id.
 
-## Build
-- Clone the repository.
-- Install the dependencies. On the command line (in the repository directory) run:
-```
-.paket\paket.bootstrapper.exe
-.paket\paket.exe install
-```
-- Open the solution in Visual Studio and build as normal.
-
 ## Usage
-When Hearthstone is running the necessary game files cannot be accessed. Therefore, you need to ensure Hearthstone is not running for the program to work correctly.
+There is no graphical user interface for extraction. The program must be used with either the programming interface or the command line interface.
+
+When Hearthstone is running the necessary game files cannot be accessed. Therefore, you need to quit out of Hearthstone for the program to work correctly.
 
 #### Programming interface
+- Include a reference to `HsArtExtractor.dll` in your .NET project.
+
 ```csharp
 using HsArtExtractor;
 using HsArtExtractor.Hearthstone;
@@ -102,3 +97,13 @@ Options:
 --version                    Display version information.
 
 ```
+Note: *some options are still experimental and may not work as expected*
+
+## Build
+- Clone the repository.
+- Install the dependencies. On the command line (in the repository directory) run:
+```
+.paket\paket.bootstrapper.exe
+.paket\paket.exe install
+```
+- Open the solution in Visual Studio and build as normal.
