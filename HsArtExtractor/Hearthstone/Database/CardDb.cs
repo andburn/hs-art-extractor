@@ -24,8 +24,6 @@ namespace HsArtExtractor.Hearthstone.Database
 		};
 
 		private static List<CardType> CardTypeExclusions = new List<CardType>() {
-			CardType.HERO,
-			CardType.HERO_POWER,
 			CardType.INVALID,
 			CardType.GAME,
 			CardType.PLAYER,
