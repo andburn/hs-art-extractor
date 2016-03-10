@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using HsArtExtractor.Util;
@@ -10,6 +11,7 @@ namespace HsArtExtractor.Hearthstone.CardArt
 		private static readonly int TexDim = 512;
 		private static readonly PointF CardBarTL = new PointF(0.0f, 0.3856f);
 		private static readonly PointF CardBarBR = new PointF(1.0f, 0.6144f);
+		private static readonly Material DefaultMaterial = GetDefaultMaterial();
 
 		public static void CardBar(ArtCard card, Bitmap bmp, string dir, int outHeight)
 		{
@@ -26,64 +28,65 @@ namespace HsArtExtractor.Hearthstone.CardArt
 			original = TileHorizontal(original);
 
 			var mat = card.GetMaterial(MaterialType.CardBar);
-			if (mat != null)
+			// if no card bar coords found use default
+			if (mat == null)
+				mat = DefaultMaterial;
+
+			var standard = mat.GetTransform(TransformType.Standard);
+			var shader = mat.GetTransform(TransformType.Shader);
+			if (standard == null || shader == null)
 			{
-				var standard = mat.GetTransform(TransformType.Standard);
-				var shader = mat.GetTransform(TransformType.Shader);
-				if (standard == null || shader == null)
+				Logger.Log("Transforms are null for {0}", card.Id);
+				return;
+			}
+			Logger.Log(LogLevel.DEBUG, "Calculating bar coords for {0}", card.Id);
+			int baseWidth = (int)Math.Round(CardBarBR.X * TexDim - CardBarTL.X * TexDim);
+			int baseHeight = (int)Math.Round(CardBarBR.Y * TexDim - CardBarTL.Y * TexDim);
+			var coords = GetCardBarRect(standard, shader);
+			var x = coords.X;
+			var y = coords.Y;
+			var width = coords.Width;
+			var height = coords.Height;
+			// Image needs to be wrapped, for tiling
+			if (x < 0)
+				x += TexDim;
+
+			try
+			{
+				var cropRect = new Rectangle(x, y, width, height);
+				Bitmap target = new Bitmap(cropRect.Width, cropRect.Height);
+
+				using (Graphics g = Graphics.FromImage(target))
 				{
-					Logger.Log("Transform are null for {0}", card.Id);
-					return;
+					g.DrawImage(original, new Rectangle(0, 0, target.Width, target.Height),
+									 cropRect,
+									 GraphicsUnit.Pixel);
 				}
-				Logger.Log(LogLevel.DEBUG, "Calculating bar coords for {0}", card.Id);
-				int baseWidth = (int)Math.Round(CardBarBR.X * TexDim - CardBarTL.X * TexDim);
-				int baseHeight = (int)Math.Round(CardBarBR.Y * TexDim - CardBarTL.Y * TexDim);
-				var coords = GetCardBarRect(standard, shader);
-				var x = coords.X;
-				var y = coords.Y;
-				var width = coords.Width;
-				var height = coords.Height;
-				// Image needs to be wrapped, for tiling
-				if (x < 0)
-					x += TexDim;
 
-				try
+				// After scale and offset, flip right way up
+				target.RotateFlip(RotateFlipType.RotateNoneFlipY);
+				// A negative standard X scale/tile, flips on x too
+				if (standard.Scale.X < 0)
+					target.RotateFlip(RotateFlipType.RotateNoneFlipX);
+
+				Bitmap output = null;
+				if (outHeight > 0)
 				{
-					var cropRect = new Rectangle(x, y, width, height);
-					Bitmap target = new Bitmap(cropRect.Width, cropRect.Height);
-
-					using (Graphics g = Graphics.FromImage(target))
-					{
-						g.DrawImage(original, new Rectangle(0, 0, target.Width, target.Height),
-										 cropRect,
-										 GraphicsUnit.Pixel);
-					}
-
-					// After scale and offset, flip right way up
-					target.RotateFlip(RotateFlipType.RotateNoneFlipY);
-					// A negative standard X scale/tile, flips on x too
-					if (standard.Scale.X < 0)
-						target.RotateFlip(RotateFlipType.RotateNoneFlipX);
-
-					Bitmap output = null;
-					if (outHeight > 0)
-					{
-						// calc new width base on new height
-						var ratio = Math.Round((float)outHeight / baseHeight, 2);
-						var outWidth = ratio * baseWidth;
-						output = new Bitmap(target, (int)outWidth, (int)outHeight);
-					}
-					else
-					{
-						// save as "full" size card bar
-						output = new Bitmap(target, baseWidth, baseHeight);
-					}
-					output.Save(Path.Combine(dir, card.Id + ".png"));
+					// calc new width base on new height
+					var ratio = Math.Round((float)outHeight / baseHeight, 2);
+					var outWidth = ratio * baseWidth;
+					output = new Bitmap(target, (int)outWidth, (int)outHeight);
 				}
-				catch (Exception e)
+				else
 				{
-					throw e;
+					// save as "full" size card bar
+					output = new Bitmap(target, baseWidth, baseHeight);
 				}
+				output.Save(Path.Combine(dir, card.Id + ".png"));
+			}
+			catch (Exception e)
+			{
+				throw e;
 			}
 		}
 
@@ -142,6 +145,25 @@ namespace HsArtExtractor.Hearthstone.CardArt
 			Logger.Log(LogLevel.DEBUG, "(x,y)* = ({0}, {1})", x, y);
 
 			return new Rectangle(x, y, width, height);
+		}
+
+		public static Material GetDefaultMaterial()
+		{
+			return new Material() {
+				Type = MaterialType.CardBar,
+				Transforms = new List<Transform>() {
+					new Transform() {
+						Type = TransformType.Standard,
+						Offset = new CoordinateTransform(0, 0),
+						Scale = new CoordinateTransform(1, 1)
+					},
+					new Transform() {
+						Type = TransformType.Shader,
+						Offset = new CoordinateTransform(0, 0),
+						Scale = new CoordinateTransform(1, 1)
+					}
+				}
+			};
 		}
 
 		private static Bitmap TileHorizontal(Bitmap bmp, int tiles = 2)

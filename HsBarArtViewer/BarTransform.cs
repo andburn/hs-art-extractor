@@ -22,16 +22,9 @@ namespace HsBarArtViewer
 		public ArtCardBarWrapper()
 		{
 			_artCard = new ArtCard();
-			_tStandard = new Transform() {
-				Type = TransformType.Shader,
-				Offset = new CoordinateTransform(-0.2f, 0.25f),
-				Scale = new CoordinateTransform(1, 1)
-			};
-			_tShader = new Transform() {
-				Type = TransformType.Shader,
-				Offset = new CoordinateTransform(0, 0),
-				Scale = new CoordinateTransform(1, 1)
-			};
+			var mat = Export.GetDefaultMaterial();
+			_tStandard = mat.GetTransform(TransformType.Standard);
+			_tShader = mat.GetTransform(TransformType.Shader);
 			CardId = "NA";
 			TextureName = "NA";
 			TexturePath = "NA";
