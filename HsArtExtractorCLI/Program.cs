@@ -57,6 +57,7 @@ namespace HsArtExtractorCLI
 			exOptions.Types = opts.Types.ToList();
 			exOptions.NoFiltering = opts.NoFiltering;
 			exOptions.MapFile = opts.MapFile;
+			exOptions.CropHidden = opts.CropHidden;
 
 			if (opts.ImageType != null)
 				exOptions.ImageType = opts.ImageType;

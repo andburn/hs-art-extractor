@@ -79,6 +79,7 @@
     <Compile Include="Hearthstone\Database\CardDb.cs" />
     <Compile Include="Hearthstone\Database\Entity.cs" />
     <Compile Include="Hearthstone\Database\Tag.cs" />
+    <Compile Include="Image\BitmapExtensions.cs" />
     <Compile Include="Image\DDSHeader.cs" />
     <Compile Include="Image\DDSPixelFormat.cs" />
     <Compile Include="Image\TextureException.cs" />

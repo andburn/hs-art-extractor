@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using HsArtExtractor.Image;
 using HsArtExtractor.Util;
 
 namespace HsArtExtractor.Hearthstone.CardArt
@@ -13,7 +14,7 @@ namespace HsArtExtractor.Hearthstone.CardArt
 		private static readonly PointF CardBarBR = new PointF(1.0f, 0.6144f);
 		private static readonly Material DefaultMaterial = GetDefaultMaterial();
 
-		public static void CardBar(ArtCard card, Bitmap bmp, string dir, int outHeight)
+		public static void CardBar(ArtCard card, Bitmap bmp, string dir, int outHeight, bool cropHidden)
 		{
 			Bitmap original = new Bitmap(bmp);
 			if (bmp.Width != TexDim || bmp.Height != TexDim)
@@ -70,17 +71,34 @@ namespace HsArtExtractor.Hearthstone.CardArt
 					target.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
 				Bitmap output = null;
+				Size final = new Size(baseWidth, baseHeight);
 				if (outHeight > 0)
 				{
 					// calc new width base on new height
-					var ratio = Math.Round((float)outHeight / baseHeight, 2);
-					var outWidth = ratio * baseWidth;
-					output = new Bitmap(target, (int)outWidth, (int)outHeight);
+					var ratio = Math.Round((float)baseWidth / baseHeight, 2);
+					var outWidth = (int)Math.Round(ratio * outHeight);
+					final.Height = outHeight;
+					final.Width = outWidth;
+				}
+				if (cropHidden)
+				{
+					// safe to crop 10% from left
+					var cropAmount = (int)Math.Round(target.Width * 0.1);
+					var cropWidth = target.Width - cropAmount;
+					// required output size
+					var outWidth = (int)Math.Round(final.Width * 0.9);
+					output = new Bitmap(outWidth, final.Height);
+					using (Graphics g = Graphics.FromImage(output))
+					{
+						g.DrawImage(target,
+							new Rectangle(0, 0, outWidth, final.Height),
+							new Rectangle(cropAmount, 0, cropWidth, target.Height),
+							GraphicsUnit.Pixel);
+					}
 				}
 				else
 				{
-					// save as "full" size card bar
-					output = new Bitmap(target, baseWidth, baseHeight);
+					output = new Bitmap(target, final.Width, final.Height);
 				}
 				output.Save(Path.Combine(dir, card.Id + ".png"));
 			}

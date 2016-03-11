@@ -40,6 +40,10 @@ namespace HsArtExtractorCLI
 			HelpText = "Specify the height of full size card art (height == width).")]
 		public string Height { get; set; }
 
+		[Option("crop-hidden",
+			HelpText = "Crop the card bar image to remove the portion to the left that is usually hidden.")]
+		public bool CropHidden { get; set; }
+
 		// general options
 
 		[Option('a', "keep-alpha",

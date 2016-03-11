@@ -21,6 +21,7 @@ namespace HsArtExtractor.Hearthstone
 		public int BarHeight { get; set; } = 0;
 		public bool WithoutBarCoords { get; set; } = false;
 		public string ImageType { get; set; } = "png";
+		public bool CropHidden { get; set; } = false;
 
 		public override string ToString()
 		{

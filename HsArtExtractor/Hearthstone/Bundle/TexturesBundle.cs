@@ -133,7 +133,7 @@ namespace HsArtExtractor.Hearthstone.Bundle
 			}
 
 			if (!_opts.FullArtOnly)
-				Export.CardBar(match, original, _dirBars, _opts.BarHeight);
+				Export.CardBar(match, original, _dirBars, _opts.BarHeight, _opts.CropHidden);
 		}
 	}
 }
