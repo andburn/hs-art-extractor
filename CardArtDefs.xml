@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CardArtDefs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Patch>4.1.0.10956</Patch>
+  <Patch>1.0.0.12051</Patch>
   <Card id="BRM_012e">
     <Texture>
       <Name>HS4_023_D</Name>
@@ -963,6 +963,23 @@
       <Transform type="Shader">
         <Scale x="1.11" y="1.11" />
         <Offset x="-0.26" y="0.12" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_08w">
+    <Texture>
+      <Name>r5_a100_D</Name>
+      <Path>Assets/Game/Cards/06 FP1/NAX7_04/r5_a100_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.12" y="0.07" />
       </Transform>
     </Material>
   </Card>
@@ -2027,6 +2044,33 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.1" y="0.18" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_FactionWar_Hero_Annoy">
+    <Texture>
+      <Name>HS3-018_D2</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_MechWar_Boss1/HS3-018_D2.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="Portrait">
+      <Transform type="Shader">
+        <Scale x="0.94" y="0.94" />
+        <Offset x="0.01" y="0.04" />
+      </Transform>
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+    </Material>
+    <Material type="CardBar">
+      <Transform type="Shader">
+        <Scale x="0.76" y="0.76" />
+        <Offset x="0.23" y="0.03" />
+      </Transform>
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="-0.2" y="0.25" />
       </Transform>
     </Material>
   </Card>
@@ -4094,6 +4138,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_HP_KT_3">
+    <Texture>
+      <Name>R5_a010_D</Name>
+      <Path>Assets/Game/Cards/06 FP1/NAX4_03/R5_a010_D.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.1" y="0.22" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="AT_011">
     <Texture>
       <Name>R8_A040_D</Name>
@@ -4954,6 +5015,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_H_2">
+    <Texture>
+      <Name>HS6-030_D</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_H_2/HS6-030_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.11" y="0.24" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="GVG_069">
     <Texture>
       <Name>HS3-023_D</Name>
@@ -5359,6 +5437,13 @@
         <Offset x="-0.14" y="-0.02" />
       </Transform>
     </Material>
+  </Card>
+  <Card id="EX1_393e">
+    <Texture>
+      <Name>W2_024_D</Name>
+      <Path>Assets/Game/Cards/01 Expert/EX1_393/W2_024_D.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
   </Card>
   <Card id="BRM_004t">
     <Texture>
@@ -10352,6 +10437,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="XXX_100">
+    <Texture>
+      <Name>W6_174_D</Name>
+      <Path>Assets/Game/Cards/010 Credits/CRED_02/W6_174_D.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.13" y="0.12" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="BRMA12_10">
     <Texture>
       <Name>W15_A148_D</Name>
@@ -10822,6 +10924,13 @@
         <Offset x="-0.2" y="0.25" />
       </Transform>
     </Material>
+  </Card>
+  <Card id="EX1_414e">
+    <Texture>
+      <Name>RiseoftheHorde_Final_NoLayers_D</Name>
+      <Path>Assets/Game/Cards/01 Expert/EX1_414/RiseoftheHorde_Final_NoLayers_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
   </Card>
   <Card id="EX1_509">
     <Texture>
@@ -11406,6 +11515,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_FactionWar_Boss_RagFirst">
+    <Texture>
+      <Name>W2_435_D</Name>
+      <Path>Assets/Game/Cards/08 BRM/BRMA06_2/W2_435_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.11" y="0.09" />
       </Transform>
     </Material>
   </Card>
@@ -12490,6 +12616,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_H_1">
+    <Texture>
+      <Name>r5_a089_D</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_H_1/r5_a089_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.13" y="0.17" />
       </Transform>
     </Material>
   </Card>
@@ -13795,6 +13938,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_6m">
+    <Texture>
+      <Name>HS2-112_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_6m/HS2-112_D 1.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.83" y="0.83" />
+        <Offset x="-0" y="0.3" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="CS2_004">
     <Texture>
       <Name>W13_066_D</Name>
@@ -13985,23 +14145,6 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
-      </Transform>
-    </Material>
-  </Card>
-  <Card id="TB_BlingBrawl_Weapon">
-    <Texture>
-      <Name>Foam_Sword_D</Name>
-      <Path>Assets/Game/Cards/012 TB/TB_BlingBrawl_Weapon/Foam_Sword_D.psd</Path>
-      <Bundle>cardtextures0</Bundle>
-    </Texture>
-    <Material type="CardBar">
-      <Transform type="Standard">
-        <Scale x="1" y="1" />
-        <Offset x="0" y="0" />
-      </Transform>
-      <Transform type="Shader">
-        <Scale x="1.11" y="1.11" />
-        <Offset x="-0.09" y="0.09" />
       </Transform>
     </Material>
   </Card>
@@ -14727,6 +14870,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.1" y="0.09" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_3">
+    <Texture>
+      <Name>HS2_002_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_3/HS2_002_D 1.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.91" y="0.91" />
+        <Offset x="-0.03" y="0.14" />
       </Transform>
     </Material>
   </Card>
@@ -15526,6 +15686,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="0" y="0" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_FactionWar_Hero_Nef">
+    <Texture>
+      <Name>W15_A158_hero_D</Name>
+      <Path>Assets/Game/Cards/08 BRM/BRMA13_3/W15_A158_hero_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.25" y="1.25" />
+        <Offset x="-0.18" y="-0.08" />
       </Transform>
     </Material>
   </Card>
@@ -17365,6 +17542,13 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="EX1_390e">
+    <Texture>
+      <Name>W17_a171_D</Name>
+      <Path>Assets/Game/Cards/01 Expert/EX1_390/W17_a171_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+  </Card>
   <Card id="EX1_295o">
     <Texture>
       <Name>WoW_TAL_011_D</Name>
@@ -18202,6 +18386,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_SPT_BossWeapon">
+    <Texture>
+      <Name>ONY_HLM_010</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_BossWeapon/ONY_HLM_010.jpg</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.05" y="1.05" />
+        <Offset x="-0.08" y="0.24" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="NEW1_019">
     <Texture>
       <Name>w12_a081_D</Name>
@@ -18642,6 +18843,23 @@
       <Transform type="Shader">
         <Scale x="0.95" y="0.95" />
         <Offset x="-0.13" y="0.31" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_2">
+    <Texture>
+      <Name>r5_a072_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_2/r5_a072_D 1.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.87" y="0.87" />
+        <Offset x="-0.03" y="0.3" />
       </Transform>
     </Material>
   </Card>
@@ -19394,22 +19612,12 @@
       </Transform>
     </Material>
   </Card>
-  <Card id="CS1_113e">
+  <Card id="EX1_009e">
     <Texture>
-      <Name>W3_141_D</Name>
-      <Path>Assets/Game/Cards/00 Basic/CS1_113/W3_141_D.psd</Path>
-      <Bundle>cardtextures2</Bundle>
+      <Name>W12_a222_D</Name>
+      <Path>Assets/Game/Cards/01 Expert/EX1_009/W12_a222_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
     </Texture>
-    <Material type="Portrait">
-      <Transform type="Shader">
-        <Scale x="0.59" y="0.59" />
-        <Offset x="0.82" y="0.44" />
-      </Transform>
-      <Transform type="Standard">
-        <Scale x="1" y="1" />
-        <Offset x="0" y="0" />
-      </Transform>
-    </Material>
   </Card>
   <Card id="LOEA05_02ha">
     <Texture>
@@ -19520,6 +19728,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="0" y="0" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_SPT_MinionKilled">
+    <Texture>
+      <Name>W3_056</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_MinionKilled/W3_056.jpg</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.12" y="0.17" />
       </Transform>
     </Material>
   </Card>
@@ -19858,6 +20083,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_101">
+    <Texture>
+      <Name>R5_a089_D2</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_101/R5_a089_D2.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.1" y="0.15" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="BRMA14_7">
     <Texture>
       <Name>HS4-039_D</Name>
@@ -20184,6 +20426,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.1" y="0.09" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_2s">
+    <Texture>
+      <Name>r5_a015_D</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_2s/r5_a015_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.91" y="0.91" />
+        <Offset x="-0.03" y="0.3" />
       </Transform>
     </Material>
   </Card>
@@ -21136,22 +21395,11 @@
       </Transform>
     </Material>
   </Card>
-  <Card id="TB_CoOp_Mechazod_V2">
+  <Card id="CardDefTemplate">
     <Texture>
       <Name>HS3-062_D</Name>
       <Path>Assets/Game/Cards/012 TB/HRW02_1/HS3-062_D.psd</Path>
-      <Bundle>cardtextures2</Bundle>
     </Texture>
-    <Material type="CardBar">
-      <Transform type="Standard">
-        <Scale x="1" y="1" />
-        <Offset x="0" y="0" />
-      </Transform>
-      <Transform type="Shader">
-        <Scale x="0.8" y="0.8" />
-        <Offset x="0" y="0.39" />
-      </Transform>
-    </Material>
   </Card>
   <Card id="EX1_055">
     <Texture>
@@ -21685,6 +21933,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_1">
+    <Texture>
+      <Name>R5_a088_D</Name>
+      <Path>Assets/Game/Cards/06 FP1/NAX1_01/R5_a088_D.psd</Path>
+      <Bundle>shared3</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.07" y="0.1" />
       </Transform>
     </Material>
   </Card>
@@ -22504,6 +22769,13 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="GVG_051e">
+    <Texture>
+      <Name>HS3-028_D</Name>
+      <Path>Assets/Game/Cards/07 PE1/GVG_051/HS3-028_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+  </Card>
   <Card id="AT_026">
     <Texture>
       <Name>W20_a149_D</Name>
@@ -22674,6 +22946,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.1" y="0.09" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_FactionWar_Herald">
+    <Texture>
+      <Name>W5_092_D2</Name>
+      <Path>Assets/Game/Cards/07 PE1/GVG_110t/W5_092_D2.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.87" y="0.87" />
+        <Offset x="-0.06" y="-0.13" />
       </Transform>
     </Material>
   </Card>
@@ -23996,6 +24285,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_FactionWar_Boss_Rag">
+    <Texture>
+      <Name>W2_073_D</Name>
+      <Path>Assets/Game/Cards/08 BRM/BRM_027p/W2_073_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.2" y="0.13" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="LOE_079">
     <Texture>
       <Name>HS6-029_D</Name>
@@ -24724,6 +25030,16 @@
       <Path>Assets/Game/Cards/012 TB/TB_PickYourFate_5/05_Fate_art_D.psd</Path>
       <Bundle>cardtextures0</Bundle>
     </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.11" y="1.11" />
+        <Offset x="-0.12" y="-0.1" />
+      </Transform>
+    </Material>
   </Card>
   <Card id="EX1_554t">
     <Texture>
@@ -26659,6 +26975,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_SPT_Minion1">
+    <Texture>
+      <Name>W19_a279</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_Minion1/W19_a279.jpg</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.18" y="1.18" />
+        <Offset x="-0.13" y="-0.25" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="CS2_057">
     <Texture>
       <Name>W7_037_D</Name>
@@ -26744,6 +27077,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.13" y="0.18" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_SPT_Minion2">
+    <Texture>
+      <Name>W9_A148</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_Minion2/W9_A148.jpg</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.83" y="0.83" />
+        <Offset x="0" y="0.35" />
       </Transform>
     </Material>
   </Card>
@@ -26886,6 +27236,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_8">
+    <Texture>
+      <Name>r5_a012_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_8/r5_a012_D 1.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.87" y="0.87" />
+        <Offset x="-0.1" y="0.39" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="AT_116e">
     <Texture>
       <Name>W9_001_D</Name>
@@ -26951,6 +27318,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="0" y="0" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="HERO_04a">
+    <Texture>
+      <Name>HERO_04a</Name>
+      <Path>Assets/Game/Cards/011 HeroSkins/HERO_04a/HERO_04a.psd</Path>
+      <Bundle>shared2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.18" y="0.25" />
       </Transform>
     </Material>
   </Card>
@@ -28424,6 +28808,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_6">
+    <Texture>
+      <Name>r5_a001_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_6/r5_a001_D 1.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.87" y="0.87" />
+        <Offset x="-0.04" y="0.1" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="BRMA03_1">
     <Texture>
       <Name>HS4-001_D</Name>
@@ -29179,6 +29580,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_4">
+    <Texture>
+      <Name>r5_a067_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_4/r5_a067_D 1.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.08" y="0.21" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="CS1_069">
     <Texture>
       <Name>W3_269_D</Name>
@@ -29766,6 +30184,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_5">
+    <Texture>
+      <Name>r5_a035_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_5/r5_a035_D 1.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.83" y="0.83" />
+        <Offset x="0" y="0.49" />
       </Transform>
     </Material>
   </Card>
@@ -30372,6 +30807,13 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_10e">
+    <Texture>
+      <Name>r5_a027_D 2</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_10e/r5_a027_D 2.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+  </Card>
   <Card id="FP1_006">
     <Texture>
       <Name>W10_A215_D</Name>
@@ -30772,23 +31214,6 @@
       </Transform>
     </Material>
   </Card>
-  <Card id="TB_PickYourFate_11">
-    <Texture>
-      <Name>11_Fate_art_D</Name>
-      <Path>Assets/Game/Cards/012 TB/TB_PickYourFate_11/11_Fate_art_D.psd</Path>
-      <Bundle>cardtextures0</Bundle>
-    </Texture>
-    <Material type="CardBar">
-      <Transform type="Standard">
-        <Scale x="1" y="1" />
-        <Offset x="0" y="0" />
-      </Transform>
-      <Transform type="Shader">
-        <Scale x="0.91" y="0.91" />
-        <Offset x="-0.16" y="0.19" />
-      </Transform>
-    </Material>
-  </Card>
   <Card id="GVG_092t">
     <Texture>
       <Name>HS3-059_D</Name>
@@ -30972,6 +31397,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_SPT_Boss">
+    <Texture>
+      <Name>W7_109</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_Boss/W7_109.jpg</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.14" y="-0.06" />
       </Transform>
     </Material>
   </Card>
@@ -31297,6 +31739,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.11" y="0.26" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_7">
+    <Texture>
+      <Name>R5_056_D2</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_7/R5_056_D2.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.8" y="0.8" />
+        <Offset x="0.06" y="0.49" />
       </Transform>
     </Material>
   </Card>
@@ -31659,6 +32118,13 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="EX1_412e">
+    <Texture>
+      <Name>EX1_412_D</Name>
+      <Path>Assets/Game/Cards/01 Expert/EX1_412/EX1_412_D.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+  </Card>
   <Card id="LOEA01_11">
     <Texture>
       <Name>HS6-062_D</Name>
@@ -32015,6 +32481,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_SPT_Minion3">
+    <Texture>
+      <Name>W20_a109</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_Minion3/W20_a109.jpg</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.06" y="0.26" />
       </Transform>
     </Material>
   </Card>
@@ -32929,6 +33412,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_HP_RAF3">
+    <Texture>
+      <Name>HS6-062_D</Name>
+      <Path>Assets/Game/Cards/014 LoE/LOEA01_11/HS6-062_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.91" y="0.91" />
+        <Offset x="-0.07" y="0.08" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="AT_132_SHAMANa">
     <Texture>
       <Name>W17_A170_D</Name>
@@ -33136,6 +33636,23 @@
       <Transform type="Shader">
         <Scale x="0.87" y="0.87" />
         <Offset x="-0.02" y="0.47" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_4m">
+    <Texture>
+      <Name>r5_a067_D 2</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_4m/r5_a067_D 2.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.08" y="0.21" />
       </Transform>
     </Material>
   </Card>
@@ -33559,6 +34076,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_FactionWar_Boss_Rag_0">
+    <Texture>
+      <Name>R6_a075_D</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_FactionWar_Boss_Rag_0/R6_a075_D.png</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.11" y="0.27" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="NEW1_007b">
     <Texture>
       <Name>W14_a122_D</Name>
@@ -33742,6 +34276,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.12" y="0.09" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_104">
+    <Texture>
+      <Name>HS6-091_D</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_104/HS6-091_D.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.95" y="0.95" />
+        <Offset x="-0.12" y="0.1" />
       </Transform>
     </Material>
   </Card>
@@ -35100,6 +35651,40 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_FactionWar_Rag1">
+    <Texture>
+      <Name>W2_073_D</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_FactionWar_Boss_Rag/W2_073_D.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.12" y="0.12" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_12">
+    <Texture>
+      <Name>r5_a084_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_12/r5_a084_D 1.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.12" y="0.18" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="BRMA17_8H">
     <Texture>
       <Name>ONY_STK_001_D</Name>
@@ -35641,6 +36226,12 @@
         <Offset x="-0.2" y="0.25" />
       </Transform>
     </Material>
+  </Card>
+  <Card id="CardDefTemplate">
+    <Texture>
+      <Name>W4_264</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_Damage/W4_264.jpg</Path>
+    </Texture>
   </Card>
   <Card id="DS1_070o">
     <Texture>
@@ -36316,6 +36907,23 @@
       <Transform type="Shader">
         <Scale x="1.05" y="1.05" />
         <Offset x="-0.11" y="0.05" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_HP_RAF5">
+    <Texture>
+      <Name>HS6-090_D 3</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_HP_RAF5/HS6-090_D 3.psd</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1" y="1" />
+        <Offset x="-0.11" y="-0.11" />
       </Transform>
     </Material>
   </Card>
@@ -37111,6 +37719,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_HP_RAF4">
+    <Texture>
+      <Name>W16_a257_D</Name>
+      <Path>Assets/Game/Cards/014 LoE/LOEA12_2/W16_a257_D.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.05" y="1.05" />
+        <Offset x="-0.13" y="-0.27" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="LOEA12_1">
     <Texture>
       <Name>W16_a177_D</Name>
@@ -37328,6 +37953,23 @@
       <Transform type="Standard">
         <Scale x="1" y="1" />
         <Offset x="-0.2" y="0.25" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_KTRAF_11">
+    <Texture>
+      <Name>Saph_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_11/Saph_D 1.psd</Path>
+      <Bundle>cardtextures1</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.83" y="0.83" />
+        <Offset x="-0.02" y="0.07" />
       </Transform>
     </Material>
   </Card>
@@ -38043,6 +38685,23 @@
       </Transform>
     </Material>
   </Card>
+  <Card id="TB_KTRAF_10">
+    <Texture>
+      <Name>r5_a027_D 1</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_KTRAF_10/r5_a027_D 1.psd</Path>
+      <Bundle>cardtextures2</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="0.77" y="0.77" />
+        <Offset x="0.08" y="0.51" />
+      </Transform>
+    </Material>
+  </Card>
   <Card id="XXX_027">
     <Texture>
       <Name>W6_174_D</Name>
@@ -38389,6 +39048,23 @@
       <Transform type="Shader">
         <Scale x="1" y="1" />
         <Offset x="-0.03" y="-0.04" />
+      </Transform>
+    </Material>
+  </Card>
+  <Card id="TB_SPT_Length">
+    <Texture>
+      <Name>W3_252</Name>
+      <Path>Assets/Game/Cards/012 TB/TB_SPT_Length/W3_252.jpg</Path>
+      <Bundle>cardtextures0</Bundle>
+    </Texture>
+    <Material type="CardBar">
+      <Transform type="Standard">
+        <Scale x="1" y="1" />
+        <Offset x="0" y="0" />
+      </Transform>
+      <Transform type="Shader">
+        <Scale x="1.05" y="1.05" />
+        <Offset x="-0.1" y="-0" />
       </Transform>
     </Material>
   </Card>
