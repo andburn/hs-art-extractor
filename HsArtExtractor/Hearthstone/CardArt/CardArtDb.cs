@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using HsArtExtractor.Util;
 
 namespace HsArtExtractor.Hearthstone.CardArt
 {
@@ -42,7 +43,10 @@ namespace HsArtExtractor.Hearthstone.CardArt
 				_defs = (CardArtDefs)xml.Deserialize(tr);
 				foreach (var card in _defs.Cards)
 				{
-					All.Add(card.Id, card);
+					if (All.ContainsKey(card.Id))
+						Logger.Log(LogLevel.ERROR, $"{card.Id} already in CardArtDb");
+					else
+						All.Add(card.Id, card);
 				}
 			}
 		}

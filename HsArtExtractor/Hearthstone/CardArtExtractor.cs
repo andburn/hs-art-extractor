@@ -34,20 +34,40 @@ namespace HsArtExtractor.Hearthstone
 			{
 				Logger.Log(LogLevel.INFO, "using map file: {0}", opts.MapFile);
 				CardArtDb.Read(opts.MapFile);
-				defs = CardArtDb.Defs;
+				var loadedPatch = CardArtDb.GamePatch;
+				var currentPatch = GetPatchVersion(opts.HearthstoneDir);
+				if (loadedPatch != currentPatch)
+				{
+					Console.WriteLine("Map file patch mismatch, attempting merge: {0} != {1}",
+						loadedPatch, currentPatch);
+
+					var current = LoadCardDefs(opts.HearthstoneDir);
+					var loaded = CardArtDb.Defs;
+					foreach (var item in current.Cards)
+					{
+						// replace any missing coords, from map defs if possible
+						if (!item.HasBarCoords() && CardArtDb.All.ContainsKey(item.Id))
+						{
+							var bar = CardArtDb.All[item.Id].GetMaterial(MaterialType.CardBar);
+							if (bar != null)
+								item.AddMaterial(
+									bar.GetTransform(TransformType.Standard),
+									bar.GetTransform(TransformType.Shader),
+									MaterialType.CardBar);
+						}
+					}
+					defs = current;
+				}
+				else
+				{
+					defs = CardArtDb.Defs;
+				}
 			}
 			else
 			{
 				// map file not found, using default method
 				Logger.Log(LogLevel.WARN, "map file not found: {0}", opts.MapFile);
-
-				// Load card art data (cards<n>.unity3d)
-				var cardsFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cards?.unity3d"));
-				var artCards = new CardsBundle(cardsFiles);
-				// create CardArtDb defs
-				defs = new CardArtDefs();
-				defs.Patch = GetPatchVersion(opts.HearthstoneDir);
-				defs.Cards = artCards.Cards;
+				defs = LoadCardDefs(opts.HearthstoneDir);
 			}
 
 			// Create the list of cards we want to output
@@ -84,7 +104,20 @@ namespace HsArtExtractor.Hearthstone
 			if (opts.SaveMapFile)
 				UpdateAndSaveCardArtDefs(bundleMap, defs, opts.OutputDir);
 			// Delete TextAsset directory
-			Directory.Delete(Path.Combine(opts.OutputDir, "TextAsset"), true);
+			//Directory.Delete(Path.Combine(opts.OutputDir, "TextAsset"), true);
+		}
+
+		private static CardArtDefs LoadCardDefs(string hsDir)
+		{
+			// Load card art data (cards<n>.unity3d)
+			var cardsFiles = new List<string>(Directory.GetFiles(_hsDataPath, "cards?.unity3d"));
+			var artCards = new CardsBundle(cardsFiles);
+			// create CardArtDb defs
+			var defs = new CardArtDefs();
+			defs.Patch = GetPatchVersion(hsDir);
+			defs.Cards = artCards.Cards;
+
+			return defs;
 		}
 
 		private static void UpdateAndSaveCardArtDefs(Dictionary<string, string> map, CardArtDefs defs, string dir)
