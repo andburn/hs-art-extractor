@@ -104,7 +104,7 @@ namespace HsArtExtractor.Hearthstone
 			if (opts.SaveMapFile)
 				UpdateAndSaveCardArtDefs(bundleMap, defs, opts.OutputDir);
 			// Delete TextAsset directory
-			//Directory.Delete(Path.Combine(opts.OutputDir, "TextAsset"), true);
+			Directory.Delete(Path.Combine(opts.OutputDir, "TextAsset"), true);
 		}
 
 		private static CardArtDefs LoadCardDefs(string hsDir)

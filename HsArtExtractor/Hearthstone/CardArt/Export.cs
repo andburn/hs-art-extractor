@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using HsArtExtractor.Image;
 using HsArtExtractor.Util;
 
 namespace HsArtExtractor.Hearthstone.CardArt
@@ -20,9 +19,9 @@ namespace HsArtExtractor.Hearthstone.CardArt
 			if (bmp.Width != TexDim || bmp.Height != TexDim)
 			{
 				Logger.Log("{1} not {0}x{0} ({1}x{2})", TexDim, card.Id, bmp.Width, bmp.Height);
-				// If not square return, else resize
+				// Warn when not square
 				if (bmp.Width != bmp.Height)
-					return;
+					Logger.Log(LogLevel.WARN, $"{card.Id} is not square.");
 				original = new Bitmap(bmp, TexDim, TexDim);
 			}
 			// Tile the original texture x2, for wrapping
