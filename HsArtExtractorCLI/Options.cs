@@ -119,4 +119,26 @@ namespace HsArtExtractorCLI
 			Required = true)]
 		public IEnumerable<string> InputFiles { get; set; }
 	}
+
+	[Verb("images", HelpText = "Extract images from all unity3d files in a directory.")]
+	internal class ImageOptions
+	{
+		[Option('o', "output-dir",
+			HelpText = "The directory to save the extracted files to.")]
+		public string Output { get; set; }
+
+		[Option('a', "alpha",
+			HelpText = "Keep the alpha channel in the images.")]
+		public bool Alpha { get; set; }
+
+		[Option('f', "flip",
+			HelpText = "Flip the images on the y-axis.")]
+		public bool Flip { get; set; }
+
+		[Value(0,
+			MetaName = "source directory",
+			HelpText = "The directory containing the unity files.",
+			Required = true)]
+		public string SourceDirectory { get; set; }
+	}
 }

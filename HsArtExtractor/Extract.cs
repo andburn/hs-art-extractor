@@ -33,14 +33,37 @@ namespace HsArtExtractor
 			string outDir, params string[] files)
 		{
 			List<IExtractor> extractors = new List<IExtractor>();
-			if (raw)
+			if(raw)
 				extractors.Add(new RawExtractor());
-			if (text)
+			if(text)
 				extractors.Add(new TextExtractor());
-			if (texture)
+			if(texture)
 				extractors.Add(new TextureExtractor());
 
 			ExtractAssets(extractors, outDir, files);
+		}
+
+		public static void AllImages(string[] files, string dir, bool alpha, bool flip)
+		{
+			IExtractor extractor = new ImageExtractor(alpha, flip);
+
+			if(!Directory.Exists(dir))
+				Directory.CreateDirectory(dir);
+
+			foreach(var f in files)
+			{
+				if(File.Exists(f))
+				{
+					AssestFile bundle = new AssestFile(f);
+					var bundleDir = Path.Combine(dir, bundle.FlieName);
+
+					System.Console.WriteLine("Extracting {0}...", bundle.FlieName);
+					foreach(var obj in bundle.Objects)
+					{
+						extractor.Extract(obj, bundleDir);
+					}
+				}
+			}
 		}
 
 		private static void ExtractAssets(IExtractor extractor, string outDir, string[] files)
@@ -50,21 +73,21 @@ namespace HsArtExtractor
 
 		private static void ExtractAssets(IEnumerable<IExtractor> extractors, string outDir, string[] files)
 		{
-			if (!Directory.Exists(outDir))
+			if(!Directory.Exists(outDir))
 			{
 				Directory.CreateDirectory(outDir);
 			}
 
-			foreach (var f in files)
+			foreach(var f in files)
 			{
-				if (File.Exists(f))
+				if(File.Exists(f))
 				{
 					AssestFile bundle = new AssestFile(f);
 					var bundleDir = Path.Combine(outDir, bundle.FlieName);
 					Directory.CreateDirectory(bundleDir);
-					foreach (var obj in bundle.Objects)
+					foreach(var obj in bundle.Objects)
 					{
-						foreach (var ex in extractors)
+						foreach(var ex in extractors)
 						{
 							ex.Extract(obj, bundleDir);
 						}
