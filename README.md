@@ -12,45 +12,29 @@ There is no graphical user interface for extraction. The program must be used wi
 
 When Hearthstone is running the necessary game files cannot be accessed. Therefore, you need to quit out of Hearthstone for the program to work correctly.
 
-#### Programming interface
-- Include a reference to `HsArtExtractor.dll` in your .NET project.
-
-```csharp
-using HsArtExtractor;
-using HsArtExtractor.Hearthstone;
-using HsArtExtractor.Util;
-
-class Program
-{
-  private static void Main(string[] args)
-  {
-    // set the logging level and location
-    Logger.SetLogLevel(LogLevel.WARN);
-    Logger.SetLogLocation(@"C:\CardArt");
-
-    // do the extraction
-    Extract.CardArt(new CardArtExtractorOptions() {
-      HearthstoneDir = @"C:\Program Files\Hearthstone",
-      OutputDir = @"C:\CardArt",
-      MapFile = "CardArtDefs.xml",
-      Height = 256,
-      BarHeight = 35
-    });
-  }
-}
-```
-
 #### Command line interface
 ```
 extractor.exe cardart [options] <hearthstone directory>
 
 ```
-Example:
+**Examples**
+
+Extract the card art including card bars to *C:\CardArt* directory, this excludes enchantments and miscellaneous sets.
 ```
-extractor.exe cardart -o "C:\CardArt" -m "CardArtDefs.xml" --height 256 --bar-height 35 "C:\Hearthstone"
+extractor.exe cardart -o "C:\CardArt" "C:\Hearthstone"
 ```
 
-Options:
+Extract the full card art images only (no bars) and disable all default filtering on sets and card type.
+```
+extractor.exe cardart --full-only --no-filters -o "C:\CardArt" "C:\Hearthstone"
+```
+
+Extract the card bars with "hidden" areas cropped off, and set the output height to be 34 pixels. Also, use the supplied [CardArtDefs.xml](CardArtDefs.xml) to create bars for tokens.
+```
+extractor.exe cardart -o "C:\CardArt" --crop-hidden --bar-height 34 --bar-only -m CardArtDefs.xml C:\Hearthstone
+```
+
+Other available options:
 ```
 --full-only                  Extract only the full size card art.
 
@@ -92,12 +76,42 @@ Options:
 -o, --output-dir             The directory where the extracted files will be
                              saved to.
 
+--crop-hidden                Remove parts of the card bar that are hidden by
+                             the bar frame in the game.
+
 --help                       Display this help screen.
 
 --version                    Display version information.
 
 ```
-Note: *some options are still experimental and may not work as expected*
+
+#### Programming interface
+- Include a reference to `HsArtExtractor.dll` in your .NET project.
+
+```csharp
+using HsArtExtractor;
+using HsArtExtractor.Hearthstone;
+using HsArtExtractor.Util;
+
+class Program
+{
+  private static void Main(string[] args)
+  {
+    // set the logging level and location
+    Logger.SetLogLevel(LogLevel.WARN);
+    Logger.SetLogLocation(@"C:\CardArt");
+
+    // do the extraction
+    Extract.CardArt(new CardArtExtractorOptions() {
+      HearthstoneDir = @"C:\Program Files\Hearthstone",
+      OutputDir = @"C:\CardArt",
+      MapFile = "CardArtDefs.xml",
+      Height = 256,
+      BarHeight = 35
+    });
+  }
+}
+```
 
 ## Build
 - Clone the repository.
