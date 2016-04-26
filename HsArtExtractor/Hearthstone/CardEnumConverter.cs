@@ -23,7 +23,8 @@ namespace HsArtExtractor.Hearthstone
 				{ CardSet.CREDITS, "Credits" },
 				{ CardSet.HERO_SKINS, "Hero Skins" },
 				{ CardSet.TB, "Tavern Brawl" },
-				{ CardSet.LOE, "League of Explorers" }
+				{ CardSet.LOE, "League of Explorers" },
+				{ CardSet.OG, "Whispers of the Old Gods" }
 			};
 
 		internal static List<CardSet> SetIds(List<string> sets)
@@ -68,6 +69,15 @@ namespace HsArtExtractor.Hearthstone
 
 				case "promo":
 					return CardSet.PROMO;
+
+				case "oldgods":
+				case "og":
+				case "gods":
+				case "whispers":
+					return CardSet.OG;
+
+				case "brawl":
+					return CardSet.TB;
 
 				default:
 					return CardSet.INVALID;

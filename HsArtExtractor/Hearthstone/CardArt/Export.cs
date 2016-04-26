@@ -81,11 +81,11 @@ namespace HsArtExtractor.Hearthstone.CardArt
 				}
 				if (cropHidden)
 				{
-					// safe to crop 10% from left
+					// safe to crop 10% from left, and 3% right
 					var cropAmount = (int)Math.Round(target.Width * 0.1);
-					var cropWidth = target.Width - cropAmount;
+					var cropWidth = (int)Math.Round(target.Width * 0.87);
 					// required output size
-					var outWidth = (int)Math.Round(final.Width * 0.9);
+					var outWidth = (int)Math.Round(final.Width * 0.87);
 					output = new Bitmap(outWidth, final.Height);
 					using (Graphics g = Graphics.FromImage(output))
 					{

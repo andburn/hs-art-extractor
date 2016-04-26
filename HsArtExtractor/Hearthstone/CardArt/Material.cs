@@ -22,8 +22,8 @@ namespace HsArtExtractor.Hearthstone.CardArt
 		{
 			var t = new Transform();
 			t.Type = TransformType.Shader;
-			t.Scale = new CoordinateTransform();
-			t.Offset = new CoordinateTransform();
+			t.Scale = new CoordinateTransform(1f, 1f);
+			t.Offset = new CoordinateTransform(0f, 0f);
 
 			foreach (var entry in floats)
 			{
