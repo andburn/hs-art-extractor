@@ -4499,7 +4499,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1.05" y="1.05" />
-        <Offset x="-0.14" y="0.16" />
+        <Offset x="-0.18" y="0.19" />
       </Transform>
     </Material>
   </Card>
@@ -4742,7 +4742,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1.11" y="1.11" />
-        <Offset x="-0.14" y="0.17" />
+        <Offset x="-0.22" y="0.17" />
       </Transform>
     </Material>
   </Card>
@@ -4929,12 +4929,12 @@
     </Material>
     <Material type="CardBar">
       <Transform type="Shader">
-        <Scale x="2" y="2" />
-        <Offset x="-0.2537" y="-0.2985" />
+        <Scale x="1.18" y="1.18" />
+        <Offset x="-0.21" y="0.08" />
       </Transform>
       <Transform type="Standard">
         <Scale x="1" y="1" />
-        <Offset x="-0.2" y="0.25" />
+        <Offset x="0" y="0" />
       </Transform>
     </Material>
   </Card>
@@ -6110,7 +6110,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1" y="1" />
-        <Offset x="-0.14" y="0.16" />
+        <Offset x="-0.15" y="0.17" />
       </Transform>
     </Material>
   </Card>
@@ -13454,12 +13454,12 @@
     </Material>
     <Material type="CardBar">
       <Transform type="Shader">
-        <Scale x="2" y="2" />
-        <Offset x="-0.2537" y="-0.2985" />
+        <Scale x="1.11" y="1.11" />
+        <Offset x="-0.2" y="0.15" />
       </Transform>
       <Transform type="Standard">
         <Scale x="1" y="1" />
-        <Offset x="-0.2" y="0.25" />
+        <Offset x="0" y="0" />
       </Transform>
     </Material>
   </Card>
@@ -21342,8 +21342,8 @@
     </Material>
     <Material type="CardBar">
       <Transform type="Shader">
-        <Scale x="1" y="1" />
-        <Offset x="0" y="0" />
+        <Scale x="1.18" y="1.18" />
+        <Offset x="-0.21" y="0.12" />
       </Transform>
       <Transform type="Standard">
         <Scale x="1" y="1" />
@@ -22709,7 +22709,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1.05" y="1.05" />
-        <Offset x="-0.13" y="0.15" />
+        <Offset x="-0.18" y="0.17" />
       </Transform>
     </Material>
   </Card>
@@ -23425,7 +23425,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1.11" y="1.11" />
-        <Offset x="-0.14" y="0.12" />
+        <Offset x="-0.17" y="0.14" />
       </Transform>
     </Material>
   </Card>
@@ -25809,7 +25809,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1" y="1" />
-        <Offset x="-0.14" y="0.17" />
+        <Offset x="-0.13" y="0.18" />
       </Transform>
     </Material>
   </Card>
@@ -30198,7 +30198,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1" y="1" />
-        <Offset x="-0.18" y="0.25" />
+        <Offset x="-0.18" y="0.26" />
       </Transform>
     </Material>
   </Card>
@@ -31350,7 +31350,7 @@
       </Transform>
       <Transform type="Shader">
         <Scale x="1.11" y="1.11" />
-        <Offset x="-0.14" y="0.16" />
+        <Offset x="-0.16" y="0.16" />
       </Transform>
     </Material>
   </Card>
