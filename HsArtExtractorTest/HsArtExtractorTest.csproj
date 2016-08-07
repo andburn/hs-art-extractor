@@ -52,9 +52,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FSAssetBundleHeaderTest.cs" />
     <Compile Include="AssetHeaderTest.cs" />
     <Compile Include="CardArtDbTest.cs" />
     <Compile Include="CardDbTest.cs" />
+    <Compile Include="FSObjectInfoTableTest.cs" />
     <Compile Include="ObjectInfoTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssetBundleHeaderTest.cs" />
@@ -76,7 +78,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\cardtextures.unity3d">
+    <None Include="Data\bundle_5.1.unity3d">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\bundle_5.3_fs.unity3d">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

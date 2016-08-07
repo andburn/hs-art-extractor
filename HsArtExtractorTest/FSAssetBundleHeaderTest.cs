@@ -4,14 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HsArtExtractorTest
 {
 	[TestClass]
-	public class AssetBundleHeaderTest
+	public class FSAssetBundleHeaderTest
 	{
 		private static AssetBundleHeader _header;
 
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext context)
 		{
-			var file = @".\Data\bundle_5.1.unity3d";
+			var file = @".\Data\bundle_5.3_fs.unity3d";
 			var abr = new AssestFile(file);
 			_header = abr.Header;
 		}
@@ -19,7 +19,7 @@ namespace HsArtExtractorTest
 		[TestMethod]
 		public void TestSignature()
 		{
-			Assert.AreEqual("UnityRaw", _header.Signature);
+			Assert.AreEqual("UnityFS", _header.Signature);
 		}
 
 		[TestMethod]
@@ -31,31 +31,37 @@ namespace HsArtExtractorTest
 		[TestMethod]
 		public void TestUnityEngineVersion()
 		{
-			Assert.AreEqual("5.1.3p2", _header.UnityRevision);
+			Assert.AreEqual("5.3.4p4", _header.UnityRevision);
 		}
 
 		[TestMethod]
 		public void TestFileSize()
 		{
-			Assert.AreEqual(528904, _header.CompleteFileSize);
+			Assert.AreEqual(528974, _header.CompleteFileSize);
 		}
 
 		[TestMethod]
 		public void TestHeaderSize()
 		{
-			Assert.AreEqual(60, _header.HeaderSize);
-		}
-
-		[TestMethod]
-		public void TestDataHeaderSize()
-		{
-			Assert.AreEqual(36, _header.DataHeaderSize);
+			Assert.AreEqual(110, _header.HeaderSize);
 		}
 
 		[TestMethod]
 		public void TestNumberOfFiles()
 		{
 			Assert.AreEqual(1, _header.NumberOfFiles);
+		}
+
+		[TestMethod]
+		public void TestCompressedBlockSize()
+		{
+			Assert.AreEqual(64, _header.CompressedBlockSize);
+		}
+
+		[TestMethod]
+		public void TestUnCompressedBlockSize()
+		{
+			Assert.AreEqual(91, _header.UnCompressedBlockSize);
 		}
 	}
 }

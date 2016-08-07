@@ -11,7 +11,7 @@ namespace HsArtExtractorTest
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext context)
 		{
-			var file = @".\Data\cardtextures.unity3d";
+			var file = @".\Data\bundle_5.1.unity3d";
 			var abr = new AssestFile(file);
 			_entry = abr.BundleEntry;
 		}
