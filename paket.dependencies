@@ -1,7 +1,8 @@
 source https://nuget.org/api/v2
 
-nuget CommandLineParser >= 2.0
+nuget CommandLineParser >= 2 prerelease
 nuget WindowsAPICodePack-Shell >= 1.1
+nuget lz4net >= 1.0
 
 github andburn/dds-reader DDSReader/DDS.cs
 github andburn/dds-reader DDSReader/DDSImage.cs

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace HsArtExtractor.Util
 {
@@ -10,7 +6,7 @@ namespace HsArtExtractor.Util
 	{
 		private int _version;
 		private Dictionary<long, ObjectInfo> _infoMap;
-		
+
 		public ObjectInfoTable(int version)
 		{
 			_version = version;
@@ -22,16 +18,16 @@ namespace HsArtExtractor.Util
 
 			int entries = b.ReadInt();
 
-			if(_version > 13)
+			if (_version > 13)
 				b.Align(4);
 
-			for(int i = 0; i < entries; i++)
+			for (int i = 0; i < entries; i++)
 			{
 				long pathID;
 				if (_version > 13)
 				{
 					pathID = b.ReadLong();
-				} 
+				}
 				else
 				{
 					pathID = b.ReadInt();
