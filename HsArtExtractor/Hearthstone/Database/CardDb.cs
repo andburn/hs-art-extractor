@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using HsArtExtractor.Util;
 
 namespace HsArtExtractor.Hearthstone.Database
 {
@@ -74,7 +75,10 @@ namespace HsArtExtractor.Hearthstone.Database
 				foreach (var entity in cardDefs.Entites)
 				{
 					var card = new Card(entity);
-					_cards.Add(entity.CardId, card);
+					if (!_cards.ContainsKey(entity.CardId))
+						_cards.Add(entity.CardId, card);
+					else
+						Logger.Log(LogLevel.WARN, $"{entity.CardId} already added");
 				}
 			}
 		}

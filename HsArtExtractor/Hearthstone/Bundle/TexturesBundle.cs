@@ -63,7 +63,14 @@ namespace HsArtExtractor.Hearthstone.Bundle
 							{
 								SaveImages(tex, match);
 								// add card id to filename record
-								bundleMap.Add(match.Id, tf);
+								if (bundleMap.ContainsKey(match.Id))
+								{
+									Logger.Log(LogLevel.WARN, $"{refName} multi match {match}");
+								}
+								else
+								{
+									bundleMap.Add(match.Id, tf);
+								}
 							}
 						}
 					}
