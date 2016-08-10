@@ -89,8 +89,8 @@ namespace HsArtExtractor.Hearthstone
 		BLANK = 9,
 		DEBUG_SP = 10,
 		PROMO = 11,
-		FP1 = 12,
-		PE1 = 13,
+		NAXX = 12,
+		GVG = 13,
 		BRM = 14,
 		TGT = 15,
 		CREDITS = 16,
@@ -100,9 +100,14 @@ namespace HsArtExtractor.Hearthstone
 		LOE = 20,
 		OG = 21,
 		OG_RESERVE = 22,
+		KARA = 23,
+		KARA_RESERVE = 24,
 
-		GVG = PE1,
+		FP1 = 12,
+		PE1 = 13,
+
 		FP2 = BRM,
-		PE2 = TGT
+		PE2 = TGT,
+		TEMP1 = TGT
 	}
 }
