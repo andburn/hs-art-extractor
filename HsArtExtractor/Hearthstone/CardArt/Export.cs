@@ -47,9 +47,6 @@ namespace HsArtExtractor.Hearthstone.CardArt
 			var y = coords.Y;
 			var width = coords.Width;
 			var height = coords.Height;
-			// Image needs to be wrapped, for tiling
-			if (x < 0)
-				x += TexDim;
 
 			try
 			{
@@ -159,7 +156,11 @@ namespace HsArtExtractor.Hearthstone.CardArt
 				y -= TexDim;
 			while (y + height < 0)
 				y += TexDim;
-			Logger.Log(LogLevel.DEBUG, "(x,y)* = ({0}, {1})", x, y);
+
+			if (x < 0)
+				x += TexDim;
+
+			Logger.Log(LogLevel.DEBUG, "Rect = ({0}, {1}, {2}, {3})", x, y, width, height);
 
 			return new Rectangle(x, y, width, height);
 		}
