@@ -23,7 +23,8 @@ namespace HsArtExtractor.Unity.Objects
 
         public AssetBundle(BinaryBlock b)
         {
-            Name = b.ReadStringToNull();
+            var nameSize = b.ReadInt();
+            Name = b.ReadFixedString(nameSize);
             b.Align(4);
 
             _nameless = new List<FilePointer>();
