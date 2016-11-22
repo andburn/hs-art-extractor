@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using AndBurn.DDSReader;
+using Imaging.DDSReader;
 using HsArtExtractor.Hearthstone.CardArt;
 using HsArtExtractor.Hearthstone.Database;
 using HsArtExtractor.Image;
@@ -88,6 +88,12 @@ namespace HsArtExtractor.Hearthstone.Bundle
 			var cardSet = card.Set;
 			var filename = cardId;
 			var subDir = "";
+
+			if (tex.Image.Length <= 0)
+			{
+				Logger.Log(LogLevel.WARN, $"Texture {tex.Name} has an empty image");
+				return;
+			}
 
 			if (_opts.AddCardName)
 				filename = StringUtils.SafeString(cardName) + "-" + filename;

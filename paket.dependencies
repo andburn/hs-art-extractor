@@ -1,6 +1,6 @@
 source https://nuget.org/api/v2
 
-nuget CommandLineParser >= 2 prerelease
+nuget CommandLineParser ~> 2.0.275-beta
 nuget WindowsAPICodePack-Shell >= 1.1
 nuget lz4net >= 1.0
 nuget Costura.Fody >= 1.3

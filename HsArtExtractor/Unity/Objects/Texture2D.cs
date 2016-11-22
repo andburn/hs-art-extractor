@@ -82,16 +82,31 @@ namespace HsArtExtractor.Unity.Objects
 
 		private byte[] CreateImage()
 		{
-			// for HS check if DDS, otherwise assume TGA
-			if (Format == TextureFormat.DXT1 || Format == TextureFormat.DXT5)
+			var image = new byte[0];
+			try
 			{
-				return CreateDDS();
+				if (Format == TextureFormat.DXT1Crunched || Format == TextureFormat.DXT5Crunched)
+				{
+					throw new TextureException("DXT Crunched not supported: " + Name);
+				}
+				else if (Format == TextureFormat.DXT1 || Format == TextureFormat.DXT5)
+				{
+					image = CreateDDS();
+				}
+				// for HS card art is either DDS (possibly crunched) or TGA
+				else
+				{
+					Logger.Log("Not a DDS file! Format = " + Format + " (assuming TGA)");
+					image = CreateTGA();
+				}
 			}
-			else
+			catch (TextureException te)
 			{
-				Logger.Log("Not a DDS file! Format = " + Format + " (treating as TGA)");
-				return CreateTGA();
+				var message = $"Image decoding failed for texture {Name}";
+				Console.WriteLine(message);
+				Logger.Log(LogLevel.ERROR, $"{message} ({te.Message})");
 			}
+			return image;
 		}
 
 		private byte[] CreateTGA()

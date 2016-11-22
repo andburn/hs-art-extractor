@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using AndBurn.DDSReader;
+using Imaging.DDSReader;
 using HsArtExtractor.Image;
 using HsArtExtractor.Unity.Objects;
 using HsArtExtractor.Util;
