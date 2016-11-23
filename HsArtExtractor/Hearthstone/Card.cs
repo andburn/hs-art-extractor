@@ -1,4 +1,5 @@
-﻿using HsArtExtractor.Hearthstone.Database;
+﻿using System;
+using HsArtExtractor.Hearthstone.Database;
 
 namespace HsArtExtractor.Hearthstone
 {
@@ -22,13 +23,26 @@ namespace HsArtExtractor.Hearthstone
 		public Card(Entity e)
 		{
 			Id = e.CardId;
-			Name = e.GetInnerValue((int)CardTag.CARDNAME);
-			var typeId = e.GetTag((int)CardTag.CARDTYPE);
+			Name = e.GetInnerValue((int)GameTag.CARDNAME);
+			var typeId = e.GetTag((int)GameTag.CARDTYPE);
 			Type = (CardType)typeId;
-			var setId = e.GetTag((int)CardTag.CARD_SET);
+			var setId = e.GetTag((int)GameTag.CARD_SET);
 			Set = (CardSet)setId;
-			var collectible = e.GetTag((int)CardTag.COLLECTIBLE);
+			var collectible = e.GetTag((int)GameTag.COLLECTIBLE);
 			IsCollectible = collectible == 1;
+		}
+
+		public Card(JsonCard jc)
+		{
+			Id = jc.Id;
+			Name = jc.Name;
+			CardType pType;
+			if (Enum.TryParse(jc.Type, true, out pType))
+				Type = pType;
+			CardSet pSet;
+			if (Enum.TryParse(jc.Set, true, out pSet))
+				Set = pSet;
+			IsCollectible = jc.Collectible;
 		}
 
 		public override bool Equals(object obj)
@@ -50,64 +64,5 @@ namespace HsArtExtractor.Hearthstone
 		{
 			return string.Format("{1} [{0}] ({2})", Id, Name, Type);
 		}
-	}
-
-	public enum CardTag
-	{
-		CARD_SET = 183,
-		CARDNAME = 185,
-		CARDTYPE = 202,
-		COLLECTIBLE = 321
-	}
-
-	public enum CardType
-	{
-		INVALID = 0,
-		GAME = 1,
-		PLAYER = 2,
-		HERO = 3,
-		MINION = 4,
-		ABILITY = 5,
-		ENCHANTMENT = 6,
-		WEAPON = 7,
-		ITEM = 8,
-		TOKEN = 9,
-		HERO_POWER = 10
-	}
-
-	public enum CardSet
-	{
-		INVALID = 0,
-		TEST_TEMPORARY = 1,
-		CORE = 2,
-		EXPERT1 = 3,
-		REWARD = 4,
-		MISSIONS = 5,
-		DEMO = 6,
-		NONE = 7,
-		CHEAT = 8,
-		BLANK = 9,
-		DEBUG_SP = 10,
-		PROMO = 11,
-		NAXX = 12,
-		GVG = 13,
-		BRM = 14,
-		TGT = 15,
-		CREDITS = 16,
-		HERO_SKINS = 17,
-		TB = 18,
-		SLUSH = 19,
-		LOE = 20,
-		OG = 21,
-		OG_RESERVE = 22,
-		KARA = 23,
-		KARA_RESERVE = 24,
-
-		FP1 = 12,
-		PE1 = 13,
-
-		FP2 = BRM,
-		PE2 = TGT,
-		TEMP1 = TGT
 	}
 }

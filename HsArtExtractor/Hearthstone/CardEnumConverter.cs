@@ -3,9 +3,6 @@
 namespace HsArtExtractor.Hearthstone
 {
 	// Convert card set and type for CardArtExtractor
-	// TODO needs overhaul, less maintenance
-	// TODO use proper converter?
-	// TOOD use hs-data or HearthDB
 	internal class CardEnumConverter
 	{
 		internal static Dictionary<CardSet, string> FriendlySetName =
@@ -51,6 +48,7 @@ namespace HsArtExtractor.Hearthstone
 					return CardSet.EXPERT1;
 
 				case "naxx":
+				case "naxxramas":
 					return CardSet.FP1;
 
 				case "gvg":
@@ -81,6 +79,10 @@ namespace HsArtExtractor.Hearthstone
 				case "karazhan":
 					return CardSet.KARA;
 
+				case "gangs":
+				case "gadgetzan":
+					return CardSet.GANGS;
+
 				case "brawl":
 					return CardSet.TB;
 
@@ -106,6 +108,7 @@ namespace HsArtExtractor.Hearthstone
 				case "hero":
 					return CardType.HERO;
 
+				case "heropower":
 				case "hero_power":
 				case "power":
 					return CardType.HERO_POWER;
@@ -115,6 +118,7 @@ namespace HsArtExtractor.Hearthstone
 					return CardType.MINION;
 
 				case "ability":
+				case "abilities":
 				case "spell":
 				case "spells":
 					return CardType.ABILITY;

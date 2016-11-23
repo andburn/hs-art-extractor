@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using HsArtExtractor.Hearthstone.Bundle;
 using HsArtExtractor.Hearthstone.CardArt;
 using HsArtExtractor.Hearthstone.Database;
@@ -10,6 +11,7 @@ using HsArtExtractor.Unity;
 using HsArtExtractor.Unity.Extract;
 using HsArtExtractor.Unity.Objects;
 using HsArtExtractor.Util;
+using Newtonsoft.Json;
 
 namespace HsArtExtractor.Hearthstone
 {
@@ -25,8 +27,8 @@ namespace HsArtExtractor.Hearthstone
 			List<CardSet> includeSets = CardEnumConverter.SetIds(opts.Sets);
 			List<CardType> includeTypes = CardEnumConverter.TypeIds(opts.Types);
 
-			// Load card data
-			LoadCardDb(opts.OutputDir);
+			// Load card data from hearthstonejson
+			LoadCardData();
 
 			// If a map file was supplied, use that instead of parsing cards files
 			CardArtDefs defs = null;
@@ -103,8 +105,42 @@ namespace HsArtExtractor.Hearthstone
 			// Update the cardartdb with found bundle names, and save
 			if (opts.SaveMapFile)
 				UpdateAndSaveCardArtDefs(bundleMap, defs, opts.OutputDir);
-			// Delete TextAsset directory
-			Directory.Delete(Path.Combine(opts.OutputDir, "TextAsset"), true);
+		}
+
+		private static void LoadCardData()
+		{
+			// TODO save it locally / cached, check created date?
+			var url = @"https://api.hearthstonejson.com/v1/latest/enUS/cards.json";
+			var local = @"cards.json";
+			var json = string.Empty;
+
+			if (File.Exists(local))
+			{
+				json = File.ReadAllText(local);
+			}
+			else
+			{
+				using (var wc = new WebClient())
+				{					
+					try
+					{
+						json = wc.DownloadString(url);
+						if (string.IsNullOrWhiteSpace(json))
+							throw new Exception("JSON string is empty");
+						File.WriteAllText(local, json);
+					}
+					catch (Exception e)
+					{
+						var message = $"Failed to download HearthstoneJson data";
+						Console.WriteLine(message + "...Exiting");
+						Logger.Log(LogLevel.ERROR, $"{message} ({e.Message})");
+						Environment.Exit(1);
+					}					
+				}
+			}
+			CardDb.ReadJsonString(json);
+			Logger.Log("CardDB loaded: {0} cards", CardDb.All.Count);
+			Logger.Log("CardDB loaded: {0} cards (filtered)", CardDb.Filtered.Count);
 		}
 
 		private static CardArtDefs LoadCardDefs(string hsDir)

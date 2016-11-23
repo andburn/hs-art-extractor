@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using HsArtExtractor.Util;
+using Newtonsoft.Json;
 
 namespace HsArtExtractor.Hearthstone.Database
 {
@@ -80,6 +81,20 @@ namespace HsArtExtractor.Hearthstone.Database
 					else
 						Logger.Log(LogLevel.WARN, $"{entity.CardId} already added");
 				}
+			}
+		}
+
+		public static void ReadJsonString(string json)
+		{
+			var cards = JsonConvert.DeserializeObject<List<JsonCard>>(json);
+			_cards.Clear();
+			foreach (var jcard in cards)
+			{
+				var card = new Card(jcard);
+				if (!_cards.ContainsKey(jcard.Id))
+					_cards.Add(jcard.Id, card);
+				else
+					Logger.Log(LogLevel.WARN, $"{jcard.Id} already added");
 			}
 		}
 	}

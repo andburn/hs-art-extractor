@@ -73,7 +73,7 @@ namespace HsArtExtractor.Util
             StringBuilder str = new StringBuilder();
             foreach (var p in props)
             {
-                Type t = p.PropertyType;
+                System.Type t = p.PropertyType;
                 object objValue = p.GetValue(obj, null);
                 if (typeof(IEnumerable).IsAssignableFrom(t) && t != typeof(string))
                 {
