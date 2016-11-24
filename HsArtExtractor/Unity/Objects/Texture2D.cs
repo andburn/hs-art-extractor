@@ -87,7 +87,9 @@ namespace HsArtExtractor.Unity.Objects
 			{
 				if (Format == TextureFormat.DXT1Crunched || Format == TextureFormat.DXT5Crunched)
 				{
-					throw new TextureException("DXT Crunched not supported: " + Name);
+					Logger.Log(LogLevel.INFO, $"Starting to de-crunch texture {Name}");
+					image = Crunchy.Decode(_data);
+					Format = Format == TextureFormat.DXT1Crunched ? TextureFormat.DXT1 : TextureFormat.DXT5;										
 				}
 				else if (Format == TextureFormat.DXT1 || Format == TextureFormat.DXT5)
 				{
@@ -96,7 +98,7 @@ namespace HsArtExtractor.Unity.Objects
 				// for HS card art is either DDS (possibly crunched) or TGA
 				else
 				{
-					Logger.Log("Not a DDS file! Format = " + Format + " (assuming TGA)");
+					Logger.Log($"{Name} is not a DDS file! Format={Format} (assuming TGA)");
 					image = CreateTGA();
 				}
 			}

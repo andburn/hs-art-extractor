@@ -120,6 +120,7 @@
     <Compile Include="Util\BinaryBlock.cs" />
     <Compile Include="Util\ColorRGBA.cs" />
     <Compile Include="Util\Compression.cs" />
+    <Compile Include="Util\Crunchy.cs" />
     <Compile Include="Util\DebugUtils.cs" />
     <Compile Include="Util\FileIdentifierTable.cs" />
     <Compile Include="Util\FilePointer.cs" />

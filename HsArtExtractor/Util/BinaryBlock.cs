@@ -52,6 +52,17 @@ namespace HsArtExtractor.Util
 			Seek(0);
 		}
 
+		public void WriteAllBytes(string file)
+		{
+			var currentPos = BaseStream.Position;
+			using (var fs = File.Create(file))
+			{
+				BaseStream.Seek(0, SeekOrigin.Begin);
+				BaseStream.CopyTo(fs);
+			}
+			BaseStream.Seek(currentPos, SeekOrigin.Begin);
+		}
+
 		public short ReadShort()
 		{
 			if (_bigEndian)
