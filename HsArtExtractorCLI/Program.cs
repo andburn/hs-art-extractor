@@ -13,7 +13,11 @@ namespace HsArtExtractorCLI
 	{
 		private static int Main(string[] args)
 		{
+#if DEBUG
 			Logger.SetLogLevel(LogLevel.DEBUG);
+#else
+			Logger.SetLogLevel(LogLevel.WARN);
+#endif
 
 			return CommandLine.Parser.Default.ParseArguments<DumpOptions, CardArtOptions, ImageOptions>(args)
 				.MapResult(

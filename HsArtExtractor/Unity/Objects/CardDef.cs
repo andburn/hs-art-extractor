@@ -51,7 +51,7 @@ namespace HsArtExtractor.Unity.Objects
 			}
 			catch (Exception e)
 			{
-				Logger.Log(LogLevel.DEBUG, $"CardDef Load failed {GameObject.PathID}, {MonoScript.PathID} ({e})");
+				Logger.Log(LogLevel.DEBUG, $"CardDef Load failed {GameObject.PathID}, {MonoScript.PathID} ({e.Message})");
 				FailedToLoad = true;
 			}
 		}
