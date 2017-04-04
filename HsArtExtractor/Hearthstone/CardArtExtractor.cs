@@ -28,8 +28,8 @@ namespace HsArtExtractor.Hearthstone
 			List<CardType> includeTypes = CardEnumConverter.TypeIds(opts.Types);
 
 			// Load card data from hearthstonejson
-			LoadCardData();
-
+			LoadCardData(GetPatchVersion(opts.HearthstoneDir));
+			
 			// If a map file was supplied, use that instead of parsing cards files
 			CardArtDefs defs = null;
 			if (File.Exists(opts.MapFile))
@@ -37,7 +37,7 @@ namespace HsArtExtractor.Hearthstone
 				Logger.Log(LogLevel.INFO, "using map file: {0}", opts.MapFile);
 				CardArtDb.Read(opts.MapFile);
 				var loadedPatch = CardArtDb.GamePatch;
-				var currentPatch = GetPatchVersion(opts.HearthstoneDir);
+				var currentPatch = GetPatchVersion(opts.HearthstoneDir).ToString();
 				if (loadedPatch != currentPatch)
 				{
 					Console.WriteLine("Map file patch mismatch, attempting merge: {0} != {1}",
@@ -107,11 +107,11 @@ namespace HsArtExtractor.Hearthstone
 				UpdateAndSaveCardArtDefs(bundleMap, defs, opts.OutputDir);
 		}
 
-		private static void LoadCardData()
+		private static void LoadCardData(Version version)
 		{
-			// TODO save it locally / cached, check created date?
-			var url = @"https://api.hearthstonejson.com/v1/latest/enUS/cards.json";
-			var local = @"cards.json";
+			var patch = version.Revision;
+			var url = @"https://api.hearthstonejson.com/v1/" + patch + @"/enUS/cards.json";
+			var local = $"cards.{patch}.json";
 			var json = string.Empty;
 
 			if (File.Exists(local))
@@ -131,7 +131,7 @@ namespace HsArtExtractor.Hearthstone
 					}
 					catch (Exception e)
 					{
-						var message = $"Failed to download HearthstoneJson data";
+						var message = $"Failed to download HearthstoneJson data for patch {patch}";
 						Console.WriteLine(message + "...Exiting");
 						Logger.Log(LogLevel.ERROR, $"{message} ({e.Message})");
 						Environment.Exit(1);
@@ -150,7 +150,7 @@ namespace HsArtExtractor.Hearthstone
 			var artCards = new CardsBundle(cardsFiles);
 			// create CardArtDb defs
 			var defs = new CardArtDefs();
-			defs.Patch = GetPatchVersion(hsDir);
+			defs.Patch = GetPatchVersion(hsDir).ToString();
 			defs.Cards = artCards.Cards;
 
 			return defs;
@@ -256,7 +256,7 @@ namespace HsArtExtractor.Hearthstone
 		}
 
 		// Grab the HS version
-		private static string GetPatchVersion(string hsDir)
+		private static Version GetPatchVersion(string hsDir)
 		{
 			var version = new Version();
 			var hsExe = Path.Combine(hsDir, "Hearthstone.exe");
@@ -266,8 +266,7 @@ namespace HsArtExtractor.Hearthstone
 				// NOTE: FileVersion & ProductVersion strings are same, need to use parts
 				version = new Version(vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart);
 			}
-
-			return version.ToString();
+			return version;
 		}
 	}
 }

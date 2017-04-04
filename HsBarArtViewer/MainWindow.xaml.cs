@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using HsArtExtractor.Hearthstone.CardArt;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using Ookii.Dialogs.Wpf;
 using ControlsImage = System.Windows.Controls.Image;
 using WindowsPoint = System.Windows.Point;
 
@@ -43,8 +43,18 @@ namespace HsBarArtViewer
 		private void BtnBrowse_Click(object sender, RoutedEventArgs e)
 		{
 			var fileExt = "*.png";
-			var dirpath = OpenBrowseDialog(true);
-			if (dirpath != null)
+			var dirpath = string.Empty;
+			
+			VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
+			dialog.Description = "Select a folder";
+			dialog.UseDescriptionForTitle = true;
+
+			if ((bool)dialog.ShowDialog())
+			{
+				dirpath = dialog.SelectedPath;
+			}
+
+			if (!string.IsNullOrEmpty(dirpath))
 			{
 				StatusWrite("Loading from " + dirpath);
 				_fileList = new FileList(
@@ -56,8 +66,17 @@ namespace HsBarArtViewer
 
 		private void BtnMapBrowse_Click(object sender, RoutedEventArgs e)
 		{
-			var filepath = OpenBrowseDialog(false, "XML Files;xml");
-			if (filepath != null)
+			var filepath = string.Empty;
+
+			VistaOpenFileDialog dialog = new VistaOpenFileDialog();
+			dialog.Title = "Select a folder";
+
+			if ((bool)dialog.ShowDialog())
+			{
+				filepath = dialog.FileName;
+			}
+
+			if (!string.IsNullOrEmpty(filepath))
 			{
 				CardArtDb.Read(filepath);
 				_fileList.UpdateBars();
@@ -218,26 +237,6 @@ namespace HsBarArtViewer
 			var yDash = (yFlip * scale) * -1 + 197.5;
 
 			return new Tuple<double, double, double>(scale, xDash, yDash);
-		}
-
-		private string OpenBrowseDialog(bool folderSelect = false, string filter = null)
-		{
-			var dialog = new CommonOpenFileDialog();
-			dialog.IsFolderPicker = folderSelect;
-
-			if (!string.IsNullOrEmpty(filter))
-			{
-				var fs = filter.Split(new char[] { ';' }, 2);
-				if (fs.Length >= 2)
-					dialog.Filters.Add(new CommonFileDialogFilter(fs[0], fs[1]));
-			}
-
-			CommonFileDialogResult result = dialog.ShowDialog();
-
-			if (result == CommonFileDialogResult.Ok)
-				return dialog.FileName;
-			else
-				return null;
 		}
 
 		private void SetImageTitle()

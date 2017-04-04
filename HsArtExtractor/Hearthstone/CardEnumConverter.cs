@@ -22,7 +22,8 @@ namespace HsArtExtractor.Hearthstone
 				{ CardSet.TB, "Tavern Brawl" },
 				{ CardSet.LOE, "League of Explorers" },
 				{ CardSet.OG, "Whispers of the Old Gods" },
-				{ CardSet.KARA, "One Night in Karazhan" }
+				{ CardSet.KARA, "One Night in Karazhan" },
+				{ CardSet.UNGORO, "Journey to Un'Goro" }
 			};
 
 		internal static List<CardSet> SetIds(List<string> sets)
@@ -85,6 +86,9 @@ namespace HsArtExtractor.Hearthstone
 
 				case "brawl":
 					return CardSet.TB;
+
+				case "ungoro":
+					return CardSet.UNGORO;
 
 				default:
 					return CardSet.INVALID;

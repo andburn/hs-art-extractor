@@ -61,7 +61,7 @@
   <ItemGroup>
     <Compile Include="..\paket-files\api.hearthstonejson.com\enums.cs">
       <Paket>True</Paket>
-      <Link>Hearthstone/enums.cs</Link>
+      <Link>paket-files/enums.cs</Link>
     </Compile>
     <Compile Include="Extract.cs" />
     <Compile Include="Hearthstone\Bundle\CardsBundle.cs" />
