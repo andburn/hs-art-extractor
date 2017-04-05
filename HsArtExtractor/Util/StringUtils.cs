@@ -53,9 +53,9 @@ namespace HsArtExtractor.Util
 			{
 				fi = new FileInfo(filename);
 			}
-			catch
+			catch (Exception)
 			{
-				fi = new FileInfo("C:/" + filename);
+				return null;
 			}
 			var extIdx = fi.Name.LastIndexOf(fi.Extension);
 			return fi.Name.Substring(0, extIdx);
@@ -74,7 +74,7 @@ namespace HsArtExtractor.Util
 			}
 			catch (Exception)
 			{
-				fi = new FileInfo("C:/" + filename);
+				return null;
 			}
 			var fid = fi.Directory;
 			return fid.Name;
@@ -86,8 +86,7 @@ namespace HsArtExtractor.Util
 		public static string SafeString(string str)
 		{
 			var invalidChars = Path.GetInvalidFileNameChars();
-			var invalidSplit = str.Split(invalidChars,
-				StringSplitOptions.RemoveEmptyEntries);
+			var invalidSplit = str.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries);
 			return string.Join("_", invalidSplit).TrimEnd('.').Replace(' ', '_');
 		}
 	}

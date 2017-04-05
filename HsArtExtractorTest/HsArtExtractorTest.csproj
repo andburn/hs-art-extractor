@@ -62,6 +62,7 @@
     <Compile Include="AssetBundleHeaderTest.cs" />
     <Compile Include="AssetBundleEntryTest.cs" />
     <Compile Include="TypeTreeTest.cs" />
+    <Compile Include="UtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HsArtExtractor\HsArtExtractor.csproj">
