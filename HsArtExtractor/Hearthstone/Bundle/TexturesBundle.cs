@@ -28,11 +28,7 @@ namespace HsArtExtractor.Hearthstone.Bundle
 			_dirFull = Path.Combine(_dir, "Full");
 			_dirBars = Path.Combine(_dir, "Bars");
 
-			if (!opts.BarArtOnly)
-				Directory.CreateDirectory(_dirFull);
-
-			if (!opts.FullArtOnly)
-				Directory.CreateDirectory(_dirBars);
+			Directory.CreateDirectory(_dirFull);
 		}
 
 		public Dictionary<string, string> Extract(Dictionary<long, string> refs, List<ArtCard> cards)
@@ -138,15 +134,7 @@ namespace HsArtExtractor.Hearthstone.Bundle
 			if (_opts.FlipY)
 				full.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
-			if (!_opts.BarArtOnly)
-			{
-				if (_opts.WithoutBarCoords && match.HasBarCoords())
-					return;
-				full.Save(Path.Combine(_dirFull, subDir, filename + "." + _opts.ImageType.ToLower()));
-			}
-
-			if (!_opts.FullArtOnly)
-				Export.CardBar(match, original, _dirBars, _opts.BarHeight, _opts.CropHidden);
+			full.Save(Path.Combine(_dirFull, subDir, filename + "." + _opts.ImageType.ToLower()));
 		}
 	}
 }
