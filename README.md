@@ -1,15 +1,23 @@
 # HsArtExtractor
 A tool for windows to extract hearthstone card art from the unity game files. The project includes a partial port of [Disunity](https://github.com/ata4/disunity), it also utilizes the [DDSReader](https://github.com/andburn/dds-reader) project.
 
+## Obsolete
+As of version *0.3.3* (Hearthstone patch 8.0.0.18336) the card art can still be extracted as before, but support for card tiles and card xml has been removed.
+
+This project has become increasingly difficult to maintain with each new Hearthstone patch. Future updates to this project are unlikely. The [HearthSim](https://hearthsim.info/) tool chain is the recommended replacement:
+- [HearthstoneJSON](https://github.com/HearthSim/HearthstoneJSON)
+- [HsData](https://github.com/HearthSim/hsdata)
+- [UnityPack](https://github.com/HearthSim/UnityPack)
+
+---
+
 ## Features
 - Extract all card art.
-- Extract available card bars (deck list images).
-- Extracts the card xml text files.
+- ~~Extract available card bars (deck list images).~~
+- ~~Extracts the card xml text files.~~
 - Extracted cards can be filtered by set and card type, they can also be named by card name rather than by id.
 
 ## Usage
-There is no graphical user interface for extraction. The program must be used with either the programming interface or the command line interface.
-
 When Hearthstone is running the necessary game files cannot be accessed. Therefore, you need to quit out of Hearthstone for the program to work correctly.
 
 #### Command line interface
