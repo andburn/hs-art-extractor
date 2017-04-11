@@ -135,6 +135,11 @@ namespace HsArtExtractorCLI
 			HelpText = "Flip the images on the y-axis.")]
 		public bool Flip { get; set; }
 
+		[Option('x', "exclude",
+			HelpText = "Exclude the given files")]
+		public string Exclude { get; set; }
+
+
 		[Value(0,
 			MetaName = "source directory",
 			HelpText = "The directory containing the unity files.",

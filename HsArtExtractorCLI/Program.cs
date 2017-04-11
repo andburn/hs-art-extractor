@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -37,12 +38,33 @@ namespace HsArtExtractorCLI
 			Console.WriteLine("Source Dir: {0}", opts.SourceDirectory);
 			var files = Directory.GetFiles(opts.SourceDirectory, "*.unity3d");
 			Console.WriteLine("Found {0} files", files.Count());
+			var filtered = new List<string>();
+
+			Console.WriteLine(opts.Exclude);
+			var excludes = opts.Exclude.Split(',');
+			Console.WriteLine(excludes.Length);
+			foreach (var fs in files)
+			{
+				var include = true;
+				var finfo = new FileInfo(fs);
+				foreach (var ex in excludes)
+				{
+					if (finfo.Name.StartsWith(ex))
+					{
+						include = false;
+					}
+				}
+				if (include)
+				{
+					filtered.Add(fs);
+				}
+			}
 
 			if (!string.IsNullOrWhiteSpace(opts.Output))
 				dir = opts.Output;
 			Console.WriteLine($"Saving to: {dir}");
 
-			Extract.AllImages(files, dir, opts.Alpha, opts.Flip);
+			Extract.AllImages(filtered.ToArray(), dir, opts.Alpha, opts.Flip);
 
 			stopWatch.Stop();
 			TimeSpan ts = stopWatch.Elapsed;
